@@ -1,0 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* RESET */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Nunito", sans-serif;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: initial;
+}
+
+textarea {
+  font: inherit;
+  border: initial;
+  resize: none;
+  outline: initial;
+}
+
+button {
+  font: inherit;
+  border: initial;
+  outline: initial;
+  background-color: initial;
+}
+input,
+textarea,
+button,
+select {
+  outline: none;
+}
+
+/* GLOBAL STYLES */
+.centred {
+  @apply flex items-center justify-center;
+}
+
+.backgroundImage {
+  background-image: url("../assets/textures/cartographer.png"),
+    linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 1));
+}
