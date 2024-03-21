@@ -15,7 +15,7 @@ const Jobs = () => {
       <Layout>
         <div className="flex flex-col h-screen text-secondary font-nunito dark:bg-primaryDark dark:text-secondaryDark">
           <h1 className="text-3xl text-secondary-dark w-full mt-4 ml-2 dark:text-secondaryDark-light">
-            Welcome back, {user.username}
+            Welcome back, {/* {user.username} */} User!
           </h1>
           <p className="text-secondary-dark dark:text-secondaryDark-dark ml-2">
             {currentDate}
