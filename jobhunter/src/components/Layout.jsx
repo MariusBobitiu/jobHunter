@@ -1,4 +1,4 @@
-import Sidebar from "./Sidebar";
+import Sidebar from "./page/Sidebar";
 import PropTypes from "prop-types";
 
 export default function Layout({ children }) {

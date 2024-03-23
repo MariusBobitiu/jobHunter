@@ -1,7 +1,7 @@
 import heroImage from "../../assets/images/register-hero.jpg";
 import GoogleIcon from "@mui/icons-material/Google";
 import AppleIcon from "@mui/icons-material/Apple";
-import { RegisterForm } from "../../components/Forms";
+import { RegisterForm } from "../../components/functional/Forms";
 
 const Register = () => {
   return (

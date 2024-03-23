@@ -1,7 +1,7 @@
 import GoogleIcon from "@mui/icons-material/Google";
 import AppleIcon from "@mui/icons-material/Apple";
 import heroImage from "../../assets/images/register-hero.jpg";
-import { LoginForm } from "../../components/Forms";
+import { LoginForm } from "../../components/functional/Forms";
 
 const Login = () => {
   return (

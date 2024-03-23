@@ -44,6 +44,36 @@ select {
   outline: none;
 }
 
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(22, 26, 29);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+  background-color: rgb(212, 223, 225);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(44, 52, 58);
+}
+::-webkit-scrollbar-thumb:active {
+  background-color: rgb(61, 79, 92);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgb(224, 224, 224);
+}
+.dark ::-webkit-scrollbar-track {
+  background-color: rgb(22, 26, 29);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(199, 199, 199);
+}
+.dark ::-webkit-scrollbar-thumb:active {
+  background-color: rgb(173, 173, 173);
+}
 /* GLOBAL STYLES */
 .centred {
   @apply flex items-center justify-center;
@@ -52,4 +82,105 @@ select {
 .backgroundImage {
   background-image: url("../assets/textures/cartographer.png"),
     linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 1));
+}
+
+/* Table MUI */
+
+svg.css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon {
+  color: rgb(30, 30, 30);
+}
+.dark svg.css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon {
+  color: rgb(224, 224, 224);
+}
+
+button.css-zylse7-MuiButtonBase-root-MuiIconButton-root {
+  color: rgb(30, 30, 30);
+}
+.dark button.css-zylse7-MuiButtonBase-root-MuiIconButton-root {
+  color: rgb(224, 224, 224);
+}
+button.css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled {
+  color: rgba(30, 30, 30, 0.4);
+}
+.dark button.css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled {
+  color: rgba(224, 224, 224, 0.4);
+}
+.css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+  background-color: rgb(255, 255, 255);
+  color: rgb(22, 26, 29);
+}
+.dark .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+  background-color: rgb(22, 26, 29);
+  color: rgb(224, 224, 224);
+}
+
+td.css-1yhpg23-MuiTableCell-root {
+  color: rgb(22, 26, 29);
+  font-size: 1.2rem;
+}
+tr.css-1q1u3t4-MuiTableRow-root:nth-child(even) {
+  background-color: rgb(236, 242, 243);
+}
+tr.css-1q1u3t4-MuiTableRow-root:nth-child(odd) {
+  background-color: rgb(227, 235, 237);
+}
+th.css-dwuj3p-MuiTableCell-root {
+  background-color: rgb(212, 223, 225);
+  color: rgb(22, 26, 29);
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 1rem 1.5rem;
+  font-family: "Nunito", sans-serif;
+  top: -2px;
+}
+tr.css-1q1u3t4-MuiTableRow-root.MuiTableRow-hover:hover {
+  background-color: rgb(212, 223, 225);
+}
+
+.dark th.css-dwuj3p-MuiTableCell-root {
+  background-color: rgb(22, 26, 29);
+  color: rgb(224, 224, 224);
+  border-bottom: 1px solid rgb(88, 105, 116);
+}
+.dark tr.css-1q1u3t4-MuiTableRow-root:nth-child(even) {
+  background-color: rgb(39, 47, 52);
+}
+.dark tr.css-1q1u3t4-MuiTableRow-root:nth-child(odd) {
+  background-color: rgb(33, 39, 44);
+}
+.dark td.css-1yhpg23-MuiTableCell-root {
+  color: rgb(224, 224, 224);
+  border: 0;
+}
+.dark tr.css-1q1u3t4-MuiTableRow-root.MuiTableRow-hover:hover {
+  background-color: rgb(22, 26, 29);
+}
+
+.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  color: rgb(22, 26, 29);
+}
+.dark
+  .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  color: rgb(224, 224, 224);
+}
+.css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
+  color: rgb(22, 26, 29);
+}
+.dark .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
+  color: rgb(224, 224, 224);
+}
+
+/* OVERRIDES */
+
+.dark\:text-white:where(.dark, .dark *) {
+  color: rgb(224, 224, 224) !important;
+}
+.dark\:bg-slate-800:where(.dark, .dark *) {
+  background-color: rgb(22, 26, 29) !important;
+}
+.dark\:border-slate-600:where(.dark, .dark *) {
+  border-color: rgb(39, 47, 52) !important;
+}
+.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  padding: 1.2rem 1rem !important;
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import useRegister from "../hooks/useRegister";
-import useLogin from "../hooks/useLogin";
+import useRegister from "../../hooks/useRegister";
+import useLogin from "../../hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {

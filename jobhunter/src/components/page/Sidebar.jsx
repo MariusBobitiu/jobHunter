@@ -1,4 +1,4 @@
-import Logo from "../assets/images/jobHunterLogo.png";
+import Logo from "../../assets/images/jobHunterLogo.png";
 import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
 import WorkIcon from "@mui/icons-material/Work";
 import PersonIcon from "@mui/icons-material/Person";
@@ -6,8 +6,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { logout } from "../features/user/userSlice";
-import ThemeSwitcher from "./ThemeSwitcher";
+import { logout } from "../../features/user/userSlice";
+import ThemeSwitcher from "../functional/ThemeSwitcher";
 
 const Sidebar = () => {
   const [active, setActive] = useState("Dashboard");
