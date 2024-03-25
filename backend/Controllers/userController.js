@@ -39,7 +39,9 @@ const signup = async (req, res) => {
       console.log("user", JSON.stringify(user, null, 2));
       console.log(token);
       // Send user details
-      return res.status(200).send(user);
+      return res
+        .status(200)
+        .send({ id: user.id, username: user.username, email: user.email });
     } else {
       return res.status(409).send("Details are not correct");
     }
@@ -80,7 +82,9 @@ const signin = async (req, res) => {
         });
 
         // Send user details
-        return res.status(200).send(user);
+        return res
+          .status(200)
+          .send({ id: user.id, username: user.username, email: user.email });
       } else {
         return res.status(401).json({ message: "Invalid credentials" });
       }
@@ -94,26 +98,83 @@ const signin = async (req, res) => {
 
 updateUser = async (req, res) => {
   try {
+    const { userName, email } = req.body;
     const { id } = req.params;
-    const updateData = req.body;
+
+    // Check if the user exists
     const user = await User.findOne({ where: { id } });
 
-    if (updateData.password) {
-      updateData.password = await bcrypt.hash(
-        updateData.password,
-        process.env.SALT_ROUNDS
-      );
-    }
-    const [updated] = await User.update(updateData, { where: { id } });
-    if (updated) {
-      const updatedUser = await User.findOne({ where: { id } });
-      res.json(updatedUser);
+    // If the user exists, update the user details
+    if (user) {
+      const data = {
+        username: userName,
+        email,
+        updatedAt: Date.now(),
+      };
+
+      // Update the user details
+      await User.update(data, { where: { id } });
+
+      // Send user details
+      return res
+        .status(200)
+        .send({ username: user.username, email: user.email });
     } else {
-      res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
-    return res.status(500).json({ message: "Error in updating user" });
+    return res.status(500).json({ message: `Error in updating user ${error}` });
   }
 };
 
-module.exports = { signup, signin, updateUser };
+updatePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const { id } = req.params;
+
+    // Check if the user exists
+    const user = await User.findOne({ where: { id } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Compare the old password
+    const validPassword = await bcrypt.compare(oldPassword, user.password);
+    if (!validPassword) {
+      return res.status(401).json({ message: "Wrong Old Password" });
+    }
+    // If the user exists, update the password
+    const data = {
+      password: await bcrypt.hash(newPassword, 10),
+    };
+
+    // Update the user password
+    await User.update(data, { where: { id } });
+
+    // Send user details
+    return res.status(200).send({ username: user.username, email: user.email });
+  } catch (error) {
+    return res.status(500).json({ message: "Error in updating password" });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Check if the user exists
+    const user = await User.findOne({ where: { id } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Delete the user
+    await User.destroy({ where: { id } });
+    return res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { signup, signin, updateUser, updatePassword, deleteUser };

@@ -117,6 +117,8 @@ button.css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled {
 td.css-1yhpg23-MuiTableCell-root {
   color: rgb(22, 26, 29);
   font-size: 1.2rem;
+  padding: 10px 0;
+  font-family: "Nunito", sans-serif;
 }
 tr.css-1q1u3t4-MuiTableRow-root:nth-child(even) {
   background-color: rgb(236, 242, 243);
@@ -135,6 +137,10 @@ th.css-dwuj3p-MuiTableCell-root {
 }
 tr.css-1q1u3t4-MuiTableRow-root.MuiTableRow-hover:hover {
   background-color: rgb(212, 223, 225);
+}
+div.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  color: rgb(224, 224, 224);
+  font-weight: 700;
 }
 
 .dark th.css-dwuj3p-MuiTableCell-root {

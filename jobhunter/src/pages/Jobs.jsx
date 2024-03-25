@@ -4,11 +4,21 @@ import CheckIcon from "@mui/icons-material/Check";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
 import CloseIcon from "@mui/icons-material/Close";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
-import TableComponent from "../components/TableComponent";
+import TableComponent from "../components/TableComponent/TableComponent";
 
 const Jobs = () => {
   const user = useSelector((state) => state.user.user);
   const currentDate = new Date().toLocaleDateString();
+
+  const jobs = useSelector((state) => state.jobs.jobs);
+  const appliedJobs = jobs.filter((job) => job.status === "Applied").length;
+  const interviewingJobs = jobs.filter(
+    (job) => job.status === "Interviewing"
+  ).length;
+  const offerJobs = jobs.filter(
+    (job) => job.status === "Offer Received"
+  ).length;
+  const deniedJobs = jobs.filter((job) => job.status === "Rejected").length;
 
   return (
     <>
@@ -31,7 +41,7 @@ const Jobs = () => {
                   Applied
                 </p>
                 <p className="text-4xl text-secondary-dark font-bold dark:text-secondaryDark">
-                  8
+                  {appliedJobs}
                 </p>
               </div>
             </div>
@@ -41,10 +51,10 @@ const Jobs = () => {
               </div>
               <div className="centred flex-col">
                 <p className="text-lg text-secondary dark:text-secondaryDark">
-                  In progress
+                  Interviewing
                 </p>
                 <p className="text-4xl text-secondary-dark font-bold dark:text-secondaryDark">
-                  12
+                  {interviewingJobs}
                 </p>
               </div>
             </div>
@@ -54,10 +64,10 @@ const Jobs = () => {
               </div>
               <div className="centred flex-col">
                 <p className="text-lg text-secondary dark:text-secondaryDark">
-                  Offer
+                  Offer Received
                 </p>
                 <p className="text-4xl text-secondary-dark font-bold dark:text-secondaryDark">
-                  4
+                  {offerJobs}
                 </p>
               </div>
             </div>
@@ -67,10 +77,10 @@ const Jobs = () => {
               </div>
               <div className="centred flex-col">
                 <p className="text-lg text-secondary dark:text-secondaryDark">
-                  Denied
+                  Rejected
                 </p>
                 <p className="text-4xl text-secondary-dark font-bold dark:text-secondaryDark">
-                  20
+                  {deniedJobs}
                 </p>
               </div>
             </div>

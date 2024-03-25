@@ -5,12 +5,13 @@ import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/user/userSlice";
 import ThemeSwitcher from "../functional/ThemeSwitcher";
 
 const Sidebar = () => {
   const [active, setActive] = useState("Dashboard");
+  const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -49,7 +50,7 @@ const Sidebar = () => {
           className="w-full h-full object-cover rounded-full"
         />
         <p className="text-center text-secondary mt-2 dark:text-secondaryDark">
-          John Doe
+          {user.username || "John Doe"}
         </p>
       </div>
       <div className="flex flex-col items-center w-full h-full p-4 rounded-lg font-nunito text-xl text-secondary dark:text-secondaryDark">

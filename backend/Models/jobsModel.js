@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Job = sequelize.define(
-    "job",
+    "jobs",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -27,8 +27,24 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      UserId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
     },
     { timestamps: true }
   );
+
+  Job.associate = (models) => {
+    Job.belongsTo(models.User, {
+      foreignKey: "UserId",
+      as: "users",
+    });
+  };
   return Job;
 };

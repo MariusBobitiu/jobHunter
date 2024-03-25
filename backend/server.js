@@ -2,8 +2,8 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const db = require("./Models");
 const userRoutes = require("./Routes/userRoutes");
-const updateRoutes = require("./Routes/updateRoutes");
 const jobsRoutes = require("./Routes/jobsRoutes");
+const updateUserRoutes = require("./Routes/updateUserRoutes");
 const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -34,6 +34,8 @@ app.use(cors(corsOptions));
 
 // Set up routes
 app.use("/api/auth", userRoutes);
+
+app.use("/api/users", updateUserRoutes);
 
 app.use("/api/jobs", jobsRoutes);
 
