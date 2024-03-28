@@ -85,7 +85,13 @@ const signin = async (req, res) => {
         // Send user details
         return res
           .status(200)
-          .send({ id: user.id, username: user.username, email: user.email });
+          .send({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            goalValue: user.goalValue,
+            timeFrame: user.timeFrame,
+          });
       } else {
         return res.status(401).json({ message: "Invalid credentials" });
       }
@@ -265,6 +271,33 @@ const verifyToken = async (req, res) => {
   });
 };
 
+const updateGoal = async (req, res) => {
+  try {
+    const { goalValue, timeFrame } = req.body;
+    const { id } = req.params;
+
+    // Check if the user exists
+    const user = await User.findOne({ where: { id } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update the user goal
+    const data = {
+      goalValue,
+      timeFrame,
+    };
+
+    await User.update(data, { where: { id } });
+
+    // Send user details
+    return res.status(200).send({ goalValue, timeFrame });
+  } catch (error) {
+    return res.status(500).json({ message: "Error in updating goal" });
+  }
+};
+
 module.exports = {
   signup,
   signin,
@@ -274,4 +307,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyToken,
+  updateGoal,
 };

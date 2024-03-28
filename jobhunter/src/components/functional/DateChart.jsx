@@ -104,7 +104,7 @@ const JobsChart = () => {
         <h2 className="text-3xl ml-4 font-bold text-secondary-dark dark:text-secondaryDark-light mb-4">
           Activity
         </h2>
-        <div className="w-1/3">
+        <div className="w-1/3 datepicker">
           <Datepicker
             showShortcuts={true}
             inputClassName="bg-primary-light w-full p-4 rounded-lg dark:bg-primaryDark-dark text-secondary dark:text-secondaryDark mb-2"

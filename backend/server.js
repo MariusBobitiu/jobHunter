@@ -4,6 +4,8 @@ const db = require("./Models");
 const userRoutes = require("./Routes/userRoutes");
 const jobsRoutes = require("./Routes/jobsRoutes");
 const updateUserRoutes = require("./Routes/updateUserRoutes");
+const quoteRoutes = require("./Routes/quoteRoutes");
+const goalRoutes = require("./Routes/goalRoutes");
 const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -38,6 +40,10 @@ app.use("/api/auth", userRoutes);
 app.use("/api/users", updateUserRoutes);
 
 app.use("/api/jobs", jobsRoutes);
+
+app.use("/api/quote", quoteRoutes);
+
+app.use("/api/goal", goalRoutes);
 
 // Listen for requests
 app.listen(PORT, () => {

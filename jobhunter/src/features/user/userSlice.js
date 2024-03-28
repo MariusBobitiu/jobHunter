@@ -17,7 +17,11 @@ export const userSlice = createSlice({
     updateUser: (state, action) => {
       state.user = { ...state.user, ...action.payload };
     },
+    updateGoalAndInterval: (state, action) => {
+      state.user = { ...state.user, ...action.payload };
+    },
   },
 });
 
-export const { login, logout, updateUser } = userSlice.actions;
+export const { login, logout, updateUser, updateGoalAndInterval } =
+  userSlice.actions;

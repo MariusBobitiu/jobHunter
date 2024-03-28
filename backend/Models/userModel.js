@@ -24,10 +24,19 @@ module.exports = (sequelize, DataTypes) => {
       resetLink: {
         type: DataTypes.STRING,
       },
-      twoFactorAuth: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+      goalValue: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
       },
+      timeFrame: {
+        type: DataTypes.STRING,
+        defaultValue: "daily",
+      },
+      // TODO: Add two factor authentication
+      // twoFactorAuth: {
+      //   type: DataTypes.BOOLEAN,
+      //   defaultValue: false,
+      // },
     },
     { timestamps: true }
   );

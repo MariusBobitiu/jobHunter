@@ -8,9 +8,6 @@ import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import TableComponent from "../components/TableComponent/TableComponent";
 
 const Jobs = () => {
-  const user = useSelector((state) => state.user.user);
-  const currentDate = new Date().toLocaleDateString();
-
   const jobs = useSelector((state) => state.jobs.jobs);
   const appliedJobs = jobs.filter((job) => job.status === "Applied").length;
   const interviewingJobs = jobs.filter(
