@@ -57,6 +57,7 @@ const EditJobPopupComponent = ({ job, onSave, onClose }) => {
             <MenuItem value="Interviewing">Interviewing</MenuItem>
             <MenuItem value="Offer Received">Offer Received</MenuItem>
             <MenuItem value="Rejected">Rejected</MenuItem>
+            <MenuItem value="No response">No response</MenuItem>
           </Select>
           <DatePicker
             showShortcuts={true}

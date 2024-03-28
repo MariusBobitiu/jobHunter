@@ -9,6 +9,10 @@ import PasswordIcon from "@mui/icons-material/Password";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { login, updateUser } from "../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import deleteAccountImg from "../assets/images/deleteProfile.svg";
+import deleteAccountImgDark from "../assets/images/deleteProfileDark.svg";
+// import twoFactorAuthImg from "../assets/images/2fa.svg";
+// import twoFactorAuthImgDark from "../assets/images/2faDark.svg";
 
 const Profile = () => {
   const user = useSelector((state) => state.user.user);
@@ -21,6 +25,18 @@ const Profile = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  // --- Two Factor Authentication ---
+  // const [twoFactorAuth, setTwoFactorAuth] = useState(false);
+  // const [twoFactorAuthPopUp, setTwoFactorAuthPopUp] = useState(false);
+  // const isChecked = twoFactorAuth ? true : false;
+
+  // const handleCheckboxChange = () => {
+  //   setTwoFactorAuth(!twoFactorAuth);
+  //   twoFactorAuth ? setTwoFactorAuthPopUp(false) : setTwoFactorAuthPopUp(true);
+  // };
+  // --- Two Factor Authentication --- Later implementation
+
+  const darkMode = useSelector((state) => state.darkMode.darkMode);
 
   const [deleteAccount, setDeleteAccount] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
@@ -40,7 +56,7 @@ const Profile = () => {
           email,
         };
         const response = await fetch(
-          `http://192.168.0.41:8080/api/users/${user.id}`,
+          `${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`,
           {
             method: "PUT",
             headers: {
@@ -79,7 +95,7 @@ const Profile = () => {
     }
     try {
       const response = await fetch(
-        `http://192.168.0.41:8080/api/users/password/${user.id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/users/password/${user.id}`,
         {
           method: "PUT",
           headers: {
@@ -112,7 +128,7 @@ const Profile = () => {
   const deleteUser = async () => {
     try {
       const response = await fetch(
-        `http://192.168.0.41:8080/api/users/${user.id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`,
         {
           method: "DELETE",
         }
@@ -133,7 +149,7 @@ const Profile = () => {
   return (
     <>
       <Layout>
-        <div className="flex flex-col h-screen text-secondary font-nunito p-6 dark:bg-primaryDark dark:text-secondaryDark">
+        <div className="flex flex-col h-screen text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark">
           <div className="py-4 ml-4 pl-2 border-b-2 border-secondary/50 mb-4 dark:border-secondaryDark/50 flex justify-between items-center">
             <h1 className="text-3xl font-bold">Profile</h1>
             <button
@@ -154,6 +170,7 @@ const Profile = () => {
                 alt="profile"
                 className="w-full h-full object-cover rounded-full"
               />
+              {/* TODO: Implement profile picture upload */}
               {/* <label
                 htmlFor="profilePic"
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-28 h-28 rounded-full centred"
@@ -300,18 +317,40 @@ const Profile = () => {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <div className="w-full flex justify-between items-center">
-                <label htmlFor="2fa">
-                  <p className="text-secondary dark:text-secondaryDark">
-                    Two Factor Authentication
-                  </p>
+              {/* TODO: Implement 2FA */}
+              {/* <div className="w-full flex justify-between items-center">
+                <p className="text-secondary dark:text-secondaryDark">
+                  Two Factor Authentication
+                </p>
+                <label
+                  htmlFor="2fa"
+                  className="flex cursor-pointer select-none items-center justify-between"
+                >
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      id="2fa"
+                      className="sr-only"
+                      checked={isChecked}
+                      onChange={handleCheckboxChange}
+                    />
+                    <div
+                      className={`box block h-8 w-14 rounded-full ${
+                        darkMode
+                          ? "bg-primaryDark-light"
+                          : "bg-primaryDark-light"
+                      }`}
+                    ></div>
+                    <div
+                      className={`absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full transition ${
+                        isChecked
+                          ? "translate-x-full bg-accentDark"
+                          : "bg-primary"
+                      }`}
+                    ></div>
+                  </div>
                 </label>
-                <input
-                  type="checkbox"
-                  id="2fa"
-                  className="w-6 h-6 rounded-lg bg-secondary/50 dark:border-secondaryDark/50"
-                />
-              </div>
+              </div> */}
               <button
                 className="text-accent w-fit text-xl py-2 my-2 dark:text-accentDark font-bold"
                 onClick={() => setDeleteAccount(true)}
@@ -320,30 +359,43 @@ const Profile = () => {
               </button>
               {deleteAccount && (
                 <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-                  <div className="bg-primary w-1/3 h-1/4 p-6 rounded-lg flex flex-col justify-center items-start gap-4 border-t-4 border-accent relative dark:bg-primaryDark-light dark:border-accentDark">
-                    <h1 className="text-3xl text-secondary font-bold dark:text-secondaryDark">
-                      Delete Account
-                    </h1>
-                    <p className="text-secondary-dark font-medium text-xl mb-4 dark:text-secondaryDark">
-                      Are you sure you want to delete your account?{" "}
-                      <span className="text-secondary/75 font-normal dark:text-secondaryDark/75">
-                        If you delete your account, you will permanently lose
-                        your profile, personal settings, and all other data
-                        associated with your account.
-                      </span>
-                    </p>
-                    <button
-                      className="absolute top-2 right-4 text-4xl"
-                      onClick={() => setDeleteAccount(false)}
-                    >
-                      &times;
-                    </button>
+                  <div className="bg-primary w-1/2 p-6 rounded-lg flex flex-col justify-center items-start gap-4 border-t-4 border-accent relative dark:bg-primaryDark-light dark:border-accentDark">
+                    <div className="centred gap-6">
+                      <div className="size-1/3">
+                        <img
+                          src={
+                            darkMode ? deleteAccountImg : deleteAccountImgDark
+                          }
+                          alt="delete account"
+                          className="size-full"
+                        />
+                      </div>
+                      <div className="flex-col px-6">
+                        <h1 className="text-3xl text-secondary font-bold dark:text-secondaryDark">
+                          Delete Account
+                        </h1>
+                        <p className="text-secondary-dark font-medium text-xl mb-4 dark:text-secondaryDark">
+                          Are you sure you want to delete your account?{" "}
+                          <span className="text-secondary/75 font-normal dark:text-secondaryDark/75">
+                            If you delete your account, you will permanently
+                            lose your profile, personal settings, and all other
+                            data associated with your account.
+                          </span>
+                        </p>
+                        <button
+                          className="absolute top-2 right-4 text-4xl"
+                          onClick={() => setDeleteAccount(false)}
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    </div>
                     <div className="flex gap-4 centred w-full">
                       <button
-                        className="bg-accent text-primary font-bold w-48 h-16 rounded-lg text-lg dark:bg-accentDark"
+                        className="bg-accent text-primary font-bold w-48 h-16 rounded-lg text-lg dark:bg-accentDark hover:bg-accent-dark dark:hover:bg-accentDark-dark"
                         onClick={deleteUser}
                       >
-                        Delete Account
+                        Confirm
                       </button>
                       <button
                         className="text-secondary w-48 h-16 rounded-lg text-lg bg-secondary-light/25 hover:bg-secondary-light/40 dark:text-secondaryDark dark:bg-secondaryDark/25 dark:hover:bg-secondaryDark/40"
@@ -355,6 +407,48 @@ const Profile = () => {
                   </div>
                 </div>
               )}
+              {/* {twoFactorAuthPopUp && (
+                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+                  <div className="bg-primary w-3/5 p-10 rounded-lg flex flex-col justify-center items-start gap-4 border-t-4 border-accent relative dark:bg-primaryDark-light dark:border-accentDark">
+                    <span className="absolute top-2 right-4 text-4xl">
+                      &times;
+                    </span>
+                    <div className="flex gap-6">
+                      <div className="size-1/5">
+                        <img
+                          src={
+                            darkMode ? twoFactorAuthImg : twoFactorAuthImgDark
+                          }
+                          alt="2fa"
+                          className="size-full"
+                        />
+                      </div>
+                      <div className="flex-col gap-4 centred w-full">
+                        <h1 className="text-3xl text-secondary font-bold dark:text-secondaryDark">
+                          Two Factor Authentication
+                        </h1>
+                        <p className="text-secondary-dark font-medium text-xl mb-4 dark:text-secondaryDark">
+                          Two Factor Authentication has been{" "}
+                          <span className="text-accent font-bold dark:text-accentDark">
+                            enabled
+                          </span>{" "}
+                          for your account.
+                        </p>
+                        <p className="text-secondary-dark font-medium text-xl mb-4 dark:text-secondaryDark">
+                          You will need to enter a code sent to your email
+                          address every time you log in.
+                        </p>
+                        <button
+                          className="bg-accent text-primary font-bold w-48 h-16 rounded-lg text-lg dark:bg-accentDark"
+                          onClick={() => setTwoFactorAuthPopUp(false)}
+                        >
+                          Got it!
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )} */}
             </div>
           </div>
           <h1 className="text-3xl font-bold py-4 ml-4 pl-2 border-b-2 border-secondary/50 mb-4 dark:border-secondaryDark/50">
@@ -370,19 +464,6 @@ const Profile = () => {
               </div>
             </div>
           </div>
-          <small className="absolute bottom-2 right-4">
-            <p className="text-secondary text-center dark:text-secondaryDark-dark">
-              &copy; Made with 💖 by
-              <a
-                href="http://www.linkedin.com/in/marius-bobitiu"
-                className="text-accent font-bold dark:text-accentDark"
-              >
-                {" "}
-                Marius Bobitiu.
-              </a>{" "}
-              All rights reserved.
-            </p>
-          </small>
         </div>
       </Layout>
     </>

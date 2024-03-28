@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   jobs: [],
   status: "idle",
+  sortState: { key: "id", isAsc: false },
   error: null,
 };
 
@@ -21,8 +22,19 @@ export const jobsSlice = createSlice({
       state.status = "failed";
       state.error = action.payload;
     },
+    setSortState: (state, action) => {
+      state.sortState = action.payload;
+    },
+    setJobsLogout: (state) => {
+      state.jobs = [];
+    },
   },
 });
 
-export const { getJobsStart, getJobsSuccess, getJobsFailure } =
-  jobsSlice.actions;
+export const {
+  getJobsStart,
+  getJobsSuccess,
+  getJobsFailure,
+  setSortState,
+  setJobsLogout,
+} = jobsSlice.actions;

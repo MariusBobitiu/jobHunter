@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/user/userSlice";
 import ThemeSwitcher from "../functional/ThemeSwitcher";
+import { setJobsLogout } from "../../features/jobs/jobsSlice";
 
 const Sidebar = () => {
   const [active, setActive] = useState("Dashboard");
@@ -29,8 +30,8 @@ const Sidebar = () => {
         case "/profile":
           setActive("Profile");
           break;
-        case "/settings":
-          setActive("Settings");
+        case "/about":
+          setActive("About");
           break;
         default:
           setActive("Dashboard");
@@ -50,7 +51,7 @@ const Sidebar = () => {
           className="w-full h-full object-cover rounded-full"
         />
         <p className="text-center text-secondary mt-2 dark:text-secondaryDark">
-          {user.username || "John Doe"}
+          jobHunter
         </p>
       </div>
       <div className="flex flex-col items-center w-full h-full p-4 rounded-lg font-nunito text-xl text-secondary dark:text-secondaryDark">
@@ -101,18 +102,18 @@ const Sidebar = () => {
             </span>
           </a>
           <a
-            href="/settings"
-            alt="Settings"
+            href="/about"
+            alt="About"
             className="py-4 px-2 hover:text-accent cursor-pointer rounded-lg"
             style={
-              active === "Settings"
+              active === "About"
                 ? { backgroundColor: "#BA181B", color: "white" }
                 : {}
             }
           >
             <span>
               <SettingsIcon className="-mt-2 mr-2" fontSize="large" />
-              Settings
+              About
             </span>
           </a>
           <ThemeSwitcher />
@@ -124,6 +125,7 @@ const Sidebar = () => {
           onClick={() => {
             localStorage.removeItem("token");
             dispatch(logout());
+            dispatch(setJobsLogout());
             window.location.href = "/login";
           }}
         >

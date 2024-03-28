@@ -1,12 +1,13 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
+// import { useSelector } from "react-redux";
 // import useFetch from "../../../hooks/useFetch";
 import CloseIcon from "@mui/icons-material/Close";
 import { Select, MenuItem } from "@mui/material";
 import Datepicker from "react-tailwindcss-datepicker";
 
 const AddJobPopupComponent = ({ onAdd, isVisible, onClose }) => {
-  //   const [rows, setRows] = useState([]);
+  // const user = useSelector((state) => state.user.user);
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
   const [status, setStatus] = useState("Applied");
@@ -19,7 +20,13 @@ const AddJobPopupComponent = ({ onAdd, isVisible, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formattedDate = new Date(date.startDate).toISOString();
-    onAdd({ company, position, status, date: formattedDate, details });
+    onAdd({
+      company,
+      position,
+      status,
+      date: formattedDate,
+      details,
+    });
     setCompany("");
     setPosition("");
     setStatus("Applied");
@@ -68,6 +75,7 @@ const AddJobPopupComponent = ({ onAdd, isVisible, onClose }) => {
             <MenuItem value="Interviewing">Interviewing</MenuItem>
             <MenuItem value="Offer Received">Offer Received</MenuItem>
             <MenuItem value="Rejected">Rejected</MenuItem>
+            <MenuItem value="No response">No response</MenuItem>
           </Select>
           <Datepicker
             showShortcuts={true}

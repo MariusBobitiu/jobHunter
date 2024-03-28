@@ -2,6 +2,7 @@ import { useState } from "react";
 import useRegister from "../../hooks/useRegister";
 import useLogin from "../../hooks/useLogin";
 import { useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/joy/CircularProgress";
 
 const RegisterForm = () => {
   const [username, setUsername] = useState("");
@@ -100,6 +101,7 @@ const RegisterForm = () => {
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const login = useLogin();
   const navigate = useNavigate();
@@ -114,12 +116,15 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
+      setIsLoading(true);
       await login(email, password);
+      setIsLoading(false);
       console.log("Logged in successful!");
       navigate("/dashboard");
     } catch (err) {
       console.error("Error logging in:", err);
       alert(err.message);
+      setIsLoading(false);
     }
   };
 
@@ -147,9 +152,13 @@ const LoginForm = () => {
         />{" "}
         <button
           type="submit"
-          className="px-16 py-2 bg-accentDark text-white text-2xl font-semibold rounded-lg hover:bg-accentDark-dark m-4"
+          className="px-16 py-2 bg-accentDark text-white text-2xl font-semibold rounded-lg hover:bg-accentDark-dark m-4 centred"
         >
-          Sign in
+          {isLoading ? (
+            <CircularProgress size="sm" variant="soft" color="neutral" />
+          ) : (
+            "Sign in"
+          )}
         </button>
       </form>
     </>

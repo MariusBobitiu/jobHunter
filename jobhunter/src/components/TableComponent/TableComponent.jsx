@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Select, MenuItem } from "@mui/material";
+import { Select, MenuItem, LinearProgress } from "@mui/material";
 
 // Hooks
 import { useEffect, useState } from "react";
@@ -17,6 +17,7 @@ import {
   getJobsStart,
   getJobsSuccess,
   getJobsFailure,
+  setSortState,
 } from "../../features/jobs/jobsSlice";
 
 // Material UI Icons
@@ -42,28 +43,39 @@ const TableComponent = () => {
   const [addJobPopup, setAddJobPopup] = useState(false);
   const [viewJob, setViewJob] = useState(null);
   const [selectedJob, setSelectedJob] = useState(null);
+  const user = useSelector((state) => state.user.user);
+  const [loading, setLoading] = useState(false);
+  const sortState = useSelector((state) => state.jobs.sortState);
 
   const StatusOptions = [
     "Applied",
     "Interviewing",
     "Offer Received",
     "Rejected",
+    "No response",
   ];
 
   const dispatch = useDispatch();
+  const jobs = useSelector((state) => state.jobs.jobs);
 
   // Fetching data from the API
   const fetchJobs = useFetch();
+
   useEffect(() => {
+    if (jobs.length !== 0) {
+      return;
+    }
+
     const getJobs = async () => {
       try {
         dispatch(getJobsStart());
+        setLoading(true);
         const data = await fetchJobs(
           "GET",
-          "http://192.168.0.41:8080/api/jobs"
+          `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
         );
-        console.log(data);
-        dispatch(getJobsSuccess(data));
+        sortBy("id", data);
+        setLoading(false);
       } catch (err) {
         console.error(err);
         dispatch(getJobsFailure(err));
@@ -74,13 +86,48 @@ const TableComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // AddJobPopupComponent
+  const handleAddJob = async (job) => {
+    try {
+      setLoading(true);
+      const sendJob = { ...job, userId: user.id };
+      await fetchJobs(
+        "POST",
+        `${import.meta.env.VITE_API_BASE_URL}/jobs`,
+        sendJob
+      );
+      dispatch(getJobsStart());
+      const data = await fetchJobs(
+        "GET",
+        `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
+      );
+      keepSortOnChanges(data);
+      setAddJobPopup(false);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      dispatch(getJobsFailure(err));
+    }
+  };
+  const handleClosePopup = () => {
+    setAddJobPopup(false);
+  };
+
   // Delete job
   const handleDeleteJob = (id) => async () => {
     try {
-      await fetchJobs("DELETE", `http://192.168.0.41:8080/api/jobs/${id}`);
+      setLoading(true);
+      await fetchJobs(
+        "DELETE",
+        `${import.meta.env.VITE_API_BASE_URL}/jobs/${id}`
+      );
       dispatch(getJobsStart());
-      const data = await fetchJobs("GET", "http://192.168.0.41:8080/api/jobs");
-      dispatch(getJobsSuccess(data));
+      const data = await fetchJobs(
+        "GET",
+        `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
+      );
+      keepSortOnChanges(data);
+      setLoading(false);
     } catch (err) {
       console.error(err);
       dispatch(getJobsFailure(err));
@@ -92,12 +139,21 @@ const TableComponent = () => {
     const newStatus = event.target.value;
     console.log(`Updating task ${id} to ${newStatus}`);
     try {
-      await fetchJobs("PUT", `http://192.168.0.41:8080/api/jobs/${id}`, {
-        status: newStatus,
-      });
+      setLoading(true);
+      await fetchJobs(
+        "PUT",
+        `${import.meta.env.VITE_API_BASE_URL}/jobs/${id}`,
+        {
+          status: newStatus,
+        }
+      );
       dispatch(getJobsStart());
-      const data = await fetchJobs("GET", "http://192.168.0.41:8080/api/jobs");
-      dispatch(getJobsSuccess(data));
+      const data = await fetchJobs(
+        "GET",
+        `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
+      );
+      keepSortOnChanges(data);
+      setLoading(false);
     } catch (err) {
       console.error(err);
       dispatch(getJobsFailure(err));
@@ -107,7 +163,9 @@ const TableComponent = () => {
 
   // Pagination
   const handleChangePage = (event, newPage) => {
+    setLoading(true);
     setPage(newPage);
+    setLoading(false);
   };
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -120,23 +178,6 @@ const TableComponent = () => {
     setViewJob(job);
   };
 
-  // AddJobPopupComponent
-  const handleAddJob = async (job) => {
-    try {
-      await fetchJobs("POST", "http://192.168.0.41:8080/api/jobs", job);
-      dispatch(getJobsStart());
-      const data = await fetchJobs("GET", "http://192.168.0.41:8080/api/jobs");
-      dispatch(getJobsSuccess(data));
-      setAddJobPopup(false);
-    } catch (err) {
-      console.error(err);
-      dispatch(getJobsFailure(err));
-    }
-  };
-  const handleClosePopup = () => {
-    setAddJobPopup(false);
-  };
-
   // EditJobPopupComponent
   const openEditJobPopup = (id) => {
     const job = rows.find((row) => row.id === id);
@@ -144,19 +185,54 @@ const TableComponent = () => {
   };
   const handleEditJob = async (job) => {
     try {
+      setLoading(true);
       await fetchJobs(
         "PUT",
-        `http://192.168.0.41:8080/api/jobs/${job.id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/jobs/${job.id}`,
         job
       );
       dispatch(getJobsStart());
-      const data = await fetchJobs("GET", "http://192.168.0.41:8080/api/jobs");
+      const data = await fetchJobs(
+        "GET",
+        `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
+      );
       setSelectedJob(null);
-      dispatch(getJobsSuccess(data));
+      keepSortOnChanges(data);
+      setLoading(false);
     } catch (err) {
       console.error(err);
       dispatch(getJobsFailure(err));
     }
+  };
+
+  // Sorting
+  const keepSortOnChanges = (array) => {
+    const key = sortState.key;
+    const isAsc = sortState.isAsc;
+    const sorted = [...array].sort((a, b) => {
+      if (a[key] < b[key]) return isAsc ? -1 : 1;
+      if (a[key] > b[key]) return isAsc ? 1 : -1;
+      return 0;
+    });
+    dispatch(getJobsSuccess(sorted));
+  };
+
+  const sortBy = (key, array) => {
+    const isAsc = sortState.key === key ? !sortState.isAsc : true;
+    dispatch(setSortState({ key, isAsc }));
+    const sorted = [...array].sort((a, b) => {
+      if (a[key] < b[key]) return isAsc ? -1 : 1;
+      if (a[key] > b[key]) return isAsc ? 1 : -1;
+      return 0;
+    });
+    dispatch(getJobsSuccess(sorted));
+  };
+
+  const sortIcon = (key) => {
+    if (sortState.key === key) {
+      return sortState.isAsc ? "▲" : "▼";
+    }
+    return "";
   };
 
   if (!rows.length)
@@ -199,6 +275,17 @@ const TableComponent = () => {
   return (
     <>
       <div className="w-full bg-tertiary p-4 m-2">
+        <div className="flex justify-between items-center px-8">
+          <h2 className="text-3xl font-bold mb-2 text-secondary dark:text-secondaryDark">
+            Total Jobs:
+          </h2>
+          <p className="text-xl font-medium text-secondary-light dark:text-secondaryDark">
+            <span className="text-2xl font-bold text-secondary dark:text-secondaryDark">
+              {rows.length}
+            </span>{" "}
+            jobs
+          </p>
+        </div>
         <Paper
           sx={{
             width: "100%",
@@ -215,15 +302,57 @@ const TableComponent = () => {
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">ID</TableCell>
-                  <TableCell align="center">Company</TableCell>
-                  <TableCell align="center">Position</TableCell>
-                  <TableCell align="center">Status</TableCell>
-                  <TableCell align="center">Date</TableCell>
+                  <TableCell align="center">
+                    <button
+                      className="text-secondary dark:text-secondaryDark"
+                      onClick={() => sortBy("id", rows)}
+                    >
+                      ID {sortIcon("id")}
+                    </button>
+                  </TableCell>
+                  <TableCell align="center">
+                    <button
+                      className="text-secondary dark:text-secondaryDark"
+                      onClick={() => sortBy("company", rows)}
+                    >
+                      Company {sortIcon("company")}
+                    </button>
+                  </TableCell>
+                  <TableCell align="center">
+                    <button
+                      className="text-secondary dark:text-secondaryDark"
+                      onClick={() => sortBy("position", rows)}
+                    >
+                      Position {sortIcon("position")}
+                    </button>
+                  </TableCell>
+                  <TableCell align="center">
+                    <button
+                      className="text-secondary dark:text-secondaryDark"
+                      onClick={() => sortBy("status", rows)}
+                    >
+                      Status {sortIcon("status")}
+                    </button>
+                  </TableCell>
+                  <TableCell align="center">
+                    <button
+                      className="text-secondary dark:text-secondaryDark"
+                      onClick={() => sortBy("date", rows)}
+                    >
+                      Date {sortIcon("date")}
+                    </button>
+                  </TableCell>
                   <TableCell align="center">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
+                {loading && (
+                  <TableRow>
+                    <TableCell colSpan={6}>
+                      <LinearProgress />
+                    </TableCell>
+                  </TableRow>
+                )}
                 {rows
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
@@ -254,6 +383,8 @@ const TableComponent = () => {
                                   ? "#4F46E5"
                                   : row.status === "Offer Received"
                                   ? "#16A34A"
+                                  : row.status === "No response"
+                                  ? "#64748b"
                                   : "#EF4444",
                               borderRadius: "9999px",
                             }}

@@ -4,7 +4,8 @@ const Job = db.jobs;
 
 const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.findAll();
+    const userId = req.params.userId;
+    const jobs = await Job.findAll({ where: { UserId: userId } });
     return res.status(200).send(jobs);
   } catch (error) {
     console.error("Error in fetching jobs:", error);
@@ -14,11 +15,12 @@ const getJobs = async (req, res) => {
 
 const createJob = async (req, res) => {
   try {
-    const { company, position, status, date, details } = req.body;
+    const { company, position, status, date, details, userId } = req.body;
     const data = {
       company,
       position,
       status,
+      UserId: userId,
       date,
       details,
     };
@@ -32,7 +34,7 @@ const createJob = async (req, res) => {
 
 const updateJob = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { jobId } = req.params;
     const { company, position, status, date, details } = req.body;
     const data = {
       company,
@@ -41,7 +43,8 @@ const updateJob = async (req, res) => {
       date,
       details,
     };
-    const job = await Job.update(data, { where: { id } });
+    if (!jobId) return res.status(400).send({ message: "Job ID is required" });
+    const job = await Job.update(data, { where: { id: jobId } });
     return res.status(200).send(job);
   } catch (error) {
     console.error("Error in updating job:", error);
@@ -51,8 +54,9 @@ const updateJob = async (req, res) => {
 
 const deleteJob = async (req, res) => {
   try {
-    const { id } = req.params;
-    const job = await Job.destroy({ where: { id } });
+    const { jobId } = req.params;
+    const job = await Job.destroy({ where: { id: jobId } });
+    if (!job) return res.status(404).send({ message: "Job not found" });
     return res.status(200).send({ message: "Job deleted successfully" });
   } catch (error) {
     console.error("Error in deleting job:", error);

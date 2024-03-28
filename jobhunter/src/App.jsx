@@ -4,9 +4,11 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 import Jobs from "./pages/Jobs";
 import Profile from "./pages/Profile";
-import Settings from "./pages/Settings";
+import About from "./pages/About";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 function App() {
   return (
@@ -16,10 +18,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/about" element={<About />} />
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
       </Router>

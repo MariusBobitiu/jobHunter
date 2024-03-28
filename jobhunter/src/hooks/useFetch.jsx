@@ -14,7 +14,6 @@ const useFetch = () => {
     const contentType = res.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
       const data = await res.json(); // Parse as JSON
-      console.log(data);
       if (res.status !== 200) {
         throw new Error(data.message || "An unexpected error occurred");
       }

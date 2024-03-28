@@ -35,7 +35,15 @@ const Login = () => {
               <div className="w-full centred">
                 <LoginForm />
               </div>
-              <p className="text-center text-primary-dark">
+              <div className="flex flex-col items-center gap-4 w-full z-20">
+                <a
+                  href="/forgot-password"
+                  className="text-accent font-bold text-lg hover:underline transition-all duration-300"
+                >
+                  Forgot your password?
+                </a>
+              </div>
+              <p className="text-center text-primary-dark text-xl">
                 Don&apos;t have an account?{" "}
                 <a
                   href="/register"

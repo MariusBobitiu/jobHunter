@@ -5,12 +5,15 @@ const useLogin = () => {
   const dispatch = useDispatch();
 
   const loginUser = async (email, password) => {
-    const res = await fetch("http://192.168.0.41:8080/api/auth/signin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ email, password }),
-    });
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/auth/signin`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      }
+    );
     const contentType = res.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
       const data = await res.json(); // Parse as JSON

@@ -21,6 +21,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      resetLink: {
+        type: DataTypes.STRING,
+      },
+      twoFactorAuth: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     { timestamps: true }
   );

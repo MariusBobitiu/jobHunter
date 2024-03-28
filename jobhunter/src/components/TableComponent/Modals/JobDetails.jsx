@@ -34,6 +34,8 @@ const JobDetails = ({ job, onClose }) => {
                         ? "#4F46E5"
                         : job.status === "Offer Received"
                         ? "#16A34A"
+                        : job.status === "No response"
+                        ? "#64748b"
                         : "#EF4444",
                   }}
                 >

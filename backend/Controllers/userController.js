@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const db = require("../Models");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const sendEmail = require("../utils/sendEmail");
 
 dotenv.config();
 
@@ -30,7 +31,7 @@ const signup = async (req, res) => {
 
       res.cookie("jwt", token, {
         maxAge: process.env.COOKIE_EXPIRATION,
-        domain: "127.0.0.1/",
+        domain: "192.168.0.41/",
         sameSite: "None",
         httpOnly: true,
         path: "/",
@@ -73,7 +74,7 @@ const signin = async (req, res) => {
         // If password is valid, set cookie with the token generated
         res.cookie("jwt", token, {
           maxAge: parseInt(process.env.COOKIE_EXPIRATION),
-          domain: "127.0.0.1",
+          domain: "192.168.0.41",
           sameSite: "None",
           httpOnly: true,
           secure: true,
@@ -177,4 +178,100 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { signup, signin, updateUser, updatePassword, deleteUser };
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Check if the user exists
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Generate a reset link
+    const resetLink = jwt.sign(
+      { email: user.email, issued: Date.now() },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "10m",
+      }
+    );
+
+    await User.update({ resetLink }, { where: { email } });
+
+    // Send the reset link to the user
+    sendEmail(user, resetLink);
+    res.status(200).json({ message: "Reset link sent to your email" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  const resetLink = req.params.token;
+  const newPassword = req.body.password;
+
+  if (resetLink) {
+    jwt.verify(resetLink, process.env.JWT_SECRET, async (err, decodedToken) => {
+      if (err) {
+        return res.status(401).json({ message: "Token expired or invalid" });
+      }
+
+      try {
+        const [user] = await User.findAll({ where: { resetLink } });
+
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+
+        const hashPassword = await bcrypt.hash(newPassword, 10);
+        await User.update({ password: hashPassword }, { where: { resetLink } });
+
+        await User.update({ resetLink: "" }, { where: { resetLink } });
+
+        return res.status(200).json({ message: "Password reset successfully" });
+      } catch (error) {
+        return res.status(500).json({ error: error.message });
+      }
+    });
+  } else {
+    return res.status(401).json({ message: "Authentication error" });
+  }
+};
+
+const verifyToken = async (req, res) => {
+  const token = req.body.token;
+
+  if (!token) {
+    return res.status(401).json({ message: "Authentication error" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
+    if (err) {
+      return res.status(401).json({ message: "Token expired or invalid" });
+    }
+
+    try {
+      const [user] = await User.findAll({ where: { resetLink: token } });
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      return res.status(200).json({ message: "Token verified" });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  });
+};
+
+module.exports = {
+  signup,
+  signin,
+  updateUser,
+  updatePassword,
+  deleteUser,
+  forgotPassword,
+  resetPassword,
+  verifyToken,
+};

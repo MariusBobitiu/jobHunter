@@ -12,12 +12,13 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, userSlice.reducer);
+const persistedJobsReducer = persistReducer(persistConfig, jobsSlice.reducer);
 
 export const store = configureStore({
   reducer: {
     user: persistedReducer,
     darkMode: darkModeSlice.reducer,
-    jobs: jobsSlice.reducer,
+    jobs: persistedJobsReducer,
   },
 });
 

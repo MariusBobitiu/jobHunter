@@ -142,6 +142,25 @@ div.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-1
   color: rgb(224, 224, 224);
   font-weight: 700;
 }
+span.css-eglki6-MuiLinearProgress-root {
+  background-color: rgb(224, 224, 224);
+}
+span.css-5ir5xx-MuiLinearProgress-bar1 {
+  background-color: rgb(22, 26, 29);
+}
+span.css-1r8wrcl-MuiLinearProgress-bar2 {
+  background-color: rgb(22, 26, 29);
+}
+
+.dark span.css-5ir5xx-MuiLinearProgress-bar1 {
+  background-color: rgb(224, 224, 224);
+}
+.dark span.css-1r8wrcl-MuiLinearProgress-bar2 {
+  background-color: rgb(224, 224, 224);
+}
+.dark span.css-eglki6-MuiLinearProgress-root {
+  background-color: rgb(22, 26, 29);
+}
 
 .dark th.css-dwuj3p-MuiTableCell-root {
   background-color: rgb(22, 26, 29);
@@ -189,4 +208,21 @@ div.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-1
 }
 .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 1.2rem 1rem !important;
+}
+g.css-1u0lry5-MuiChartsLegend-root tspan {
+  font-size: 1rem;
+  font-weight: 600;
+  fill: rgb(22, 26, 29);
+}
+.dark g.css-1u0lry5-MuiChartsLegend-root tspan {
+  fill: rgb(224, 224, 224);
+}
+path.css-1mhcdve-MuiPieArc-root {
+  stroke: none;
+}
+circle.MuiCircularProgress-track {
+  stroke: rgb(22, 26, 29, 0.4);
+}
+circle.MuiCircularProgress-progress {
+  stroke: rgb(224, 224, 224);
 }
