@@ -7,8 +7,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "../../features/user/userSlice";
-import ThemeSwitcher from "../functional/ThemeSwitcher";
 import { setJobsLogout } from "../../features/jobs/jobsSlice";
+import ThemeSwitcher from "../functional/ThemeSwitcher";
 
 const Sidebar = () => {
   const [active, setActive] = useState("Dashboard");
@@ -115,7 +115,6 @@ const Sidebar = () => {
               About
             </span>
           </a>
-          <ThemeSwitcher />
         </div>
       </div>
       <div className="absolute bottom-0 w-full p-4 text-white text-lg">
@@ -136,6 +135,9 @@ const Sidebar = () => {
             Logout
           </span>
         </button>
+      </div>
+      <div className="absolute top-0 -z-10">
+        <ThemeSwitcher hidden={true} />
       </div>
     </div>
   );

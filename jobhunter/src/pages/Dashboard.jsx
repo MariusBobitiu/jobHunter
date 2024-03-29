@@ -33,6 +33,8 @@ const Dashboard = () => {
   const [quoteType, setQuoteType] = useState("Quote of the day");
 
   useEffect(() => {
+    console.log("User after login:", user);
+
     const getJobs = async () => {
       try {
         console.log("Fetching jobs...");

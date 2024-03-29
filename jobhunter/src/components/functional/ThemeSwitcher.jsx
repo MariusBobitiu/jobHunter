@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleDarkMode } from "../../features/darkMode/darkModeSlice";
+import { PropTypes } from "prop-types";
 
-const ThemeSwitcher = () => {
+const ThemeSwitcher = ({ hidden }) => {
   const darkMode = useSelector((state) => state.darkMode.darkMode);
   const isChecked = darkMode ? true : false;
   const dispatch = useDispatch();
@@ -17,7 +18,11 @@ const ThemeSwitcher = () => {
 
   return (
     <>
-      <label className="flex cursor-pointer select-none items-center justify-between">
+      <label
+        className={`flex cursor-pointer select-none items-center justify-between ${
+          hidden ? "hidden" : ""
+        }`}
+      >
         <div className="relative">
           <input
             type="checkbox"
@@ -39,6 +44,10 @@ const ThemeSwitcher = () => {
       </label>
     </>
   );
+};
+
+ThemeSwitcher.propTypes = {
+  hidden: PropTypes.bool,
 };
 
 export default ThemeSwitcher;

@@ -5,20 +5,32 @@ import storage from "redux-persist/lib/storage";
 import { darkModeSlice } from "./features/darkMode/darkModeSlice";
 import { jobsSlice } from "./features/jobs/jobsSlice";
 
-const persistConfig = {
-  key: "root",
+const userPersistConfig = {
+  key: "user",
   storage,
-  whitelist: ["user", "darkMode", "jobs"],
+  whitelist: ["user"],
 };
 
-const persistedReducer = persistReducer(persistConfig, userSlice.reducer);
-const persistedJobsReducer = persistReducer(persistConfig, jobsSlice.reducer);
+const jobsPersistConfig = {
+  key: "jobs",
+  storage,
+  whitelist: ["jobs"],
+};
+
+const userPersistedReducer = persistReducer(
+  userPersistConfig,
+  userSlice.reducer
+);
+const jobsPersistedReducer = persistReducer(
+  jobsPersistConfig,
+  jobsSlice.reducer
+);
 
 export const store = configureStore({
   reducer: {
-    user: persistedReducer,
+    user: userPersistedReducer,
     darkMode: darkModeSlice.reducer,
-    jobs: persistedJobsReducer,
+    jobs: jobsPersistedReducer,
   },
 });
 
