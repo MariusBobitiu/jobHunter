@@ -48,7 +48,7 @@ const AddJobPopupComponent = ({ onAdd, isVisible, onClose }) => {
             <CloseIcon fontSize="medium" />
           </button>
         </div>
-        <div className="flex-col centred gap-4 p-6 my-4">
+        <div className="flex-col centred gap-4 p-6 my-4 culoareText">
           <input
             type="text"
             placeholder="Company"

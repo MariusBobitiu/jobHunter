@@ -84,178 +84,46 @@ select {
     linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 1));
 }
 
-/* Table MUI */
+/* OVERRIDES  */
 
-svg.css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon {
-  color: rgb(30, 30, 30);
+.bye-stroke > div > svg > g > g > g > path {
+  stroke: none !important;
 }
-.dark svg.css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon {
-  color: rgb(224, 224, 224);
+.bye-stroke > div > svg > g > g > text > tspan {
+  fill: rgba(22, 26, 29);
 }
-
-button.css-zylse7-MuiButtonBase-root-MuiIconButton-root {
-  color: rgb(30, 30, 30);
-}
-.dark button.css-zylse7-MuiButtonBase-root-MuiIconButton-root {
-  color: rgb(224, 224, 224);
-}
-button.css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled {
-  color: rgba(30, 30, 30, 0.4);
-}
-.dark button.css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled {
-  color: rgba(224, 224, 224, 0.4);
-}
-.css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
-  background-color: rgb(255, 255, 255);
-  color: rgb(22, 26, 29);
-}
-.dark .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
-  background-color: rgb(22, 26, 29);
-  color: rgb(224, 224, 224);
+.dark .bye-stroke > div > svg > g > g > text > tspan {
+  fill: rgba(224, 224, 224);
 }
 
-td.css-1yhpg23-MuiTableCell-root {
-  color: rgb(22, 26, 29);
-  font-size: 1.2rem;
-  padding: 10px 0;
-  font-family: "Nunito", sans-serif;
+/* MUI-TABLE OVERRIDE */
+
+div[role="combobox"] {
+  padding-right: 16.5px !important;
 }
-tr.css-1q1u3t4-MuiTableRow-root:nth-child(even) {
-  background-color: rgb(236, 242, 243);
+svg[data-testid="ArrowDropDownIcon"] {
+  color: rgba(22, 26, 29) !important;
 }
-tr.css-1q1u3t4-MuiTableRow-root:nth-child(odd) {
-  background-color: rgb(227, 235, 237);
-}
-th.css-dwuj3p-MuiTableCell-root {
-  background-color: rgb(212, 223, 225);
-  color: rgb(22, 26, 29);
-  font-size: 1.2rem;
-  font-weight: 700;
-  padding: 1rem 1.5rem;
-  font-family: "Nunito", sans-serif;
-  top: -2px;
-}
-tr.css-1q1u3t4-MuiTableRow-root.MuiTableRow-hover:hover {
-  background-color: rgb(212, 223, 225);
-}
-div.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-  color: rgb(224, 224, 224);
-  font-weight: 700;
-}
-span.css-eglki6-MuiLinearProgress-root {
-  background-color: rgb(224, 224, 224);
-}
-span.css-5ir5xx-MuiLinearProgress-bar1 {
-  background-color: rgb(22, 26, 29);
-}
-span.css-1r8wrcl-MuiLinearProgress-bar2 {
-  background-color: rgb(22, 26, 29);
+.dark svg[data-testid="ArrowDropDownIcon"] {
+  color: rgba(224, 224, 224) !important;
 }
 
-.dark span.css-5ir5xx-MuiLinearProgress-bar1 {
-  background-color: rgb(224, 224, 224);
+svg[data-testid="KeyboardArrowLeftIcon"] {
+  color: rgba(22, 26, 29) !important;
 }
-.dark span.css-1r8wrcl-MuiLinearProgress-bar2 {
-  background-color: rgb(224, 224, 224);
+.dark svg[data-testid="KeyboardArrowLeftIcon"] {
+  color: rgba(224, 224, 224) !important;
 }
-.dark span.css-eglki6-MuiLinearProgress-root {
-  background-color: rgb(22, 26, 29);
+svg[data-testid="KeyboardArrowRightIcon"] {
+  color: rgba(22, 26, 29) !important;
 }
-
-.dark th.css-dwuj3p-MuiTableCell-root {
-  background-color: rgb(22, 26, 29);
-  color: rgb(224, 224, 224);
-  border-bottom: 1px solid rgb(88, 105, 116);
-}
-.dark tr.css-1q1u3t4-MuiTableRow-root:nth-child(even) {
-  background-color: rgb(39, 47, 52);
-}
-.dark tr.css-1q1u3t4-MuiTableRow-root:nth-child(odd) {
-  background-color: rgb(33, 39, 44);
-}
-.dark td.css-1yhpg23-MuiTableCell-root {
-  color: rgb(224, 224, 224);
-  border: 0;
-}
-.dark tr.css-1q1u3t4-MuiTableRow-root.MuiTableRow-hover:hover {
-  background-color: rgb(22, 26, 29);
+.dark svg[data-testid="KeyboardArrowRightIcon"] {
+  color: rgba(224, 224, 224) !important;
 }
 
-.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-  color: rgb(22, 26, 29);
+.culoareText > div > div[role="combobox"] {
+  color: rgba(22, 26, 29) !important;
 }
-.dark
-  .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-  color: rgb(224, 224, 224);
-}
-.css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
-  color: rgb(22, 26, 29);
-}
-.dark .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
-  color: rgb(224, 224, 224);
-}
-
-/* OVERRIDES */
-
-.dark\:text-white:where(.dark, .dark *) {
-  color: rgb(224, 224, 224) !important;
-}
-.dark\:bg-slate-800:where(.dark, .dark *) {
-  background-color: rgb(22, 26, 29) !important;
-}
-.dark\:border-slate-600:where(.dark, .dark *) {
-  border-color: rgb(39, 47, 52) !important;
-}
-div.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-  padding: 1.2rem 1rem;
-}
-fieldset.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
-  border-color: transparent;
-}
-fieldset.css-1d3z3hw-MuiOutlinedInput-notchedOutline:hover {
-  border-color: transparent;
-}
-fieldset.css-1d3z3hw-MuiOutlinedInput-notchedOutline.Mui-focused {
-  border-color: transparent;
-}
-fieldset.css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root.Mui-focused
-  .MuiOutlinedInput-notchedOutline {
-  border-color: transparent;
-}
-div.css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root
-  > fieldset.MuiOutlinedInput-notchedOutline.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
-  border-color: rgba(224, 224, 224, 0.05);
-}
-
-.dashboard-select
-  div.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-  color: rgb(22, 26, 29);
-}
-.dark
-  .dashboard-select
-  div.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-  color: rgb(224, 224, 224);
-}
-.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled {
-  -webkit-text-fill-color: unset !important;
-}
-.datepicker > div > button {
-  bottom: 3px;
-}
-g.css-1u0lry5-MuiChartsLegend-root tspan {
-  font-size: 1rem;
-  font-weight: 600;
-  fill: rgb(22, 26, 29);
-}
-.dark g.css-1u0lry5-MuiChartsLegend-root tspan {
-  fill: rgb(224, 224, 224);
-}
-path.css-1mhcdve-MuiPieArc-root {
-  stroke: none;
-}
-circle.MuiCircularProgress-track {
-  stroke: rgb(22, 26, 29, 0.4);
-}
-circle.MuiCircularProgress-progress {
-  stroke: rgb(224, 224, 224);
+.dark .culoareText > div > div[role="combobox"] {
+  color: rgba(224, 224, 224) !important;
 }

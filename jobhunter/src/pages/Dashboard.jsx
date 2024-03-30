@@ -1,7 +1,6 @@
 import Layout from "./../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo, useState } from "react";
-import { PieChart } from "@mui/x-charts/PieChart";
+import { useEffect, useState } from "react";
 import DateChart from "../components/functional/DateChart";
 import Placeholder from "../components/dashboard/Placeholder";
 import Loading from "../components/dashboard/Loading";
@@ -14,11 +13,11 @@ import {
   getJobsSuccess,
 } from "../features/jobs/jobsSlice";
 import GoalTracker from "../components/dashboard/GoalTracker";
+import CustomPieChart from "../components/dashboard/CustomPieChart";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [isData, setIsData] = useState(false);
-  const [paddingAngle, setPaddingAngle] = useState(false);
 
   const dispatch = useDispatch();
   const jobs = useSelector((state) => state.jobs.jobs);
@@ -111,67 +110,6 @@ const Dashboard = () => {
     setLoading(false);
   }, [jobs]);
 
-  const appliedJobs = jobs.filter((job) => job.status === "Applied").length;
-  const interviewingJobs = jobs.filter(
-    (job) => job.status === "Interviewing"
-  ).length;
-  const offerJobs = jobs.filter(
-    (job) => job.status === "Offer Received"
-  ).length;
-  const deniedJobs = jobs.filter((job) => job.status === "Rejected").length;
-  const noResponse = jobs.filter((job) => job.status === "No response").length;
-
-  const combinedData = useMemo(
-    () => [
-      {
-        id: "Applied",
-        label: "Applied",
-        value: appliedJobs,
-        color: "#4F46E5",
-      },
-      {
-        id: "Interviewing",
-        label: "Interviewing",
-        value: interviewingJobs,
-        color: "#CA8A04",
-      },
-      {
-        id: "Offer Received",
-        label: "Offer Received",
-        value: offerJobs,
-        color: "#16A34A",
-      },
-      {
-        id: "Rejected",
-        label: "Rejected",
-        value: deniedJobs,
-        color: "#64748b",
-      },
-      {
-        id: "No response",
-        label: "No response",
-        value: noResponse,
-        color: "#EF4444",
-      },
-    ],
-    [appliedJobs, interviewingJobs, offerJobs, deniedJobs, noResponse]
-  );
-
-  useEffect(() => {
-    let totalValues = 0;
-    combinedData.map((data) => {
-      if (data.value > 0) {
-        totalValues += 1;
-      }
-    });
-
-    if (totalValues > 1) {
-      setPaddingAngle(true);
-    } else {
-      setPaddingAngle(false);
-    }
-  }, [combinedData]);
-
   return (
     <>
       <Layout>
@@ -247,7 +185,9 @@ const Dashboard = () => {
                     <h3 className="text-2xl text-secondary dark:text-secondaryDark font-medium ml-2 mt-4">
                       Job Status
                     </h3>
-                    <PieChart
+                    <CustomPieChart
+                    />
+                    {/* <PieChart
                       series={[
                         {
                           data: combinedData,
@@ -269,7 +209,7 @@ const Dashboard = () => {
                       height={300}
                       innerRadius={10}
                       outerRadius={80}
-                    />
+                    /> */}
                   </div>
                 </div>
                 <div className="w-full h-full pt-2 centred flex-col gap-2">
