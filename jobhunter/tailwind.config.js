@@ -44,6 +44,10 @@ export default {
           dark: "#A21517",
         },
       },
+      screens: {
+        xsm: "320px",
+        lg: "1440px",
+      },
     },
   },
   plugins: [],

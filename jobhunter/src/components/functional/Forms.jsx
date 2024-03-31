@@ -48,11 +48,14 @@ const RegisterForm = () => {
 
   return (
     <>
-      <form className="centred flex-col w-1/2" onSubmit={submitForm}>
+      <form
+        className="centred flex-col xsm:w-4/5 lg:w-1/2 lg:text-xl"
+        onSubmit={submitForm}
+      >
         <input
           type="text"
           placeholder="Username"
-          className="text-xl bg-transparent border border-primary-dark/75 text-primary-light w-full mb-4 py-4 rounded-lg px-6 focus:outline-none focus:border-white"
+          className=" bg-transparent border border-primary-dark/75 text-primary-light w-full mb-4 py-4 rounded-lg px-6 focus:outline-none focus:border-white"
           onChange={handleChange}
           value={username}
           name="username"
@@ -62,7 +65,7 @@ const RegisterForm = () => {
         <input
           type="email"
           placeholder="Email Address"
-          className="text-xl bg-transparent border border-primary-dark/75 text-primary-light w-full mb-4 py-4 rounded-lg px-6 focus:outline-none focus:border-white"
+          className=" bg-transparent border border-primary-dark/75 text-primary-light w-full mb-4 py-4 rounded-lg px-6 focus:outline-none focus:border-white"
           value={email}
           onChange={handleChange}
           name="email"
@@ -72,7 +75,7 @@ const RegisterForm = () => {
         <input
           type="password"
           placeholder="Password"
-          className="text-xl bg-transparent border border-primary-dark/75 text-primary-light w-full mb-4 py-4 rounded-lg px-6 focus:outline-none focus:border-white"
+          className=" bg-transparent border border-primary-dark/75 text-primary-light w-full mb-4 py-4 rounded-lg px-6 focus:outline-none focus:border-white"
           value={password}
           onChange={handleChange}
           name="password"
@@ -81,7 +84,7 @@ const RegisterForm = () => {
         <input
           type="password"
           placeholder="Confirm Password"
-          className="text-xl bg-transparent border border-primary-dark/75 text-primary-light w-full mb-4 py-4 rounded-lg px-6 focus:outline-none focus:border-white"
+          className=" bg-transparent border border-primary-dark/75 text-primary-light w-full mb-4 py-4 rounded-lg px-6 focus:outline-none focus:border-white"
           value={confirmPassword}
           onChange={handleChange}
           name="confirmPassword"
@@ -89,7 +92,7 @@ const RegisterForm = () => {
         />
         <button
           type="submit"
-          className="px-16 py-2 bg-accentDark text-white text-2xl font-semibold rounded-lg hover:bg-accentDark-dark m-4"
+          className="px-16 py-2 bg-accentDark text-white xsm:text-lg lg:text-2xl font-semibold rounded-lg hover:bg-accentDark-dark m-4"
         >
           Sign up
         </button>
@@ -130,11 +133,14 @@ const LoginForm = () => {
 
   return (
     <>
-      <form className="centred flex-col w-1/2" onSubmit={submitForm}>
+      <form
+        className="centred flex-col xsm:w-4/5 lg:w-1/2 lg:text-xl"
+        onSubmit={submitForm}
+      >
         <input
           type="email"
           placeholder="Email Address"
-          className="text-xl bg-transparent border border-primary-dark/75 text-primary-light w-full mb-4 py-4 rounded-lg px-6 focus:outline-none focus:border-white"
+          className=" bg-transparent border border-primary-dark/75 text-primary-light w-full mb-4 py-4 rounded-lg px-6 focus:outline-none focus:border-white"
           value={email}
           onChange={handleChange}
           name="email"
@@ -144,7 +150,7 @@ const LoginForm = () => {
         <input
           type="password"
           placeholder="Password"
-          className="text-xl bg-transparent border border-primary-dark/75 text-primary-light w-full mb-4 py-4 rounded-lg px-6 focus:outline-none focus:border-white"
+          className=" bg-transparent border border-primary-dark/75 text-primary-light w-full mb-4 py-4 rounded-lg px-6 focus:outline-none focus:border-white"
           value={password}
           onChange={handleChange}
           name="password"
@@ -152,7 +158,7 @@ const LoginForm = () => {
         />{" "}
         <button
           type="submit"
-          className="px-16 py-2 bg-accentDark text-white text-2xl font-semibold rounded-lg hover:bg-accentDark-dark m-4 centred"
+          className="px-16 py-2 bg-accentDark text-white xsm:text-lg lg:text-2xl font-semibold rounded-lg hover:bg-accentDark-dark m-4 centred"
         >
           {isLoading ? (
             <CircularProgress size="sm" variant="soft" color="neutral" />

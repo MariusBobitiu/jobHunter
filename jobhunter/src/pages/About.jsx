@@ -21,9 +21,9 @@ const About = () => {
   return (
     <>
       <Layout>
-        <div className="size-full flex-col gap-4 p-4 centred bg-primary text-secondary dark:bg-primaryDark dark:text-secondaryDark relative">
+        <div className="w-full h-screen flex flex-col gap-4 bg-primary text-secondary dark:bg-primaryDark dark:text-secondaryDark relative xsm:mt-28 sm:mt-32 lg:mt-0">
           <div className="bg-primary-dark dark:bg-primaryDark-light py-8 rounded-lg w-full">
-            <div className="flex justify-evenly items-center w-full gap-4">
+            <div className="flex justify-evenly items-center w-full h-full gap-4">
               <button
                 className="text-xl text-secondary dark:text-secondaryDark font-bold hover:text-secondary-dark dark:hover:text-secondaryDark-dark"
                 onClick={openAboutPage}
@@ -38,21 +38,9 @@ const About = () => {
               </button>
             </div>
           </div>
-          <small className="absolute bottom-2 right-4 z-50">
-            <p className="text-secondary text-center dark:text-secondaryDark-dark">
-              &copy; Made with 💖 by
-              <a
-                href="http://www.linkedin.com/in/marius-bobitiu"
-                className="text-accent font-bold dark:text-accentDark"
-              >
-                {" "}
-                Marius Bobitiu.
-              </a>{" "}
-              All rights reserved.
-            </p>
-          </small>
+
           {aboutPage && (
-            <div className="size-full relative bg-primary-dark dark:bg-primaryDark-light p-4 rounded-lg text-secondary dark:text-secondaryDark overflow-y-auto">
+            <div className="w-full relative bg-primary-dark dark:bg-primaryDark-light p-4 rounded-lg text-secondary dark:text-secondaryDark overflow-y-auto xsm:mb-4 lg:mb-0">
               <div className="absolute top-2 right-2">
                 <div className="bg-primary/60 dark:bg-primaryDark/50 py-2 px-4 rounded-xl font-black tracking-widest z-50">
                   v.1.0.0
@@ -265,7 +253,7 @@ const About = () => {
             </div>
           )}
           {helpPage && (
-            <div className="size-full text-secondary dark:text-secondaryDark bg-primary dark:bg-primaryDark-light p-4 rounded-lg flex flex-col gap-2">
+            <div className="w-full text-secondary dark:text-secondaryDark bg-primary dark:bg-primaryDark-light p-4 rounded-lg flex flex-col gap-2 xsm:mb-4 lg:mb-0">
               <h1 className="text-2xl text-secondary dark:text-secondaryDark font-bold mb-4">
                 Help & Support
               </h1>

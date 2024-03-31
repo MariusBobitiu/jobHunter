@@ -1,8 +1,8 @@
 import Layout from "../components/Layout";
-import Logo from "../assets/images/jobHunterLogo.png";
+// import Logo from "../assets/images/jobHunterLogo.png";
 import { useDispatch, useSelector } from "react-redux";
 import CheckIcon from "@mui/icons-material/Check";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import ThemeSwitcher from "../components/functional/ThemeSwitcher";
 import PasswordIcon from "@mui/icons-material/Password";
@@ -18,6 +18,17 @@ const Profile = () => {
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user.id) {
+      console.log("User not logged in. Redirecting to login page...");
+      navigate("/login");
+    }
+    document.title = `Profile | ${user.username}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  const phone = window.innerWidth < 520;
 
   const [isEditable, setIsEditable] = useState(false);
   const [username, setUsername] = useState(user.username);
@@ -149,60 +160,67 @@ const Profile = () => {
   return (
     <>
       <Layout>
-        <div className="flex flex-col h-screen text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark">
-          <div className="py-4 ml-4 pl-2 border-b-2 border-secondary/50 mb-4 dark:border-secondaryDark/50 flex justify-between items-center">
-            <h1 className="text-3xl font-bold">Profile</h1>
+        <div className="flex flex-col h-screen text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark xsm:overflow-auto lg:overflow-hidden">
+          <div className="xsm:mt-20 sm:mt-32 lg:mt-0 py-4 ml-4 pl-2 border-b-2 border-secondary/50 lg:mb-4 dark:border-secondaryDark/50 flex justify-between items-center ">
+            <h1 className="xsm:text-lg sm:text-xl lg:text-3xl font-bold">
+              Profile
+            </h1>
             <button
               className="text-accent text-xl font-bold mr-4 dark:text-accentDark"
               onClick={editProfile}
             >
               {isEditable ? (
-                <CheckIcon fontSize="large" />
+                <CheckIcon fontSize={phone ? "medium" : "large"} />
               ) : (
-                <EditIcon fontSize="large" />
+                <EditIcon fontSize={phone ? "medium" : "large"} />
               )}
             </button>
           </div>
-          <div className="flex gap-6 items-center p-4 m-6">
-            <div className="w-28 bg-primary rounded-full flex relative">
-              <img
-                src={Logo}
-                alt="profile"
-                className="w-full h-full object-cover rounded-full"
-              />
-              {/* TODO: Implement profile picture upload */}
-              {/* <label
-                htmlFor="profilePic"
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-28 h-28 rounded-full centred"
-              >
-                <input
-                  type="file"
-                  id="profilePic"
-                  className="hidden"
-                  accept="image/*"
-                  onInput={(e) => {
-                    localStorage.setItem(
-                      "profilePic",
-                      URL.createObjectURL(e.target.files[0])
-                    );
-                  }}
-                  disabled={isEditable ? false : true}
+          <div className="flex gap-6 items-center p-4 xsm:m-0 lg:m-6">
+            <>
+              {/*
+              TODO: Implement profile picture upload
+              <div className="w-28 bg-primary rounded-full flex relative">
+                <img
+                  src={Logo}
+                  alt="profile"
+                  className="w-full h-full object-cover rounded-full"
                 />
-                {isEditable && (
-                  <div className="size-1/3 rounded-full centred bg-secondary-light dark:bg-secondaryDark p-4 absolute right-0 bottom-0">
-                    <EditIcon className="text-primary dark:text-primaryDark" />
-                  </div>
-                )} 
-              </label>
-              */}
-            </div>
-            <div className="flex flex-col w-full h-full bg-tertiary p-4 rounded-lg text-xl text-secondary relative">
+                <label
+                  htmlFor="profilePic"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-28 h-28 rounded-full centred"
+                >
+                  <input
+                    type="file"
+                    id="profilePic"
+                    className="hidden"
+                    accept="image/*"
+                    onInput={(e) => {
+                      localStorage.setItem(
+                        "profilePic",
+                        URL.createObjectURL(e.target.files[0])
+                      );
+                    }}
+                    disabled={isEditable ? false : true}
+                  />
+                  {isEditable && (
+                    <div className="size-1/3 rounded-full centred bg-secondary-light dark:bg-secondaryDark p-4 absolute right-0 bottom-0">
+                      <EditIcon className="text-primary dark:text-primaryDark" />
+                    </div>
+                  )} 
+                </label>
+              
+            </div>*/}
+            </>
+            <div className="flex flex-col w-full h-full bg-tertiary rounded-lg text-xl text-secondary relative">
               <label htmlFor="name" className="w-full mb-2">
-                <p className="mt-2 dark:text-secondaryDark">Your Username</p>
+                <p className="xsm:text-sm sm:text-xl mt-2 dark:text-secondaryDark">
+                  Your Username
+                </p>
               </label>
               <input
                 type="text"
-                className="w-full bg-transparent border-b-2 border-secondary/50 text-secondary p-2 focus:outline-none focus:border-secondary dark:border-secondaryDark/50 dark:text-secondaryDark-light"
+                className="w-full bg-transparent border-b-2 border-secondary/50 text-secondary xsm:p-1 lg:p-2 focus:outline-none focus:border-secondary dark:border-secondaryDark/50 dark:text-secondaryDark-light"
                 value={username}
                 id="name"
                 onChange={(e) => setUsername(e.target.value)}
@@ -210,28 +228,30 @@ const Profile = () => {
               />
             </div>
           </div>
-          <h1 className="text-3xl font-bold py-4 ml-4 pl-2 border-b-2 border-secondary/50 mb-4 dark:border-secondaryDark/50">
+          <h1 className="xsm:text-lg sm:text-xl lg:text-3xl font-bold py-4 ml-4 pl-2 border-b-2 border-secondary/50 mb-4 dark:border-secondaryDark/50">
             Account
           </h1>
-          <div className="flex flex-col gap-4 p-4 m-6">
+          <div className="flex flex-col gap-4 p-4 xsm:m-0 lg:m-6">
             <div className="flex flex-col gap-2">
               <label htmlFor="email">
-                <p className="text-secondary dark:text-secondaryDark">Email</p>
+                <p className="xsm:text-sm sm:text-xl text-secondary dark:text-secondaryDark">
+                  Email
+                </p>
               </label>
               <input
                 type="email"
                 id="email"
-                className="w-full bg-transparent border-b-2 border-secondary/50 text-secondary p-2 focus:outline-none focus:border-secondary dark:border-secondaryDark/25 dark:text-secondaryDark-light"
+                className="w-full bg-transparent border-b-2 border-secondary/50 text-secondary xsm:p-1 sm:p-2 focus:outline-none focus:border-secondary dark:border-secondaryDark/25 dark:text-secondaryDark-light"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isEditable ? false : true}
               />
             </div>
           </div>
-          <h1 className="text-3xl font-bold py-4 ml-4 pl-2 border-b-2 border-secondary/50 mb-4 dark:border-secondaryDark/50">
+          <h1 className="xsm:text-lg sm:text-xl lg:text-3xl font-bold py-4 ml-4 pl-2 border-b-2 border-secondary/50 mb-4 dark:border-secondaryDark/50">
             Security
           </h1>
-          <div className="flex flex-col gap-4 p-4 m-6">
+          <div className="flex flex-col gap-4 p-4 xsm:m-0 lg:m-6">
             <div className="flex justify-between items-center">
               <p className="text-secondary dark:text-secondaryDark">
                 Change Password
@@ -317,8 +337,9 @@ const Profile = () => {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              {/* TODO: Implement 2FA */}
-              {/* <div className="w-full flex justify-between items-center">
+              <>
+                {/* TODO: Implement 2FA */}
+                {/* <div className="w-full flex justify-between items-center">
                 <p className="text-secondary dark:text-secondaryDark">
                   Two Factor Authentication
                 </p>
@@ -351,6 +372,7 @@ const Profile = () => {
                   </div>
                 </label>
               </div> */}
+              </>
               <button
                 className="text-accent w-fit text-xl py-2 my-2 dark:text-accentDark font-bold"
                 onClick={() => setDeleteAccount(true)}
@@ -407,7 +429,8 @@ const Profile = () => {
                   </div>
                 </div>
               )}
-              {/* {twoFactorAuthPopUp && (
+              <>
+                {/* {twoFactorAuthPopUp && (
                 <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
                   <div className="bg-primary w-3/5 p-10 rounded-lg flex flex-col justify-center items-start gap-4 border-t-4 border-accent relative dark:bg-primaryDark-light dark:border-accentDark">
                     <span className="absolute top-2 right-4 text-4xl">
@@ -449,12 +472,13 @@ const Profile = () => {
                   </div>
                 </div>
               )} */}
+              </>
             </div>
           </div>
-          <h1 className="text-3xl font-bold py-4 ml-4 pl-2 border-b-2 border-secondary/50 mb-4 dark:border-secondaryDark/50">
+          <h1 className="xsm:text-lg sm:text-xl lg:text-3xl font-bold py-4 ml-4 pl-2 border-b-2 border-secondary/50 mb-4 dark:border-secondaryDark/50">
             Preferences
           </h1>
-          <div className="flex flex-col gap-4 p-4 m-6">
+          <div className="flex flex-col gap-4 p-4 xsm:m-0 lg:m-6">
             <div className="flex flex-col gap-2">
               <div className="w-full flex justify-between items-center">
                 <p className="text-secondary dark:text-secondaryDark">

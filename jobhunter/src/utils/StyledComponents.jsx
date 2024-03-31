@@ -80,40 +80,49 @@ const StyledTableCell = styled(TableCell)(
       color: isDarkMode ? theme.palette.text.dark : theme.palette.text.light,
       fontSize: 14,
       border: "none",
+      textOverflow: "ellipsis",
     },
   })
 );
 
-const StyledSelect = styled(Select)(({ isDarkMode, theme }) => ({
-  "& .MuiSelect-select": {
-    color: isDarkMode ? theme.palette.text.dark : theme.palette.text.light,
-    borderBottom: isDarkMode ? "1px solid #3C4A53" : "1px solid #AAC0C5",
-    fontSize: 18,
-    padding: "5px 10px 0 5px",
-    "& :focus": {
-      backgroundColor: "transparent",
+const StyledSelect = styled(Select)(
+  ({ isEdit, isTable, isDarkMode, theme }) => ({
+    "& .MuiSelect-select": {
+      color: isDarkMode ? theme.palette.text.dark : theme.palette.text.light,
+      borderBottom: isTable
+        ? "none"
+        : isDarkMode
+        ? "1px solid #3C4A53"
+        : "1px solid #AAC0C5",
+      fontSize: 14,
+      padding: isTable
+        ? "5px 0 5px 16.5px"
+        : isEdit
+        ? "11.25px 15px"
+        : "5px 10px 0 5px",
+      "& :focus": {
+        backgroundColor: "transparent",
+        borderBottom: isDarkMode ? "1px solid #3C4A53" : "1px solid #AAC0C5",
+      },
+      "& :hover": {
+        backgroundColor: "transparent",
+        borderBottom: isDarkMode ? "1px solid red" : "1px solid #AAC0C5",
+      },
+    },
+    "& .Mui-disabled": {
+      color: isDarkMode ? theme.palette.text.dark : theme.palette.text.light,
+      opacity: 0.7,
       borderBottom: isDarkMode ? "1px solid #3C4A53" : "1px solid #AAC0C5",
     },
-    "& :hover": {
-      backgroundColor: "transparent",
-      borderBottom: isDarkMode ? "1px solid red" : "1px solid #AAC0C5",
-    },
-  },
-  "& .Mui-disabled": {
-    color: isDarkMode ? theme.palette.text.dark : theme.palette.text.light,
-    opacity: 0.7,
-    borderBottom: isDarkMode ? "1px solid #3C4A53" : "1px solid #AAC0C5",
-  },
-}));
+  })
+);
 
 const StyledMenuItem = styled(MenuItem)(({ isDarkMode, theme }) => ({
   "&.MuiPaper-root": {
     color: isDarkMode ? theme.palette.text.dark : theme.palette.text.light,
   },
   "&.Mui-selected": {
-    backgroundColor: isDarkMode
-      ? theme.palette.primary.dark
-      : theme.palette.primary.main,
+    backgroundColor: isDarkMode ? "" : theme.palette.secondary.main,
     color: isDarkMode ? theme.palette.text.dark : theme.palette.text.light,
   },
   "&.Mui-selected:hover": {

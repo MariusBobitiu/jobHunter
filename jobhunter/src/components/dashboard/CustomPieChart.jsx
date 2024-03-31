@@ -5,7 +5,8 @@ import { useEffect, useMemo, useState } from "react";
 
 const CustomPieChart = () => {
   const jobs = useSelector((state) => state.jobs.jobs);
-
+  const phone = window.innerWidth < 520;
+  
   const [paddingAngle, setPaddingAngle] = useState(false);
 
   const appliedJobs = jobs.filter((job) => job.status === "Applied").length;
@@ -92,7 +93,10 @@ const CustomPieChart = () => {
             },
           ]}
           margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-          height={300}
+          height={200}
+          slotProps={{
+            legend: { hidden: phone ? true : false },
+          }}
           innerRadius={10}
           outerRadius={80}
           stroke={{ color: "transparent" }}

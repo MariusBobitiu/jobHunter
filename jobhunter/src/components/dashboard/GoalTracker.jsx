@@ -107,13 +107,14 @@ const GoalTracker = () => {
   }, [timeFrame]);
 
   return (
-    <div className="size-full bg-primary-dark dark:bg-primaryDark-light rounded-lg p-4 text-secondary dark:text-secondaryDark">
-      <div className="w-full flex justify-between items-center py-2">
-        <h2 className="text-2xl font-semibold dark:text-white">Goal Tracker</h2>
+    <div className="size-full lg:min-h-[340px] md:min-h-full bg-primary-dark dark:bg-primaryDark-light rounded-lg p-4 text-secondary dark:text-secondaryDark">
+      <div className="w-full flex justify-between items-center py-1 mb-2">
+        <h2 className="xsm:text-md xsm:mb-4 xsm:-mt-6 sm:mt-0 sm:mb-0 sm:text-2xl font-semibold dark:text-white">
+          Goal Tracker
+        </h2>
         <label className="flex gap-4 items-center text-lg webkitBye">
-          {/* Interval:{" "} */}
           <ThemeProvider theme={theme}>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+            <FormControl variant="standard" sx={{ minWidth: 150 }}>
               <StyledInputLabel isDarkMode={darkMode} id="time-frame">
                 Interval:
               </StyledInputLabel>
@@ -168,7 +169,7 @@ const GoalTracker = () => {
       </div>
       {goalAchieved ? (
         <div className="w-full flex-col centred text-center mt-2 bg-primary/40 dark:bg-primaryDark/25 p-4 rounded-lg">
-          <h3 className="text-4xl font-bold py-2 text-accent dark:text-accentDark">
+          <h3 className="text-4xl font-bold text-accent dark:text-accentDark">
             Goal Achieved!
           </h3>
           <p>
@@ -180,26 +181,28 @@ const GoalTracker = () => {
               ? "this week"
               : "this month"}
           </p>
-          <p>
+          <p className="text-sm">
             You have{" "}
             <span className="text-amber-600 dark:text-amber-500">
               {endOfTimeFrame}
             </span>{" "}
             before you can hit the ground running again!
           </p>
-          <p>
+          <p className="text-sm">
             This shouldn&apos;t stop you from applying to more jobs if you can,
             but a little break never hurt anyone!
           </p>
-          <p className="text-sm italic opacity-80">
+          <p className="text-xs italic opacity-80">
             You can change your goal and interval at any time by clicking the
             edit button above.
           </p>
         </div>
       ) : (
-        <div className="flex justify-between py-4 h-1/2 gap-4">
+        <div className="flex xsm:flex-wrap md:flex-nowrap justify-between py-4 h-1/2 gap-4">
           <div className="flex-1 flex-col centred p-4 bg-primary-light/40 dark:bg-primaryDark/25 rounded-lg">
-            <h3 className="text-lg dark:text-white">Completed: </h3>
+            <h3 className="xsm:text-xs lg:text-lg dark:text-white">
+              Completed:{" "}
+            </h3>
             <h3 className="text-4xl font-bold py-2 dark:text-white">
               {currentValue}
             </h3>

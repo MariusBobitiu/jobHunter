@@ -3,11 +3,13 @@ import PropTypes from "prop-types";
 
 export default function Layout({ children }) {
   return (
-    <main className="w-screen h-screen overflow-hidden bg-primary grid grid-cols-12">
-      <div className="col-span-2 bg-tertiary">
+    <main className="w-full overflow-hidden bg-primary dark:bg-primaryDark xsm:flex xsm:flex-col lg:grid lg:grid-cols-12">
+      <div className="xsm:fixed xsm:top-0 xsm:left-0 xsm:z-20 xsm:w-full lg:relative lg:col-span-2 bg-tertiary">
         <Sidebar />
       </div>
-      <div className="col-span-10 bg-primary">{children}</div>
+      <div className="lg:col-span-10 h-full bg-primary dark:bg-primaryDark">
+        {children}
+      </div>
     </main>
   );
 }

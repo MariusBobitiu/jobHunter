@@ -8,21 +8,24 @@ const Home = () => {
         style={{ backgroundImage: `url(${heroImage})` }}
       >
         <div className="z-10 flex-col centred">
-          <h1 className="text-6xl font-bold mb-4 text-primary">
+          <h1 className="xsm:text-2xl sm:text-4xl lg:text-6xl font-bold mb-4 text-primary">
             Welcome to JobHunter!
           </h1>
-          <p className="text-2xl mb-8 text-primary-dark">
+          <p className="xsm:text-lg lg:text-2xl mb-8 text-primary-dark">
             Track your job applications and stay organized.
           </p>
           <a
             href="/register"
-            className="px-12 py-4 bg-accentDark text-2xl font-semibold text-white rounded-lg hover:bg-accentHover"
+            className="px-12 py-4 bg-accentDark xsm:text-lg lg:text-2xl font-semibold text-white rounded-lg hover:bg-accentHover"
           >
             Get Started
           </a>
-          <p className="text-md mt-2 text-primary-dark">
+          <p className="xsm:text-sm lg:text-lg mt-2 text-primary-dark">
             Or you can just{" "}
-            <a href="/login" className="text-accentDark text-lg font-bold">
+            <a
+              href="/login"
+              className="text-accentDark xsm:text-md lg:text-lg font-bold"
+            >
               Login
             </a>
           </p>

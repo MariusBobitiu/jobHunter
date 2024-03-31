@@ -48,32 +48,35 @@ const ForgotPassword = () => {
   return (
     <main className="flex h-screen centred backgroundImage">
       {emailPage && (
-        <div className="flex-col centred w-1/3 p-6 bg-primaryDark/50 rounded-[2rem]">
-          <div className="size-24 rounded-full bg-primaryDark-ligh p-2 m-4">
+        <div className="flex-col centred xsm:w-full xsm:h-full sm:h-fit sm:w-3/5 lg:w-1/3 p-6 bg-primaryDark/50 rounded-[2rem]">
+          <div className="size-24 centred rounded-full bg-primaryDark-light p-2 m-4">
             <img
               src={forgotPasswordImg}
               alt="Email sent"
-              className="bg-cover size-full"
+              className="bg-cover size-4/5"
             />
           </div>
-          <h2 className="text-4xl text-accentDark-light">
+          <h2 className="xsm:text-2xl sm:text-3xl lg:text-4xl text-accentDark-light">
             Forgot your password?
           </h2>
-          <p className="text-secondaryDark">
+          <p className="xsm:text-sm sm:text-md lg:text-lg text-secondaryDark">
             Your password will be reset by email.
           </p>
 
           <form
             onSubmit={emailSubmit}
-            className="centred flex-col w-2/3 p-4 my-4 text-secondaryDark text-lg "
+            className="centred flex-col xsm:w-full sm:w-2/3 p-4 my-4 text-secondaryDark text-lg "
           >
-            <label htmlFor="email" className="w-full text-start text-xl">
+            <label
+              htmlFor="email"
+              className="w-full text-start xsm:text-lg sm:text-xl"
+            >
               Enter your email address:
             </label>
             <input
               type="email"
               id="email"
-              className="p-2 border border-secondaryDark/25 rounded-lg focus:outline-none focus:border-primary transition-all duration-150 bg-transparent w-full text-secondaryDark text-lg mb-8"
+              className="p-2 mt-1 border border-secondaryDark/25 rounded-lg focus:outline-none focus:border-primary transition-all duration-150 bg-transparent w-full text-secondaryDark text-lg mb-8"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -94,12 +97,12 @@ const ForgotPassword = () => {
         </div>
       )}
       {checkEmail && (
-        <div className="flex-col centred w-1/2 p-10 bg-primaryDark/50 rounded-[2rem] gap-4">
-          <div className="size-24 rounded-full bg-primaryDark">
+        <div className="flex-col centred xsm:w-full xsm:h-full sm:h-fit sm:w-3/5 lg:w-1/2 p-10 bg-primaryDark/50 rounded-[2rem] gap-4">
+          <div className="size-24 rounded-full centred bg-primaryDark">
             <img
               src={newEmail}
               alt="Email sent"
-              className="bg-cover size-full"
+              className="bg-cover size-3/4"
             />
           </div>
           <h2 className="text-4xl text-secondaryDark mb-4">Check your email</h2>

@@ -87,7 +87,7 @@ const ResetPassword = () => {
       <div>
         {isValidToken ? (
           <div className="w-screen h-screen flex justify-center items-center backgroundImage">
-            <div className="w-2/5 bg-primaryDark/50 py-12 px-6 centred rounded-2xl gap-4">
+            <div className="xsm:w-full sm:w-3/5 lg:w-2/5 xsm:h-full sm:h-fit bg-primaryDark/50 py-12 px-6 xsm:flex-col sm:flex-row xsm:flex xsm:justify-start xsm:items-center sm:justify-center rounded-2xl gap-4">
               <div className="w-1/4 centred">
                 <img
                   src={passwordImg}
@@ -95,7 +95,7 @@ const ResetPassword = () => {
                   className="bg-cover size-3/4"
                 />
               </div>
-              <form className="flex-col size-full centred text-primary text-xl">
+              <form className="flex-col w-full centred text-primary text-xl">
                 <h2 className="text-4xl text-accentDark-light">
                   Reset your password
                 </h2>
@@ -143,7 +143,7 @@ const ResetPassword = () => {
         ) : (
           <>
             <div className="w-screen h-screen backgroundImage flex justify-center items-center">
-              <div className="w-2/5 bg-primaryDark/50 py-12 px-6 centred rounded-2xl gap-4">
+              <div className="xsm:w-full xsm:h-full sm:h-fit sm:w-3/5 lg:w-2/5 bg-primaryDark/50 py-12 px-6 xsm:flex-col sm:flex-row centred rounded-2xl gap-4">
                 <div className="w-1/4 centred">
                   <img
                     src={passwordImg}
@@ -151,7 +151,7 @@ const ResetPassword = () => {
                     className="bg-cover size-3/4"
                   />
                 </div>
-                <div className="flex-col size-full centred text-primary text-xl">
+                <div className="flex-col w-full centred text-primary text-xl">
                   <h2 className="text-4xl text-accentDark-light">
                     Link has expired
                   </h2>

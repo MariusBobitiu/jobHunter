@@ -5,12 +5,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
-import { Select, MenuItem, LinearProgress } from "@mui/material";
+import { LinearProgress } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
 import {
   Theme as theme,
   StyledTableCell,
   StyledTableRow,
+  StyledSelect,
+  StyledMenuItem,
 } from "../../utils/StyledComponents";
 
 // Hooks
@@ -296,21 +298,18 @@ const TableComponent = () => {
     <>
       <div className="w-full bg-tertiary p-4 m-2">
         <div className="centred mb-2">
-          <div className="w-1/3 flex justify-between items-center px-8">
-            <h2 className="text-2xl font-bold text-secondary dark:text-secondaryDark">
+          <div className="w-1/3 flex justify-between items-center xsm:px-2 sm:px-8">
+            <h2 className="xsm:text-sm sm:text-2xl font-bold text-secondary dark:text-secondaryDark">
               Total Jobs:
             </h2>
-            <p className="text-xl font-medium text-secondary-light dark:text-secondaryDark">
-              <span className="text-xl font-bold text-secondary dark:text-secondaryDark">
-                {rows.length}
-              </span>{" "}
-              jobs
+            <p className="xsm:text-lg sm:text-xl font-medium text-secondary-light dark:text-secondaryDark">
+              {rows.length}
             </p>
           </div>
-          <div className="w-2/3 flex justify-end items-center px-8">
+          <div className="w-2/3 flex justify-end items-center xsm:px-2 sm:px-8">
             <label
               htmlFor="search"
-              className="w-2/3 bg-primary-dark dark:bg-primaryDark-light relative p-3 rounded-lg dark:border-primaryDark dark:border-opacity-50 border-primary border-opacity-50 border-2"
+              className="xsm:w-full sm:w-2/3 bg-primary-dark dark:bg-primaryDark-light relative p-3 rounded-lg dark:border-primaryDark dark:border-opacity-50 border-primary border-opacity-50 border-2"
             >
               <input
                 type="text"
@@ -336,8 +335,9 @@ const TableComponent = () => {
           <ThemeProvider theme={theme}>
             <TableContainer
               sx={{
-                maxHeight: "60vh",
+                maxHeight: "55vh",
                 border: darkMode ? "1px solid #232A2F" : "1px solid #AAC0C5",
+                marginTop: "-3px",
               }}
             >
               <Table stickyHeader aria-label="sticky table">
@@ -439,12 +439,13 @@ const TableComponent = () => {
                             {row.position}
                           </StyledTableCell>
                           <StyledTableCell isDarkMode={darkMode} align="center">
-                            <Select
+                            <StyledSelect
+                              isDarkMode={darkMode}
+                              isTable
                               IconComponent={() => null}
                               displayEmpty
                               value={row.status}
                               onChange={(e) => updateStatus(row.id, e)}
-                              className="w-2/3 rounded-full"
                               style={{
                                 backgroundColor:
                                   row.status === "Interviewing"
@@ -461,34 +462,40 @@ const TableComponent = () => {
                               }}
                             >
                               {StatusOptions.map((option) => (
-                                <MenuItem key={option} value={option}>
+                                <StyledMenuItem
+                                  isDarkMode={darkMode}
+                                  key={option}
+                                  value={option}
+                                >
                                   {option}
-                                </MenuItem>
+                                </StyledMenuItem>
                               ))}
-                            </Select>
+                            </StyledSelect>
                           </StyledTableCell>
                           <StyledTableCell isDarkMode={darkMode} align="center">
                             {row.date.split("T")[0].split("-").join("/")}
                           </StyledTableCell>
                           <StyledTableCell isDarkMode={darkMode} align="center">
-                            <button
-                              className="bg-indigo-500 text-secondaryDark w-10 h-10 mr-2 rounded-full hover:bg-indigo-700"
-                              onClick={() => openJobDescription(row.id)}
-                            >
-                              <VisibilityIcon fontSize="small" />
-                            </button>
-                            <button
-                              className="bg-yellow-600 text-secondaryDark w-10 h-10 mr-2 rounded-full hover:bg-yellow-700"
-                              onClick={() => openEditJobPopup(row.id)}
-                            >
-                              <EditIcon fontSize="small" />
-                            </button>
-                            <button
-                              className="bg-accent text-secondaryDark w-10 h-10 mr-2 rounded-full hover:bg-accent-dark dark:bg-accentDark dark:hover:bg-accentDark-dark"
-                              onClick={handleDeleteJob(row.id)}
-                            >
-                              <CloseIcon fontSize="small" />
-                            </button>
+                            <div className="flex justify-center items-center">
+                              <button
+                                className="bg-indigo-500 text-secondaryDark xsm:w-8 xsm:h-8 lg:w-10 lg:h-10 mr-2 rounded-full hover:bg-indigo-700"
+                                onClick={() => openJobDescription(row.id)}
+                              >
+                                <VisibilityIcon fontSize="small" />
+                              </button>
+                              <button
+                                className="bg-yellow-600 text-secondaryDark xsm:w-8 xsm:h-8 lg:w-10 lg:h-10 mr-2 rounded-full hover:bg-yellow-700"
+                                onClick={() => openEditJobPopup(row.id)}
+                              >
+                                <EditIcon fontSize="small" />
+                              </button>
+                              <button
+                                className="bg-accent text-secondaryDark xsm:w-8 xsm:h-8 lg:w-10 lg:h-10 mr-2 rounded-full hover:bg-accent-dark dark:bg-accentDark dark:hover:bg-accentDark-dark"
+                                onClick={handleDeleteJob(row.id)}
+                              >
+                                <CloseIcon fontSize="small" />
+                              </button>
+                            </div>
                           </StyledTableCell>
                         </StyledTableRow>
                       );
@@ -514,8 +521,9 @@ const TableComponent = () => {
                 spacer: "text-secondary dark:text-secondaryDark",
                 actions: "text-secondary dark:text-secondaryDark",
                 input: "text-secondary dark:text-secondaryDark",
+                select: "text-secondary dark:text-secondaryDark",
               }}
-              rowsPerPageOptions={[10, 25]}
+              rowsPerPageOptions={[5, 10, 25]}
               component="div"
               count={rows.length}
               rowsPerPage={rowsPerPage}
@@ -526,9 +534,9 @@ const TableComponent = () => {
           </ThemeProvider>
         </Paper>
 
-        <div className="flex justify-center items-center py-2">
+        <div className="flex justify-center items-center py-2 xsm:mb-16 sm:mb-28 lg:mb-0">
           <button
-            className="bg-green-400 text-secondary rounded-lg py-4 w-1/3 dark:bg-green-600 dark:text-secondaryDark text-2xl font-bold hover:bg-green-500 dark:hover:bg-green-700 active:bg-green-700 dark:active:bg-green-800 mt-4"
+            className="bg-green-400 text-secondary rounded-lg py-4 xsm:w-full sm:w-1/2 lg:w-1/3 dark:bg-green-600 dark:text-secondaryDark xsm:text-lg sm:text-xl lg:text-2xl font-bold hover:bg-green-500 dark:hover:bg-green-700 active:bg-green-700 dark:active:bg-green-800 mt-4"
             onClick={() => setAddJobPopup(true)}
           >
             <span>
