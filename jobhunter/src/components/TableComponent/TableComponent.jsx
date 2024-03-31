@@ -1,15 +1,17 @@
 // MATERIAL UI COMPONENTS
 import Table from "@mui/material/Table";
-import { styled } from "@mui/material/styles";
 import TableBody from "@mui/material/TableBody";
-import TableRow from "@mui/material/TableRow";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
 import { Select, MenuItem, LinearProgress } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@emotion/react";
+import {
+  Theme as theme,
+  StyledTableCell,
+  StyledTableRow,
+} from "../../utils/StyledComponents";
 
 // Hooks
 import { useEffect, useState } from "react";
@@ -36,75 +38,6 @@ import darkPlaceholder from "../../assets/images/Table-PlaceholderDark.svg";
 import AddJobPopupComponent from "./Modals/AddJob";
 import EditJobPopupComponent from "./Modals/EditJob";
 import JobDetails from "./Modals/JobDetails";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#F5F5F5",
-      dark: "#090A0C",
-    },
-    secondary: {
-      main: "#E7EDEE",
-      dark: "#121517",
-    },
-    hover: {
-      main: "#D4DFE1",
-      dark: "#232A2F",
-    },
-    text: {
-      light: "#090A0C",
-      dark: "#F5F5F5",
-    },
-  },
-  typography: {
-    fontFamily: "Nunito, sans-serif",
-  },
-});
-
-const StyledTableCell = styled(TableCell)(({ isDarkMode, theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "transparent",
-    color: isDarkMode ? theme.palette.text.dark : theme.palette.text.light,
-    border: "none",
-    borderBottom: isDarkMode ? "1px solid #3C4A53" : "1px solid #AAC0C5",
-  },
-  [`&.${tableCellClasses.body}`]: {
-    backgroundColor: "transparent",
-    color: isDarkMode ? theme.palette.text.dark : theme.palette.text.light,
-    fontSize: 14,
-    border: "none",
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ isDarkMode, isHeading, theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: isHeading
-      ? isDarkMode
-        ? "#161A1D"
-        : theme.palette.hover.main
-      : isDarkMode
-      ? theme.palette.primary.dark
-      : theme.palette.primary.main,
-  },
-  "&:nth-of-type(even)": {
-    backgroundColor: isHeading
-      ? isDarkMode
-        ? "#161A1D"
-        : theme.palette.hover.main
-      : isDarkMode
-      ? theme.palette.secondary.dark
-      : theme.palette.secondary.main,
-  },
-  "&:hover": {
-    backgroundColor: isHeading
-      ? isDarkMode
-        ? "#161A1D"
-        : theme.palette.hover.main
-      : isDarkMode
-      ? theme.palette.hover.dark
-      : theme.palette.hover.main,
-  },
-}));
 
 const TableComponent = () => {
   const darkMode = useSelector((state) => state.darkMode.darkMode);
@@ -410,7 +343,11 @@ const TableComponent = () => {
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <StyledTableRow isHeading={true} isDarkMode={darkMode}>
-                    <StyledTableCell isDarkMode={darkMode} align="center">
+                    <StyledTableCell
+                      isHeading={true}
+                      isDarkMode={darkMode}
+                      align="center"
+                    >
                       <button
                         className="text-secondary dark:text-secondaryDark"
                         onClick={() => sortBy("id", rows)}
@@ -418,7 +355,11 @@ const TableComponent = () => {
                         ID {sortIcon("id")}
                       </button>
                     </StyledTableCell>
-                    <StyledTableCell isDarkMode={darkMode} align="center">
+                    <StyledTableCell
+                      isHeading={true}
+                      isDarkMode={darkMode}
+                      align="center"
+                    >
                       <button
                         className="text-secondary dark:text-secondaryDark"
                         onClick={() => sortBy("company", rows)}
@@ -426,7 +367,11 @@ const TableComponent = () => {
                         Company {sortIcon("company")}
                       </button>
                     </StyledTableCell>
-                    <StyledTableCell isDarkMode={darkMode} align="center">
+                    <StyledTableCell
+                      isHeading={true}
+                      isDarkMode={darkMode}
+                      align="center"
+                    >
                       <button
                         className="text-secondary dark:text-secondaryDark"
                         onClick={() => sortBy("position", rows)}
@@ -434,7 +379,11 @@ const TableComponent = () => {
                         Position {sortIcon("position")}
                       </button>
                     </StyledTableCell>
-                    <StyledTableCell isDarkMode={darkMode} align="center">
+                    <StyledTableCell
+                      isHeading={true}
+                      isDarkMode={darkMode}
+                      align="center"
+                    >
                       <button
                         className="text-secondary dark:text-secondaryDark"
                         onClick={() => sortBy("status", rows)}
@@ -442,7 +391,11 @@ const TableComponent = () => {
                         Status {sortIcon("status")}
                       </button>
                     </StyledTableCell>
-                    <StyledTableCell isDarkMode={darkMode} align="center">
+                    <StyledTableCell
+                      isHeading={true}
+                      isDarkMode={darkMode}
+                      align="center"
+                    >
                       <button
                         className="text-secondary dark:text-secondaryDark"
                         onClick={() => sortBy("date", rows)}
@@ -450,7 +403,11 @@ const TableComponent = () => {
                         Date {sortIcon("date")}
                       </button>
                     </StyledTableCell>
-                    <StyledTableCell isDarkMode={darkMode} align="center">
+                    <StyledTableCell
+                      isHeading={true}
+                      isDarkMode={darkMode}
+                      align="center"
+                    >
                       <span className="text-secondary dark:text-secondaryDark">
                         Actions
                       </span>
@@ -458,13 +415,6 @@ const TableComponent = () => {
                   </StyledTableRow>
                 </TableHead>
                 <TableBody>
-                  {loading && (
-                    <StyledTableRow isDarkMode={darkMode}>
-                      <StyledTableCell isDarkMode={darkMode} colSpan={6}>
-                        <LinearProgress />
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  )}
                   {searchedJobs
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
@@ -543,6 +493,13 @@ const TableComponent = () => {
                         </StyledTableRow>
                       );
                     })}
+                  {loading && (
+                    <StyledTableRow isDarkMode={darkMode}>
+                      <StyledTableCell isDarkMode={darkMode} colSpan={6}>
+                        <LinearProgress />
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>

@@ -1,4 +1,4 @@
-import { MenuItem, Select } from "@mui/material";
+import { FormControl, ThemeProvider } from "@mui/material";
 import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
@@ -6,10 +6,17 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { updateGoalAndInterval } from "../../features/user/userSlice";
 import { DateTime } from "luxon";
+import {
+  Theme as theme,
+  StyledSelect,
+  StyledInputLabel,
+  StyledMenuItem,
+} from "../../utils/StyledComponents";
 
 const GoalTracker = () => {
   const user = useSelector((state) => state.user.user);
   const jobs = useSelector((state) => state.jobs.jobs);
+  const darkMode = useSelector((state) => state.darkMode.darkMode);
 
   const [goal, setGoal] = useState(user.goalValue || 0);
   const [timeFrame, setTimeFrame] = useState(user.timeFrame || "daily");
@@ -103,20 +110,35 @@ const GoalTracker = () => {
     <div className="size-full bg-primary-dark dark:bg-primaryDark-light rounded-lg p-4 text-secondary dark:text-secondaryDark">
       <div className="w-full flex justify-between items-center py-2">
         <h2 className="text-2xl font-semibold dark:text-white">Goal Tracker</h2>
-        <label className="flex gap-4 items-center text-lg">
-          Interval:{" "}
-          <Select
-            IconComponent={() => null}
-            displayEmpty
-            value={timeFrame}
-            disabled={!isEditable}
-            onChange={(e) => setTimeFrame(e.target.value)}
-            className="text-secondary dark:text-secondaryDark py-0 px-8 dashboard-select"
-          >
-            <MenuItem value="daily">Daily</MenuItem>
-            <MenuItem value="weekly">Weekly</MenuItem>
-            <MenuItem value="monthly">Monthly</MenuItem>
-          </Select>
+        <label className="flex gap-4 items-center text-lg webkitBye">
+          {/* Interval:{" "} */}
+          <ThemeProvider theme={theme}>
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+              <StyledInputLabel isDarkMode={darkMode} id="time-frame">
+                Interval:
+              </StyledInputLabel>
+              <StyledSelect
+                isDarkMode={darkMode}
+                labelId="time-frame"
+                id="time-frame"
+                label="Interval"
+                IconComponent={() => null}
+                value={timeFrame}
+                disabled={!isEditable}
+                onChange={(e) => setTimeFrame(e.target.value)}
+              >
+                <StyledMenuItem isDarkMode={darkMode} value="daily">
+                  Daily
+                </StyledMenuItem>
+                <StyledMenuItem isDarkMode={darkMode} value="weekly">
+                  Weekly
+                </StyledMenuItem>
+                <StyledMenuItem isDarkMode={darkMode} value="monthly">
+                  Monthly
+                </StyledMenuItem>
+              </StyledSelect>
+            </FormControl>
+          </ThemeProvider>
           {isEditable ? (
             <button onClick={saveGoalAndInterval}>
               <CheckIcon />

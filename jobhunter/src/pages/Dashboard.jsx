@@ -187,29 +187,6 @@ const Dashboard = () => {
                     </h3>
                     <CustomPieChart
                     />
-                    {/* <PieChart
-                      series={[
-                        {
-                          data: combinedData,
-                          innerRadius: 60,
-                          outerRadius: 100,
-                          paddingAngle: paddingAngle ? 2 : 0,
-                          cornerRadius: 10,
-                          highlightScope: {
-                            faded: "global",
-                            highlighted: "item",
-                          },
-                          faded: {
-                            innerRadius: 50,
-                            outerRadius: 85,
-                            color: "#808080",
-                          },
-                        },
-                      ]}
-                      height={300}
-                      innerRadius={10}
-                      outerRadius={80}
-                    /> */}
                   </div>
                 </div>
                 <div className="w-full h-full pt-2 centred flex-col gap-2">
