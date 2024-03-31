@@ -2,7 +2,7 @@ import Logo from "../../assets/images/jobHunterLogo.png";
 import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
 import WorkIcon from "@mui/icons-material/Work";
 import PersonIcon from "@mui/icons-material/Person";
-import SettingsIcon from "@mui/icons-material/Settings";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -43,7 +43,7 @@ const Sidebar = () => {
 
   return (
     <div className="lg:size-full lg:flex lg:flex-col lg:items-center lg:pt-8 lg:relative bg-primary-dark dark:bg-primaryDark-light lg:dark:border-r-4 lg:dark:border-primaryDark-light xsm:flex xsm:flex-row xsm:centred xsm:w-full">
-      <div className="xsm:hidden md:flex xsm:w-1/3 xsm:h-full xsm:flex xsm:justify-center xsm:items-center xsm:p-2 lg:p-4 lg:w-full md:h-28">
+      <div className="xsm:hidden md:flex xsm:w-1/3 xsm:h-full sm:flex sm:justify-center sm:items-center sm:p-2 lg:p-4 lg:w-full md:h-28">
         <div className="lg:w-24 lg:h-24 bg-primary rounded-full lg:mb-10 xsm:mb-0 xsm:h-full xsm:w-24 md:w-16 md:h-16 xsm:centred">
           <img
             src={Logo}
@@ -150,7 +150,7 @@ const Sidebar = () => {
                 active === "About" ? "flex-row" : "flex-col"
               }`}
             >
-              <SettingsIcon className="-mt-1 lg:mr-2" fontSize="large" />
+              <FavoriteIcon className="-mt-1 lg:mr-2" fontSize="large" />
               <span
                 className={`xsm:text-xs md:text-lg lg:text-xl md:${
                   active === "About" ? "ml-2" : ""

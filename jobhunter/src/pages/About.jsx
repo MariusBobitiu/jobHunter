@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GithubIcon from "@mui/icons-material/GitHub";
@@ -7,6 +7,10 @@ import EnvelopeIcon from "@mui/icons-material/Email";
 const About = () => {
   const [aboutPage, setAboutPage] = useState(true);
   const [helpPage, setHelpPage] = useState(false);
+
+  useEffect(() => {
+    document.title = "About jobHunter";
+  }, []);
 
   const openAboutPage = () => {
     setAboutPage(true);
@@ -21,7 +25,7 @@ const About = () => {
   return (
     <>
       <Layout>
-        <div className="w-full h-screen flex flex-col gap-4 bg-primary text-secondary dark:bg-primaryDark dark:text-secondaryDark relative xsm:mt-28 sm:mt-32 lg:mt-0">
+        <div className="w-full h-screen flex flex-col gap-4 bg-primary text-secondary dark:bg-primaryDark dark:text-secondaryDark relative xsm:mt-28 sm:mt-32 lg:mt-0 lg:p-4">
           <div className="bg-primary-dark dark:bg-primaryDark-light py-8 rounded-lg w-full">
             <div className="flex justify-evenly items-center w-full h-full gap-4">
               <button
