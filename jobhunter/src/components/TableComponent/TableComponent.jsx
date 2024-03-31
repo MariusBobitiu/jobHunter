@@ -260,23 +260,23 @@ const TableComponent = () => {
   if (!rows.length)
     return (
       <>
-        <div className="w-full bg-tertiary p-4 m-2">
-          <div className="flex-col centred py-2">
-            <div className="size-2/3 centred my-6">
+        <div className="w-full bg-tertiary p-4">
+          <div className="flex-col centred py-2 sm:mb-32 lg:mb-0">
+            <div className="xsm:size-full sm:size-2/3 centred my-6">
               <img
                 src={darkMode ? lightPlaceholder : darkPlaceholder}
                 alt="Placeholder"
                 className="size-2/3 opacity-60"
               />
             </div>
-            <h1 className="text-2xl font-bold text-secondary dark:text-secondaryDark">
+            <h1 className="xsm:text-lg sm:text-2xl font-bold text-secondary dark:text-secondaryDark">
               Currently there are no jobs to display
             </h1>
             <p className="text-lg font-medium text-secondary dark:text-secondaryDark">
               Start by adding your first job
             </p>
             <button
-              className="bg-green-400 text-secondary rounded-lg py-4 w-1/3 dark:bg-green-600 dark:text-secondaryDark text-2xl font-bold hover:bg-green-500 dark:hover:bg-green-700 active:bg-green-700 dark:active:bg-green-800 mt-4"
+              className="bg-green-400 text-secondary rounded-lg py-4 xsm:w-full sm:w-1/3 dark:bg-green-600 dark:text-secondaryDark text-2xl font-bold hover:bg-green-500 dark:hover:bg-green-700 active:bg-green-700 dark:active:bg-green-800 mt-4"
               onClick={() => setAddJobPopup(true)}
             >
               <span>

@@ -6,14 +6,14 @@ const Placeholder = () => {
   const darkMode = useSelector((state) => state.darkMode.darkMode);
   return (
     <>
-      <div className="size-full flex-col centred bg-primary-dark dark:bg-primaryDark-light rounded-lg p-4">
+      <div className="size-full sm:mt-16 lg:mt-0 flex-col centred bg-primary-dark dark:bg-primaryDark-light rounded-lg p-4">
         <img
           src={darkMode ? lightPlaceholder : darkPlaceholder}
           alt="Placeholder"
-          className="size-2/3 opacity-60 "
+          className="xsm:w-full xsm:h-2/3 sm:size-2/3 opacity-60 "
         />
         <div className="flex-col centred gap-2 mt-4">
-          <h1 className="font-bold text-2xl text-secondary dark:text-secondaryDark">
+          <h1 className="font-bold xsm:text-lg sm:text-2xl text-secondary dark:text-secondaryDark">
             Hmm... there&apos;s no activity to report yet.{" "}
           </h1>
           <p className="text-lg font-medium text-secondary dark:text-secondaryDark">
