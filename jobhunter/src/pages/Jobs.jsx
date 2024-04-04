@@ -32,7 +32,7 @@ const Jobs = () => {
     <>
       <Layout>
         <div className="w-full h-screen text-secondary font-nunito dark:bg-primaryDark dark:text-secondaryDark p-4">
-          <div className="size-full xsm:mt-20 sm:mt-28 lg:mt-0 xsm:overflow-auto">
+          <div className="size-full xsm:mt-20 sm:mt-28 lg:mt-0 xsm:overflow-auto lg:overflow-hidden">
             <h2 className="px-4 pt-2 xsm:text-lg sm:text-3xl mb-2">
               My Job board
             </h2>
