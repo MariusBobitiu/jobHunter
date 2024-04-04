@@ -82,7 +82,10 @@ const TableComponent = () => {
           "GET",
           `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
         );
-        sortBy("date", data);
+        const jobs = data.map((job) => {
+          return { ...job, jobId: index+1 };
+        });
+        sortBy("date", jobs);
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -343,7 +346,7 @@ const TableComponent = () => {
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <StyledTableRow isHeading={true} isDarkMode={darkMode}>
-                    {/* <StyledTableCell
+                    <StyledTableCell
                       isHeading={true}
                       isDarkMode={darkMode}
                       align="center"
@@ -354,7 +357,7 @@ const TableComponent = () => {
                       >
                         ID {sortIcon("id")}
                       </button>
-                    </StyledTableCell> */}
+                    </StyledTableCell>
                     <StyledTableCell
                       isHeading={true}
                       isDarkMode={darkMode}
@@ -425,13 +428,13 @@ const TableComponent = () => {
                           key={row.id}
                           isDarkMode={darkMode}
                         >
-                          {/* <StyledTableCell
+                          <StyledTableCell
                             isDarkMode={darkMode}
                             align="center"
                             color="white"
                           >
-                            {row.id}
-                          </StyledTableCell> */}
+                            {row.jobId}
+                          </StyledTableCell>
                           <StyledTableCell isDarkMode={darkMode} align="center">
                             {row.company}
                           </StyledTableCell>
