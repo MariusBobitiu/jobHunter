@@ -425,13 +425,13 @@ const TableComponent = () => {
                           key={row.id}
                           isDarkMode={darkMode}
                         >
-                          <StyledTableCell
+                          {/* <StyledTableCell
                             isDarkMode={darkMode}
                             align="center"
                             color="white"
                           >
                             {row.id}
-                          </StyledTableCell>
+                          </StyledTableCell> */}
                           <StyledTableCell isDarkMode={darkMode} align="center">
                             {row.company}
                           </StyledTableCell>
