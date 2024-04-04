@@ -54,9 +54,12 @@ const Dashboard = () => {
           "GET",
           `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
         );
+        const jobsWithId = data.map((job, index) => {
+          return { ...job, jobId: index + 1 };
+        });
         setLoading(false);
-        console.log("Jobs fetched successfully");
-        dispatch(getJobsSuccess(data));
+        // console.log("Jobs fetched successfully");
+        dispatch(getJobsSuccess(jobsWithId));
       } catch (error) {
         console.error(error);
         dispatch(getJobsFailure(error));
