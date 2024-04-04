@@ -114,7 +114,10 @@ const TableComponent = () => {
         "GET",
         `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
       );
-      keepSortOnChanges(data);
+      const jobsWithId = data.map((job, index) => {
+        return { ...job, jobId: index + 1 };
+      });
+      keepSortOnChanges(jobsWithId);
       setAddJobPopup(false);
       setLoading(false);
     } catch (err) {
@@ -139,7 +142,10 @@ const TableComponent = () => {
         "GET",
         `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
       );
-      keepSortOnChanges(data);
+      const jobsWithId = data.map((job, index) => {
+        return { ...job, jobId: index + 1 };
+      });
+      keepSortOnChanges(jobsWithId);
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -165,7 +171,10 @@ const TableComponent = () => {
         "GET",
         `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
       );
-      keepSortOnChanges(data);
+      const jobsWithId = data.map((job, index) => {
+        return { ...job, jobId: index + 1 };
+      });
+      keepSortOnChanges(jobsWithId);
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -209,8 +218,11 @@ const TableComponent = () => {
         "GET",
         `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
       );
+      const jobsWithId = data.map((job, index) => {
+        return { ...job, jobId: index + 1 };
+      });
       setSelectedJob(null);
-      keepSortOnChanges(data);
+      keepSortOnChanges(jobsWithId);
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -353,12 +365,12 @@ const TableComponent = () => {
                       isDarkMode={darkMode}
                       align="center"
                     >
-                      {/* <button
+                      <button
                         className="text-secondary dark:text-secondaryDark"
-                        onClick={() => sortBy("id", rows)}
+                        onClick={() => sortBy("jobId", rows)}
                       >
                         ID {sortIcon("id")}
-                      </button> */}
+                      </button>
                     </StyledTableCell>
                     <StyledTableCell
                       isHeading={true}
@@ -430,13 +442,13 @@ const TableComponent = () => {
                           key={row.id}
                           isDarkMode={darkMode}
                         >
-                          {/* <StyledTableCell
+                          <StyledTableCell
                             isDarkMode={darkMode}
                             align="center"
                             color="white"
                           >
                             {row.jobId}
-                          </StyledTableCell> */}
+                          </StyledTableCell>
                           <StyledTableCell isDarkMode={darkMode} align="center">
                             {row.company}
                           </StyledTableCell>
