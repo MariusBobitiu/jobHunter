@@ -82,8 +82,8 @@ const TableComponent = () => {
           "GET",
           `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
         );
-        const jobs = data.map((job) => {
-          return { ...job, jobId: index+1 };
+        const jobs = data.map((index, job) => {
+          return { ...job, jobId: index + 1 };
         });
         sortBy("date", jobs);
         setLoading(false);
