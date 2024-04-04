@@ -86,6 +86,8 @@ const TableComponent = () => {
           return { ...job, jobId: index + 1 };
         });
         sortBy("date", jobsWithId);
+        console.log("Data: ", data);
+        console.log("Jobs with ID: ", jobsWithId);
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -351,12 +353,12 @@ const TableComponent = () => {
                       isDarkMode={darkMode}
                       align="center"
                     >
-                      <button
+                      {/* <button
                         className="text-secondary dark:text-secondaryDark"
                         onClick={() => sortBy("id", rows)}
                       >
                         ID {sortIcon("id")}
-                      </button>
+                      </button> */}
                     </StyledTableCell>
                     <StyledTableCell
                       isHeading={true}
@@ -428,13 +430,13 @@ const TableComponent = () => {
                           key={row.id}
                           isDarkMode={darkMode}
                         >
-                          <StyledTableCell
+                          {/* <StyledTableCell
                             isDarkMode={darkMode}
                             align="center"
                             color="white"
                           >
                             {row.jobId}
-                          </StyledTableCell>
+                          </StyledTableCell> */}
                           <StyledTableCell isDarkMode={darkMode} align="center">
                             {row.company}
                           </StyledTableCell>
