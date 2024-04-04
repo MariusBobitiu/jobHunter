@@ -82,7 +82,7 @@ const TableComponent = () => {
           "GET",
           `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
         );
-        sortBy("id", data);
+        sortBy("date", data);
         setLoading(false);
       } catch (err) {
         console.error(err);
