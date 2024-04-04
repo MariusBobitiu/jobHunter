@@ -343,7 +343,7 @@ const TableComponent = () => {
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <StyledTableRow isHeading={true} isDarkMode={darkMode}>
-                    <StyledTableCell
+                    {/* <StyledTableCell
                       isHeading={true}
                       isDarkMode={darkMode}
                       align="center"
@@ -354,7 +354,7 @@ const TableComponent = () => {
                       >
                         ID {sortIcon("id")}
                       </button>
-                    </StyledTableCell>
+                    </StyledTableCell> */}
                     <StyledTableCell
                       isHeading={true}
                       isDarkMode={darkMode}
