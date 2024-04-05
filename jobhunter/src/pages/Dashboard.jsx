@@ -125,7 +125,7 @@ const Dashboard = () => {
     <>
       <Layout>
         {loading && <Loading />}
-        <div className="w-full h-screen bg-primary dark:bg-primaryDark centred p-4">
+        <div className="w-full h-dvh bg-primary dark:bg-primaryDark centred p-4">
           {!isData && <Placeholder />}
           {isData && (
             <div className="w-full h-full xsm:mt-52 lg:mt-0 bg-primary dark:bg-primaryDark lg:flex lg:justify-center lg:items-center font-nunito flex-col xsm:overflow-auto xsm:justify-start lg:overflow-hidden">

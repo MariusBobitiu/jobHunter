@@ -160,8 +160,8 @@ const Profile = () => {
   return (
     <>
       <Layout>
-        <div className="flex flex-col h-screen text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark xsm:overflow-auto lg:overflow-hidden">
-          <div className="xsm:mt-20 sm:mt-32 lg:mt-0 py-4 ml-4 pl-2 border-b-2 border-secondary/50 lg:mb-4 dark:border-secondaryDark/50 flex justify-between items-center ">
+        <div className="flex flex-col h-dvh text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark xsm:overflow-auto">
+          <div className="xsm:mt-20 sm:mt-32 lg:mt-0 py-4 ml-4 pl-2 border-b-2 border-secondary/50 lg:mb-4 dark:border-secondaryDark/50 flex justify-between items-center">
             <h1 className="xsm:text-lg sm:text-xl lg:text-3xl font-bold">
               Profile
             </h1>

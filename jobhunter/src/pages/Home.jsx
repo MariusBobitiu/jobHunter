@@ -2,7 +2,7 @@ import heroImage from "../assets/images/hero.jpg";
 
 const Home = () => {
   return (
-    <main className="flex-col centred h-screen bg-primaryDark text-secondary overflow-hidden">
+    <main className="flex-col centred h-dvh bg-primaryDark text-secondary overflow-hidden">
       <div
         className="flex flex-col items-center justify-center w-full h-2/3 bg-cover bg-center bg-no-repeat relative overflow-hidden before:absolute before:inset-0 before:content-[''] before:opacity-50 before:z-0 before:bg-primaryDark before:backdrop-filter before:backdrop-blur-sm before:rounded-lg dark:before:backdrop-blur-0"
         style={{ backgroundImage: `url(${heroImage})` }}

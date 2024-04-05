@@ -369,7 +369,7 @@ const TableComponent = () => {
                         className="text-secondary dark:text-secondaryDark"
                         onClick={() => sortBy("jobId", rows)}
                       >
-                        ID {sortIcon("id")}
+                        ID {sortIcon("jobId")}
                       </button>
                     </StyledTableCell>
                     <StyledTableCell
