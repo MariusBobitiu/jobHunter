@@ -4,6 +4,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import PersonIcon from "@mui/icons-material/Person";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import LogoutIcon from "@mui/icons-material/Logout";
+import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "../../features/user/userSlice";
@@ -23,8 +24,8 @@ const Sidebar = () => {
         case "/jobs":
           setActive("Jobs");
           break;
-        case "/Profile":
-          setActive("Profile");
+        case "/search":
+          setActive("Search");
           break;
         case "/profile":
           setActive("Profile");
@@ -107,6 +108,31 @@ const Sidebar = () => {
                 }`}
               >
                 Jobs
+              </span>
+            </span>
+          </a>
+          <a
+            href="/search"
+            alt="Search"
+            className="py-2 lg:px-2 xsm:px-4 hover:text-accent-dark cursor-pointer rounded-lg xsm:flex xsm:justify-center xsm:items-center lg:flex lg:items-center lg:justify-start"
+            style={
+              active === "Search"
+                ? { backgroundColor: "#BA181B", color: "white" }
+                : {}
+            }
+          >
+            <span
+              className={`xsm:flex xsm:flex-col xsm:justify-center xsm:items-center lg:flex lg:items-center lg:justify-start lg:flex-row md:${
+                active === "Search" ? "flex-row" : "flex-col"
+              }`}
+            >
+              <SearchIcon className="-mt-1 lg:mr-2" fontSize="large" />
+              <span
+                className={`xsm:text-xs md:text-lg lg:text-xl md:${
+                  active === "Search" ? "ml-2" : ""
+                }`}
+              >
+                Search
               </span>
             </span>
           </a>

@@ -15,11 +15,11 @@ export const jobsSlice = createSlice({
       state.status = "loading";
     },
     getJobsSuccess: (state, action) => {
-      state.status = "succeeded";
+      state.status = "success";
       state.jobs = action.payload;
     },
     getJobsFailure: (state, action) => {
-      state.status = "failed";
+      state.status = "fail";
       state.error = action.payload;
     },
     setSortState: (state, action) => {
