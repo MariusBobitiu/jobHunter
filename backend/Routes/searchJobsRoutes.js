@@ -9,6 +9,6 @@ router.get("/reed", searchReedJobs);
 //Specific Job
 router.get("/reed/:jobId", searchReedJob);
 // Filter Jobs
-router.get("/reed/filter", searchReedJobs);
+router.get("/reed/filter", filterReedJobs);
 
 module.exports = router;

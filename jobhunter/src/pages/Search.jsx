@@ -37,6 +37,13 @@ const Search = () => {
   const [graduateJobs, setGraduateJobs] = useState(false);
   const [postedBy, setPostedBy] = useState("All");
 
+  const dispatch = useDispatch();
+
+  // Search states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
+  const [searchedJobsError, setSearchedJobsError] = useState("");
+
   const getSalary = (value) => {
     switch (value) {
       case "20000-30000":
@@ -106,13 +113,6 @@ const Search = () => {
     setSearchedJobs(searchedJobs);
   }, [jobs, searchedJobs]);
 
-  const dispatch = useDispatch();
-
-  // Search states
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchLocation, setSearchLocation] = useState("");
-  const [searchedJobsError, setSearchedJobsError] = useState("");
-
   // Get Location
   const getLocation = (e) => {
     e.preventDefault();
@@ -162,7 +162,7 @@ const Search = () => {
       const response = await fetch(
         `${
           import.meta.env.VITE_API_BASE_URL
-        }/searchJobs/reed?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=0&${
+        }/searchJobs/reed/filter?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=0&${
           jobType === "All" ? "" : `${jobType}=true`
         }&minimumSalary=${minimumSalary}&maximumSalary=${maximumSalary}&distanceFromLocation=${distance}&graduate=${graduateJobs}&postedBy=${
           postedBy === "All" ? "" : `${postedBy}=true`

@@ -123,4 +123,4 @@ const searchReedJob = async (req, res) => {
   }
 };
 
-module.exports = { searchReedJobs, searchReedJob };
+module.exports = { searchReedJobs, searchReedJob, filterReedJobs };
