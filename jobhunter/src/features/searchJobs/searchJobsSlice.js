@@ -14,7 +14,7 @@ export const searchJobsSlice = createSlice({
       state.status = "loading";
     },
     getSearchJobsSuccess: (state, action) => {
-      state.status = "succeess";
+      state.status = "success";
       state.searchJobs = action.payload;
     },
     getSearchJobsFailure: (state, action) => {

@@ -7,7 +7,7 @@ export default function Layout({ children }) {
       <div className="xsm:fixed xsm:top-0 xsm:left-0 xsm:z-20 xsm:w-full lg:relative lg:col-span-2 bg-tertiary">
         <Sidebar />
       </div>
-      <div className="lg:col-span-10 h-full bg-primary dark:bg-primaryDark">
+      <div className="lg:col-span-10 h-dvh bg-primary dark:bg-primaryDark">
         {children}
       </div>
     </main>

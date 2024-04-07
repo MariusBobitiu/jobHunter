@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "../../features/user/userSlice";
 import { setJobsLogout } from "../../features/jobs/jobsSlice";
 import ThemeSwitcher from "../functional/ThemeSwitcher";
+import { setSearchJobsLogout } from "../../features/searchJobs/searchJobsSlice";
 
 const Sidebar = () => {
   const [active, setActive] = useState("Dashboard");
@@ -186,7 +187,7 @@ const Sidebar = () => {
               </span>
             </span>
           </a>
-          {/* <ThemeSwitcher /> */}
+          <ThemeSwitcher />
         </div>
       </div>
       <div className="xsm:flex xsm:justify-center xsm:items-center lg:justify-start lg:absolute lg:bottom-0 p-4 text-white text-lg lg:w-full">
@@ -196,6 +197,7 @@ const Sidebar = () => {
             localStorage.removeItem("token");
             dispatch(logout());
             dispatch(setJobsLogout());
+            dispatch(setSearchJobsLogout());
             window.location.href = "/login";
           }}
         >

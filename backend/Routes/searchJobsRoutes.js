@@ -6,8 +6,9 @@ const router = express.Router();
 
 // Search Reed Jobs
 router.get("/reed", searchReedJobs);
-	//Specific Job
+//Specific Job
 router.get("/reed/:jobId", searchReedJob);
+// Filter Jobs
+router.get("/reed/filter", searchReedJobs);
 
 module.exports = router;
-
