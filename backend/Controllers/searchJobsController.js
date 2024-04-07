@@ -49,28 +49,46 @@ const filterReedJobs = async (req, res) => {
     postedBy,
   } = req.query;
 
-  console.info(req.query);
+  console.log(req.query);
 
   try {
     const apiKey = process.env.REED_API_KEY;
     const encoded_API_Key = Buffer.from(`${apiKey}:`).toString("base64");
 
+    const queryParams = {
+      keywords: searchTerm,
+      locationName: searchLocation,
+      resultsToTake: 10,
+      resultsToSkip: skipped || 0,
+      minimumSalary: minimumSalary,
+      maximumSalary: maximumSalary,
+      distanceFromLocation: distanceFromLocation,
+      graduate: graduate ? "true" : undefined,
+    };
+
+    if (jobType === 'permanent') {
+      queryParams.permanent = true;
+    } else if (jobType === 'contract') {
+      queryParams.contract = true;
+    } else if (jobType === 'temp') {
+      queryParams.temp = true;
+    } else if (jobType === 'fullTime') {
+      queryParams.fullTime = true;
+    } else if (jobType === 'partTime') {
+      queryParams.partTime = true;
+    }
+
+    if (postedBy === 'Recruiter') {
+      queryParams.postedByRecruitmentAgency = true;
+    } else if (postedBy === 'Employer') {
+      queryParams.postedByDirectEmployer = true;
+    }
+
+    const queryString = new URLSearchParams(queryParams).toString();
+    console.log(`${process.env.REED_API_BASE_URL}/search?${queryString}`);
+
     const response = await fetch(
-      `${process.env.REED_API_BASE_URL}/search?keywords=${encodeURIComponent(
-        searchTerm
-      )}&locationName=${encodeURIComponent(
-        searchLocation
-      )}&resultsToTake=10&resultsToSkip=${encodeURIComponent(skipped)}&${
-        jobType ? `${jobType}=true&` : ""
-      }${minimumSalary ? `minimumSalary=${minimumSalary}&` : ""}${
-        maximumSalary ? `maximumSalary=${maximumSalary}&` : ""
-      }${
-        distanceFromLocation
-          ? `distanceFromLocation=${distanceFromLocation}&`
-          : ""
-      }${graduate ? `graduate=${graduate}&` : ""}${
-        postedBy ? `${postedBy}=true&` : ""
-      }`,
+      `${process.env.REED_API_BASE_URL}/search?${queryString}`,
       {
         method: "GET",
         headers: {
@@ -79,26 +97,10 @@ const filterReedJobs = async (req, res) => {
       }
     );
 
-    console.log(
-      `${process.env.REED_API_BASE_URL}/search?keywords=${encodeURIComponent(
-        searchTerm
-      )}&location=${encodeURIComponent(
-        searchLocation
-      )}&resultsToTake=10&resultsToSkip=${encodeURIComponent(skipped)}&${
-        jobType ? `jobType=${jobType}&` : ""
-      }${minimumSalary ? `minimumSalary=${minimumSalary}&` : ""}${
-        maximumSalary ? `maximumSalary=${maximumSalary}&` : ""
-      }${
-        distanceFromLocation
-          ? `distanceFromLocation=${distanceFromLocation}&`
-          : ""
-      }${graduate ? `graduate=${graduate}&` : ""}${
-        postedBy ? `postedBy=${postedBy}&` : ""
-      }`
-    );
-
     if (!response.ok) {
-      throw new Error("Failed to fetch Reed jobs");
+      throw new Error(
+        `Failed to fetch Reed jobs. ErrorMessage: ${response.message} Status: ${response.status}`
+      );
     }
 
     const data = await response.json();

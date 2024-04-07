@@ -84,15 +84,6 @@ const Search = () => {
       graduateJobs,
       postedBy
     );
-    console.log(
-      `${
-        import.meta.env.VITE_API_BASE_URL
-      }/searchJobs/reed?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=0&${
-        jobType === "All" ? "" : `${jobType}=true`
-      }&minimumSalary=${minimumSalary}&maximumSalary=${maximumSalary}&distanceFromLocation=${distance}&graduate=${graduateJobs}&${
-        postedBy === "All" ? "" : `${postedBy}=true`
-      }`
-    );
   }, [
     searchTerm,
     searchLocation,
@@ -158,18 +149,34 @@ const Search = () => {
     e.preventDefault();
 
     dispatch(getSearchJobsStart());
+
+    const queryParams = {
+      searchTerm,
+      searchLocation,
+      jobType: jobType === "All" ? undefined : jobType,
+      minimumSalary,
+      maximumSalary,
+      distance,
+      graduateJobs: graduateJobs ? "true" : undefined,
+      postedBy: postedBy === "All" ? undefined : postedBy,
+    };
+
+    const searchQueryParams = new URLSearchParams(queryParams).toString();
+    console.log(searchQueryParams);
+
     try {
       const response = await fetch(
         `${
           import.meta.env.VITE_API_BASE_URL
-        }/searchJobs/reed/filter?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=0&${
-          jobType === "All" ? "" : `jobType=${jobType}`
-        }&minimumSalary=${minimumSalary}&maximumSalary=${maximumSalary}&distanceFromLocation=${distance}&graduate=${graduateJobs}&postedBy=${
-          postedBy === "All" ? "" : `postedBy=${postedBy}`
-        }`
+        }/searchJobs/reed/filter?${searchQueryParams}`
       );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch Reed jobs");
+      }
+
       const data = await response.json();
-      console.log(data);
+
       dispatch(getSearchJobsSuccess(data.results));
       setSearchedJobsStatus("success");
     } catch (error) {
