@@ -63,25 +63,28 @@ const filterReedJobs = async (req, res) => {
       minimumSalary: minimumSalary,
       maximumSalary: maximumSalary,
       distanceFromLocation: distanceFromLocation,
-      graduate: graduate ? "true" : undefined,
     };
 
-    if (jobType === 'permanent') {
+    if (jobType === "permanent") {
       queryParams.permanent = true;
-    } else if (jobType === 'contract') {
+    } else if (jobType === "contract") {
       queryParams.contract = true;
-    } else if (jobType === 'temp') {
+    } else if (jobType === "temp") {
       queryParams.temp = true;
-    } else if (jobType === 'fullTime') {
+    } else if (jobType === "fullTime") {
       queryParams.fullTime = true;
-    } else if (jobType === 'partTime') {
+    } else if (jobType === "partTime") {
       queryParams.partTime = true;
     }
 
-    if (postedBy === 'Recruiter') {
+    if (postedBy === "Recruiter") {
       queryParams.postedByRecruitmentAgency = true;
-    } else if (postedBy === 'Employer') {
+    } else if (postedBy === "Employer") {
       queryParams.postedByDirectEmployer = true;
+    }
+
+    if (graduate === "true") {
+      queryParams.graduate = true;
     }
 
     const queryString = new URLSearchParams(queryParams).toString();

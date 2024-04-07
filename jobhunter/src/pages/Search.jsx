@@ -151,15 +151,18 @@ const Search = () => {
     dispatch(getSearchJobsStart());
 
     const queryParams = {
-      searchTerm,
-      searchLocation,
-      jobType: jobType === "All" ? undefined : jobType,
-      minimumSalary,
-      maximumSalary,
-      distance,
-      graduateJobs: graduateJobs ? "true" : undefined,
-      postedBy: postedBy === "All" ? undefined : postedBy,
+      searchTerm: searchTerm,
+      searchLocation: searchLocation,
+      jobType: jobType === "All" ? false : jobType,
+      minimumSalary: minimumSalary,
+      maximumSalary: maximumSalary,
+      distanceFromLocation: distance,
+      postedBy: postedBy === "All" ? false : postedBy,
     };
+
+    if (graduateJobs === "true") {
+      queryParams.graduate = graduateJobs;
+    }
 
     const searchQueryParams = new URLSearchParams(queryParams).toString();
     console.log(searchQueryParams);
@@ -495,9 +498,14 @@ const Search = () => {
                                   />
                                 }
                                 value="graduate"
-                                onChange={(e) =>
-                                  setGraduateJobs(e.target.checked)
-                                }
+                                onChange={(e) => {
+                                  setGraduateJobs(!e.target.checked);
+                                  console.log(
+                                    "graduate: ",
+                                    e.target.checked,
+                                    graduateJobs
+                                  );
+                                }}
                               />
                             </label>
                           </div>
