@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   searchJobs: [],
+  totalJobs: 0,
   status: "idle",
   error: null,
 };
@@ -24,6 +25,9 @@ export const searchJobsSlice = createSlice({
     setSearchJobsLogout: (state) => {
       state.searchJobs = [];
     },
+    getTotalJobs: (state, action) => {
+      state.totalJobs = action.payload;
+    },
   },
 });
 
@@ -32,4 +36,5 @@ export const {
   getSearchJobsSuccess,
   getSearchJobsFailure,
   setSearchJobsLogout,
+  getTotalJobs,
 } = searchJobsSlice.actions;

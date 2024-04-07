@@ -21,18 +21,20 @@ import {
   getSearchJobsFailure,
   getSearchJobsStart,
   getSearchJobsSuccess,
+  getTotalJobs,
 } from "../features/searchJobs/searchJobsSlice";
 
 const Search = () => {
   // Redux states for search jobs
   const jobs = useSelector((state) => state.searchJobs.searchJobs);
+  const totalJobs = useSelector((state) => state.searchJobs.totalJobs);
   const darkMode = useSelector((state) => state.darkMode.darkMode);
 
   const [customDistance, setCustomDistance] = useState(false);
 
   const [jobType, setJobType] = useState("All");
-  const [minimumSalary, setMinimumSalary] = useState("20000");
-  const [maximumSalary, setMaximumSalary] = useState("30000");
+  const [minimumSalary, setMinimumSalary] = useState("not specified");
+  const [maximumSalary, setMaximumSalary] = useState("not specified");
   const [distance, setDistance] = useState(10);
   const [graduateJobs, setGraduateJobs] = useState(false);
   const [postedBy, setPostedBy] = useState("All");
@@ -44,36 +46,9 @@ const Search = () => {
   const [searchLocation, setSearchLocation] = useState("");
   const [searchedJobsError, setSearchedJobsError] = useState("");
 
-  useEffect(() => {
-    console.log(
-      searchTerm,
-      searchLocation,
-      jobType,
-      minimumSalary,
-      maximumSalary,
-      distance,
-      graduateJobs,
-      postedBy
-    );
-  }, [
-    searchTerm,
-    searchLocation,
-    jobType,
-    minimumSalary,
-    maximumSalary,
-    distance,
-    graduateJobs,
-    postedBy,
-  ]);
-
   const [searchedJobs, setSearchedJobs] = useState(jobs);
   const [searchedJobsStatus, setSearchedJobsStatus] = useState("idle");
   useState(searchedJobsStatus);
-
-  useEffect(() => {
-    console.log(searchedJobs);
-    setSearchedJobs(searchedJobs);
-  }, [jobs, searchedJobs]);
 
   // Get Location
   const getLocation = (e) => {
@@ -107,9 +82,11 @@ const Search = () => {
       const data = await response.json();
       console.log(data);
       dispatch(getSearchJobsSuccess(data.results));
+      dispatch(getTotalJobs(data.totalResults));
       setSearchedJobsStatus("success");
     } catch (error) {
       dispatch(getSearchJobsFailure(error.message));
+      dispatch(getTotalJobs(0));
       setSearchedJobsStatus("fail");
       setSearchedJobsError(error.message);
       console.error(error);
@@ -125,18 +102,23 @@ const Search = () => {
       searchTerm: searchTerm,
       searchLocation: searchLocation,
       jobType: jobType === "All" ? false : jobType,
-      minimumSalary: minimumSalary,
-      maximumSalary: maximumSalary,
       distanceFromLocation: distance,
       postedBy: postedBy === "All" ? false : postedBy,
     };
+
+    if (minimumSalary !== "not specified") {
+      queryParams.minimumSalary = minimumSalary;
+    }
+
+    if (maximumSalary !== "not specified") {
+      queryParams.maximumSalary = maximumSalary;
+    }
 
     if (graduateJobs === "true") {
       queryParams.graduate = graduateJobs;
     }
 
     const searchQueryParams = new URLSearchParams(queryParams).toString();
-    console.log(searchQueryParams);
 
     try {
       const response = await fetch(
@@ -150,11 +132,14 @@ const Search = () => {
       }
 
       const data = await response.json();
+      console.log(data);
 
       dispatch(getSearchJobsSuccess(data.results));
+      dispatch(getTotalJobs(data.totalResults));
       setSearchedJobsStatus("success");
     } catch (error) {
       dispatch(getSearchJobsFailure(error.message));
+      dispatch(getTotalJobs(0));
       setSearchedJobsStatus("fail");
       setSearchedJobsError(error.message);
       console.error(error);
@@ -164,6 +149,18 @@ const Search = () => {
   useEffect(() => {
     setSearchedJobs(jobs);
   }, [jobs]);
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 10;
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Pagination Numbers
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(totalJobs / jobsPerPage); i++) {
+    pageNumbers.push(i);
+  }
 
   // Loading state
   if (searchedJobsStatus === "loading") {
@@ -186,6 +183,102 @@ const Search = () => {
       </Layout>
     );
   }
+
+  const handleNextPage = async () => {
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+
+    dispatch(getSearchJobsStart());
+    try {
+      const skipped = nextPage * jobsPerPage;
+
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/searchJobs/reed?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=${skipped}`
+      );
+
+      console.log(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/searchJobs/reed?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=${skipped}`
+      );
+
+      const data = await response.json();
+      console.log(data);
+      dispatch(getSearchJobsSuccess(data.results));
+      dispatch(getTotalJobs(data.totalResults));
+      setSearchedJobsStatus("success");
+
+      window.scrollTo(0, 0);
+    } catch (error) {
+      dispatch(getSearchJobsFailure(error.message));
+      dispatch(getTotalJobs(0));
+      setSearchedJobsStatus("fail");
+      setSearchedJobsError(error.message);
+      console.error(error);
+    }
+  };
+
+  const handlePrevPage = async () => {
+    const prevPage = currentPage - 1;
+    setCurrentPage(prevPage);
+
+    dispatch(getSearchJobsStart());
+    try {
+      const skipped = prevPage * jobsPerPage;
+
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/searchJobs/reed?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=${skipped}`
+      );
+
+      const data = await response.json();
+      console.log(data);
+      dispatch(getSearchJobsSuccess(data.results));
+      dispatch(getTotalJobs(data.totalResults));
+      setSearchedJobsStatus("success");
+
+      window.scrollTo(0, 0);
+    } catch (error) {
+      dispatch(getSearchJobsFailure(error.message));
+      dispatch(getTotalJobs(0));
+      setSearchedJobsStatus("fail");
+      setSearchedJobsError(error.message);
+      console.error(error);
+    }
+  };
+
+  const handleClickedPage = async (e) => {
+    const clickedPage = Number(e.target.textContent);
+    setCurrentPage(clickedPage);
+
+    dispatch(getSearchJobsStart());
+    try {
+      const skipped = clickedPage * jobsPerPage;
+
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/searchJobs/reed?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=${skipped}`
+      );
+
+      const data = await response.json();
+      console.log(data);
+      dispatch(getSearchJobsSuccess(data.results));
+      dispatch(getTotalJobs(data.totalResults));
+      setSearchedJobsStatus("success");
+
+      window.scrollTo(0, 0);
+    } catch (error) {
+      dispatch(getSearchJobsFailure(error.message));
+      dispatch(getTotalJobs(0));
+      setSearchedJobsStatus("fail");
+      setSearchedJobsError(error.message);
+      console.error(error);
+    }
+  };
 
   // Success state
 
@@ -583,6 +676,75 @@ const Search = () => {
                       </ThemeProvider>
                     </div>
                   </div>
+                </div>
+                <div className="flex justify-center items-center gap-4">
+                  <button
+                    className="bg-primary-light dark:bg-primaryDark-light py-2 px-4 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark-light/90 hover:opacity-90 dark:disabled:bg-primaryDark-light/50 disabled:cursor-not-allowed disabled:bg-primary-dark disabled:text-secondaryDark-dark"
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                  >
+                    Prev
+                  </button>
+                  {/* Always show the first page */}
+                  <button
+                    key={1}
+                    onClick={() => paginate(1)}
+                    className={`bg-primary-light dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark ${
+                      currentPage === 1
+                        ? "text-xl bg-primary dark:bg-primaryDark-light"
+                        : ""
+                    }`}
+                  >
+                    1
+                  </button>
+
+                  {/* Conditional rendering for ellipsis and intermediate pages */}
+                  {currentPage > 4 && <span className="p-2">...</span>}
+
+                  {pageNumbers
+                    .slice(
+                      Math.max(currentPage - 2, 1),
+                      Math.min(currentPage + 1, pageNumbers.length - 1)
+                    )
+                    .map((number) => (
+                      <button
+                        key={number}
+                        onClick={() => paginate(number)}
+                        className={`bg-primary-light dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark ${
+                          currentPage === number
+                            ? "text-xl bg-primary dark:bg-primaryDark-light"
+                            : ""
+                        }`}
+                      >
+                        {number}
+                      </button>
+                    ))}
+
+                  {currentPage < pageNumbers.length - 3 && (
+                    <span className="p-2">...</span>
+                  )}
+
+                  {/* Always show the last page */}
+                  {pageNumbers.length > 1 && (
+                    <button
+                      key={pageNumbers.length}
+                      onClick={() => paginate(pageNumbers.length)}
+                      className={`bg-primary-light dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark ${
+                        currentPage === pageNumbers.length
+                          ? "text-xl bg-primary dark:bg-primaryDark-light"
+                          : ""
+                      }`}
+                    >
+                      {pageNumbers.length}
+                    </button>
+                  )}
+                  <button
+                    className="bg-primary-light dark:bg-primaryDark-light py-2 px-4 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark-light/90 hover:opacity-90 dark:disabled:bg-primaryDark-light/50 disabled:cursor-not-allowed disabled:bg-primary-dark disabled:text-secondaryDark-dark"
+                    onClick={handleNextPage}
+                    disabled={currentPage === pageNumbers.length}
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
             </div>

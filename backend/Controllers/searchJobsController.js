@@ -40,7 +40,7 @@ const filterReedJobs = async (req, res) => {
   const {
     searchTerm,
     searchLocation,
-    skipped,
+    skippedResults,
     jobType,
     minimumSalary,
     maximumSalary,
@@ -59,7 +59,6 @@ const filterReedJobs = async (req, res) => {
       keywords: searchTerm,
       locationName: searchLocation,
       resultsToTake: 10,
-      resultsToSkip: skipped || 0,
       distanceFromLocation: distanceFromLocation || 10,
     };
 
@@ -73,6 +72,10 @@ const filterReedJobs = async (req, res) => {
       queryParams.fullTime = true;
     } else if (jobType === "partTime") {
       queryParams.partTime = true;
+    }
+
+    if (skippedResults) {
+      queryParams.resultsToSkip = skippedResults;
     }
 
     if (postedBy === "Recruiter") {
