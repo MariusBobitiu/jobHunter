@@ -154,8 +154,6 @@ const Search = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 10;
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
   // Pagination Numbers
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(totalJobs / jobsPerPage); i++) {
@@ -688,7 +686,7 @@ const Search = () => {
                   {/* Always show the first page */}
                   <button
                     key={1}
-                    onClick={() => paginate(1)}
+                    onClick={handleClickedPage}
                     className={`bg-primary-light dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark ${
                       currentPage === 1
                         ? "text-xl bg-primary dark:bg-primaryDark-light"
@@ -709,7 +707,7 @@ const Search = () => {
                     .map((number) => (
                       <button
                         key={number}
-                        onClick={() => paginate(number)}
+                        onClick={handleClickedPage}
                         className={`bg-primary-light dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark ${
                           currentPage === number
                             ? "text-xl bg-primary dark:bg-primaryDark-light"
@@ -728,7 +726,7 @@ const Search = () => {
                   {pageNumbers.length > 1 && (
                     <button
                       key={pageNumbers.length}
-                      onClick={() => paginate(pageNumbers.length)}
+                      onClick={handleClickedPage}
                       className={`bg-primary-light dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark ${
                         currentPage === pageNumbers.length
                           ? "text-xl bg-primary dark:bg-primaryDark-light"
