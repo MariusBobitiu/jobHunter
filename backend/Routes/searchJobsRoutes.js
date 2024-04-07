@@ -1,6 +1,6 @@
 const express = require("express");
 const searchJobsController = require("../Controllers/searchJobsController");
-const { searchReedJobs, searchReedJob } = searchJobsController;
+const { searchReedJobs, searchReedJob, filterReedJobs } = searchJobsController;
 
 const router = express.Router();
 
