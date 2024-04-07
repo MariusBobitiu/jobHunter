@@ -23,6 +23,7 @@ import {
   getSearchJobsSuccess,
   getTotalJobs,
 } from "../features/searchJobs/searchJobsSlice";
+import AppliedPopup from "../components/search/AppliedPopup";
 
 const Search = () => {
   // Redux states for search jobs
@@ -38,6 +39,20 @@ const Search = () => {
   const [distance, setDistance] = useState(10);
   const [graduateJobs, setGraduateJobs] = useState(false);
   const [postedBy, setPostedBy] = useState("All");
+
+  const [applied, setApplied] = useState("");
+  const [showAppliedPopup, setShowAppliedPopup] = useState(false);
+  const [appliedJob, setAppliedJob] = useState({});
+
+  useEffect(() => {
+    if (applied !== "") {
+      const job = jobs.find((job) => job.jobId === applied);
+      console.log(job);
+      setApplied(job.jobId);
+      setShowAppliedPopup(true);
+      setAppliedJob(job);
+    }
+  }, [applied, jobs]);
 
   const dispatch = useDispatch();
 
@@ -76,7 +91,7 @@ const Search = () => {
       const response = await fetch(
         `${
           import.meta.env.VITE_API_BASE_URL
-        }/searchJobs/reed?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=0`
+        }/searchJobs/reed?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skippedResults=0`
       );
 
       const data = await response.json();
@@ -95,6 +110,8 @@ const Search = () => {
 
   const filterResults = async (e) => {
     e.preventDefault();
+
+    setCurrentPage(1);
 
     dispatch(getSearchJobsStart());
 
@@ -182,93 +199,51 @@ const Search = () => {
     );
   }
 
-  const handleNextPage = async () => {
-    const nextPage = currentPage + 1;
-    setCurrentPage(nextPage);
+  const handlePageChange = async (newPage) => {
+    setCurrentPage(newPage);
 
     dispatch(getSearchJobsStart());
     try {
-      const skipped = nextPage * jobsPerPage;
+      const queryParams = {
+        searchTerm: searchTerm,
+        searchLocation: searchLocation,
+        jobType: jobType === "All" ? false : jobType,
+        distanceFromLocation: distance,
+        postedBy: postedBy === "All" ? false : postedBy,
+        skippedResults: (newPage - 1) * jobsPerPage,
+      };
+
+      if (minimumSalary !== "not specified") {
+        queryParams.minimumSalary = minimumSalary;
+      }
+
+      if (maximumSalary !== "not specified") {
+        queryParams.maximumSalary = maximumSalary;
+      }
+
+      if (graduateJobs === "true") {
+        queryParams.graduate = graduateJobs;
+      }
+
+      const searchQueryParams = new URLSearchParams(queryParams).toString();
 
       const response = await fetch(
         `${
           import.meta.env.VITE_API_BASE_URL
-        }/searchJobs/reed?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=${skipped}`
+        }/searchJobs/reed/filter?${searchQueryParams}`
       );
+      console.log(searchQueryParams);
 
-      console.log(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/searchJobs/reed?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=${skipped}`
-      );
-
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch Reed jobs. Status: ${response.status}, message: ${response.message}`
+        );
+      }
       const data = await response.json();
       console.log(data);
       dispatch(getSearchJobsSuccess(data.results));
       dispatch(getTotalJobs(data.totalResults));
       setSearchedJobsStatus("success");
-
-      window.scrollTo(0, 0);
-    } catch (error) {
-      dispatch(getSearchJobsFailure(error.message));
-      dispatch(getTotalJobs(0));
-      setSearchedJobsStatus("fail");
-      setSearchedJobsError(error.message);
-      console.error(error);
-    }
-  };
-
-  const handlePrevPage = async () => {
-    const prevPage = currentPage - 1;
-    setCurrentPage(prevPage);
-
-    dispatch(getSearchJobsStart());
-    try {
-      const skipped = prevPage * jobsPerPage;
-
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/searchJobs/reed?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=${skipped}`
-      );
-
-      const data = await response.json();
-      console.log(data);
-      dispatch(getSearchJobsSuccess(data.results));
-      dispatch(getTotalJobs(data.totalResults));
-      setSearchedJobsStatus("success");
-
-      window.scrollTo(0, 0);
-    } catch (error) {
-      dispatch(getSearchJobsFailure(error.message));
-      dispatch(getTotalJobs(0));
-      setSearchedJobsStatus("fail");
-      setSearchedJobsError(error.message);
-      console.error(error);
-    }
-  };
-
-  const handleClickedPage = async (e) => {
-    const clickedPage = Number(e.target.textContent);
-    setCurrentPage(clickedPage);
-
-    dispatch(getSearchJobsStart());
-    try {
-      const skipped = clickedPage * jobsPerPage;
-
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/searchJobs/reed?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=${skipped}`
-      );
-
-      const data = await response.json();
-      console.log(data);
-      dispatch(getSearchJobsSuccess(data.results));
-      dispatch(getTotalJobs(data.totalResults));
-      setSearchedJobsStatus("success");
-
-      window.scrollTo(0, 0);
     } catch (error) {
       dispatch(getSearchJobsFailure(error.message));
       dispatch(getTotalJobs(0));
@@ -364,7 +339,11 @@ const Search = () => {
                 <div className="flex items-center justify-between h-4/5 gap-4">
                   <div className="flex flex-wrap items-center justify-center gap-4 w-3/4 h-full overflow-scroll">
                     {searchedJobs.map((job) => (
-                      <JobContainer item={job} key={job.jobId} />
+                      <JobContainer
+                        item={job}
+                        key={job.jobId}
+                        onClick={() => setApplied(job.jobId)}
+                      />
                     ))}
                   </div>
                   <div className="w-1/4 flex flex-col gap-4 h-full p-4 rounded-sm bg-primary-dark dark:bg-primaryDark-light">
@@ -678,7 +657,7 @@ const Search = () => {
                 <div className="flex justify-center items-center gap-4">
                   <button
                     className="bg-primary-light dark:bg-primaryDark-light py-2 px-4 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark-light/90 hover:opacity-90 dark:disabled:bg-primaryDark-light/50 disabled:cursor-not-allowed disabled:bg-primary-dark disabled:text-secondaryDark-dark"
-                    onClick={handlePrevPage}
+                    onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                   >
                     Prev
@@ -686,7 +665,7 @@ const Search = () => {
                   {/* Always show the first page */}
                   <button
                     key={1}
-                    onClick={handleClickedPage}
+                    onClick={() => handlePageChange(1)}
                     className={`bg-primary-light dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark ${
                       currentPage === 1
                         ? "text-xl bg-primary dark:bg-primaryDark-light"
@@ -707,7 +686,7 @@ const Search = () => {
                     .map((number) => (
                       <button
                         key={number}
-                        onClick={handleClickedPage}
+                        onClick={() => handlePageChange(number)}
                         className={`bg-primary-light dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark ${
                           currentPage === number
                             ? "text-xl bg-primary dark:bg-primaryDark-light"
@@ -726,7 +705,7 @@ const Search = () => {
                   {pageNumbers.length > 1 && (
                     <button
                       key={pageNumbers.length}
-                      onClick={handleClickedPage}
+                      onClick={() => handlePageChange(pageNumbers.length)}
                       className={`bg-primary-light dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark ${
                         currentPage === pageNumbers.length
                           ? "text-xl bg-primary dark:bg-primaryDark-light"
@@ -738,7 +717,7 @@ const Search = () => {
                   )}
                   <button
                     className="bg-primary-light dark:bg-primaryDark-light py-2 px-4 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark-light/90 hover:opacity-90 dark:disabled:bg-primaryDark-light/50 disabled:cursor-not-allowed disabled:bg-primary-dark disabled:text-secondaryDark-dark"
-                    onClick={handleNextPage}
+                    onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === pageNumbers.length}
                   >
                     Next
@@ -749,6 +728,21 @@ const Search = () => {
           )}
         </div>
       </Layout>
+      {showAppliedPopup && (
+        <AppliedPopup
+          onClick={() => {
+            setApplied("");
+            setAppliedJob({});
+            setShowAppliedPopup(false);
+          }}
+          closePopup={() => {
+            setApplied("");
+            setAppliedJob({});
+            setShowAppliedPopup(false);
+          }}
+          job={appliedJob}
+        />
+      )}
     </>
   );
 };

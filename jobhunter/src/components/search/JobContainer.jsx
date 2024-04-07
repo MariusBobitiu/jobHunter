@@ -1,6 +1,6 @@
 import { PropTypes } from "prop-types";
 
-const JobContainer = ({ item }) => {
+const JobContainer = ({ item, onClick }) => {
   const openDescription = (jobId) => {
     console.log(jobId);
   };
@@ -24,7 +24,9 @@ const JobContainer = ({ item }) => {
         <p className="text-md italic">{item.employerName}</p>
         <p className="text-md italic">{item.locationName}</p>
       </div>
-      <p className="text-xs">{item.jobDescription}</p>
+      <p className="text-sm text-secondary-light dark:text-secondaryDark-dark">
+        {item.jobDescription}
+      </p>
       <div className="flex items-center justify-between gap-2">
         <p className="text-lg">Salary Range:</p>
         <p className="text-lg">
@@ -33,21 +35,33 @@ const JobContainer = ({ item }) => {
           {formatSalary(item.maximumSalary)}{" "}
         </p>
       </div>
-      <a
-        href="#"
-        className="text-accent-dark cursor-pointer hover:text-accent-light"
-        onClick={() => {
-          openDescription(item.jobId);
-        }}
-      >
-        View Details
-      </a>
+      <div className="flex items-center gap-4">
+        <a
+          href="#"
+          className="text-secondary dark:text-secondaryDark-dark cursor-pointer hover:text-secondary-dark dark:hover:text-secondaryDark-light"
+          onClick={() => {
+            openDescription(item.jobId);
+          }}
+        >
+          View More Details
+        </a>
+        <a
+          href={item.jobUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="text-accent-dark cursor-pointer hover:text-accent-light"
+          onClick={onClick}
+        >
+          Apply now
+        </a>
+      </div>
     </div>
   );
 };
 
 JobContainer.propTypes = {
   item: PropTypes.object,
+  onClick: PropTypes.func,
 };
 
 export default JobContainer;
