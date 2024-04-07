@@ -163,9 +163,9 @@ const Search = () => {
         `${
           import.meta.env.VITE_API_BASE_URL
         }/searchJobs/reed/filter?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skipped=0&${
-          jobType === "All" ? "" : `${jobType}=true`
+          jobType === "All" ? "" : `jobType=${jobType}`
         }&minimumSalary=${minimumSalary}&maximumSalary=${maximumSalary}&distanceFromLocation=${distance}&graduate=${graduateJobs}&postedBy=${
-          postedBy === "All" ? "" : `${postedBy}=true`
+          postedBy === "All" ? "" : `postedBy=${postedBy}`
         }`
       );
       const data = await response.json();

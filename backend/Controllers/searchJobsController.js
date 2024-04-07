@@ -49,11 +49,37 @@ const filterReedJobs = async (req, res) => {
     postedBy,
   } = req.query;
 
+  console.info(req.query);
+
   try {
     const apiKey = process.env.REED_API_KEY;
     const encoded_API_Key = Buffer.from(`${apiKey}:`).toString("base64");
 
     const response = await fetch(
+      `${process.env.REED_API_BASE_URL}/search?keywords=${encodeURIComponent(
+        searchTerm
+      )}&locationName=${encodeURIComponent(
+        searchLocation
+      )}&resultsToTake=10&resultsToSkip=${encodeURIComponent(skipped)}&${
+        jobType ? `${jobType}=true&` : ""
+      }${minimumSalary ? `minimumSalary=${minimumSalary}&` : ""}${
+        maximumSalary ? `maximumSalary=${maximumSalary}&` : ""
+      }${
+        distanceFromLocation
+          ? `distanceFromLocation=${distanceFromLocation}&`
+          : ""
+      }${graduate ? `graduate=${graduate}&` : ""}${
+        postedBy ? `${postedBy}=true&` : ""
+      }`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${encoded_API_Key}`,
+        },
+      }
+    );
+
+    console.log(
       `${process.env.REED_API_BASE_URL}/search?keywords=${encodeURIComponent(
         searchTerm
       )}&location=${encodeURIComponent(
@@ -68,13 +94,7 @@ const filterReedJobs = async (req, res) => {
           : ""
       }${graduate ? `graduate=${graduate}&` : ""}${
         postedBy ? `postedBy=${postedBy}&` : ""
-      }`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Basic ${encoded_API_Key}`,
-        },
-      }
+      }`
     );
 
     if (!response.ok) {
