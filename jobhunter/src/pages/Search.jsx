@@ -28,11 +28,11 @@ const Search = () => {
   const jobs = useSelector((state) => state.searchJobs.searchJobs);
   const darkMode = useSelector((state) => state.darkMode.darkMode);
 
-  const [customDistance, setCustomDistance] = useState(true);
+  const [customDistance, setCustomDistance] = useState(false);
 
   const [jobType, setJobType] = useState("All");
-  const [minimumSalary, setMinimumSalary] = useState(20000);
-  const [maximumSalary, setMaximumSalary] = useState(30000);
+  const [minimumSalary, setMinimumSalary] = useState("20000");
+  const [maximumSalary, setMaximumSalary] = useState("30000");
   const [distance, setDistance] = useState(10);
   const [graduateJobs, setGraduateJobs] = useState(false);
   const [postedBy, setPostedBy] = useState("All");
@@ -43,35 +43,6 @@ const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
   const [searchedJobsError, setSearchedJobsError] = useState("");
-
-  const getSalary = (value) => {
-    switch (value) {
-      case "20000-30000":
-        setMinimumSalary(20000);
-        setMaximumSalary(30000);
-        break;
-      case "30000-40000":
-        setMinimumSalary(30000);
-        setMaximumSalary(40000);
-        break;
-      case "40000-50000":
-        setMinimumSalary(40000);
-        setMaximumSalary(50000);
-        break;
-      case "50000-60000":
-        setMinimumSalary(50000);
-        setMaximumSalary(60000);
-        break;
-      case "60000-1000000":
-        setMinimumSalary(60000);
-        setMaximumSalary(1000000);
-        break;
-      default:
-        setMinimumSalary(20000);
-        setMaximumSalary(30000);
-        break;
-    }
-  };
 
   useEffect(() => {
     console.log(
@@ -365,43 +336,99 @@ const Search = () => {
                             <label htmlFor="salary" className="text-2xl mb-2">
                               Salary Range
                             </label>
-                            <div className="flex flex-col ml-4">
+                            <div className="flex flex-col gap-2 ml-4">
+                              <p className="text-lg">Minimum Salary</p>
                               <StyledSelect
                                 isDarkMode={darkMode}
                                 isTable
                                 isEdit
-                                defaultValue="20000-30000"
-                                onChange={(e) => getSalary(e.target.value)}
+                                defaultValue="not specified"
+                                onChange={(e) =>
+                                  setMinimumSalary(e.target.value)
+                                }
                               >
                                 <StyledMenuItem
                                   isDarkMode={darkMode}
-                                  value="20000-30000"
+                                  value="10000"
                                 >
-                                  £20.000 - £30.000
+                                  £10.000
                                 </StyledMenuItem>
                                 <StyledMenuItem
                                   isDarkMode={darkMode}
-                                  value="30000-40000"
+                                  value="20000"
                                 >
-                                  £30.000 - £40.000
+                                  £20.000
                                 </StyledMenuItem>
                                 <StyledMenuItem
                                   isDarkMode={darkMode}
-                                  value="40000-50000"
+                                  value="30000"
                                 >
-                                  £40.000 - £50.000
+                                  £30.000
                                 </StyledMenuItem>
                                 <StyledMenuItem
                                   isDarkMode={darkMode}
-                                  value="50000-60000"
+                                  value="40000"
                                 >
-                                  £50.000 - £60.000
+                                  £40.000
                                 </StyledMenuItem>
                                 <StyledMenuItem
                                   isDarkMode={darkMode}
-                                  value="60000-1000000"
+                                  value="50000"
                                 >
-                                  &gt; £60.000
+                                  £50.000
+                                </StyledMenuItem>
+                                <StyledMenuItem
+                                  isDarkMode={darkMode}
+                                  value="not specified"
+                                >
+                                  Not Specified
+                                </StyledMenuItem>
+                              </StyledSelect>
+                              <p className="text-lg">Maximum Salary</p>
+                              <StyledSelect
+                                isDarkMode={darkMode}
+                                isTable
+                                isEdit
+                                defaultValue="not specified"
+                                onChange={(e) =>
+                                  setMaximumSalary(e.target.value)
+                                }
+                              >
+                                <StyledMenuItem
+                                  isDarkMode={darkMode}
+                                  value="20000"
+                                >
+                                  £20.000
+                                </StyledMenuItem>
+                                <StyledMenuItem
+                                  isDarkMode={darkMode}
+                                  value="30000"
+                                >
+                                  £30.000
+                                </StyledMenuItem>
+                                <StyledMenuItem
+                                  isDarkMode={darkMode}
+                                  value="40000"
+                                >
+                                  £40.000
+                                </StyledMenuItem>
+                                <StyledMenuItem
+                                  isDarkMode={darkMode}
+                                  value="50000"
+                                >
+                                  £50.000
+                                </StyledMenuItem>
+                                <StyledMenuItem
+                                  isDarkMode={darkMode}
+                                  value="60000"
+                                >
+                                  £60.000
+                                </StyledMenuItem>
+                                <StyledMenuItem
+                                  isDarkMode={darkMode}
+                                  value="not specified"
+                                >
+                                  Not Specified
                                 </StyledMenuItem>
                               </StyledSelect>
                             </div>
@@ -414,7 +441,7 @@ const Search = () => {
                               <StyledSelect
                                 isDarkMode={darkMode}
                                 isTable
-                                defaultValue="10 miles"
+                                defaultValue="10"
                                 onChange={(e) => {
                                   const value =
                                     e.target.value === "Custom Distance"
@@ -462,26 +489,28 @@ const Search = () => {
                                   Custom Distance
                                 </StyledMenuItem>
                               </StyledSelect>
-                              <div
-                                className={`flex w-full justify-center items-center gap-4 ${
-                                  customDistance ? "" : "hidden"
-                                }`}
-                              >
-                                <input
-                                  type="number"
-                                  className="py-1 px-4 bg-transparent border border-secondary/25 dark:border-primaryDark-dark/25 rounded-sm w-4/5"
-                                  placeholder="Enter Custom Distance"
-                                  value={distance}
-                                  onChange={(e) => setDistance(e.target.value)}
-                                />
-                                <p className="w-1/5">miles</p>
-                              </div>
+                              {customDistance && (
+                                <>
+                                  <div className="flex justify-center items-center gap-4">
+                                    <input
+                                      type="number"
+                                      className="py-1 px-4 bg-transparent border border-secondary/25 dark:border-primaryDark-dark/25 rounded-sm w-4/5"
+                                      placeholder="Enter Custom Distance"
+                                      value={distance}
+                                      onChange={(e) =>
+                                        setDistance(e.target.value)
+                                      }
+                                    />
+                                    <p className="w-1/5">miles</p>
+                                  </div>
+                                </>
+                              )}
                             </div>
                           </div>
                           <div className="flex flex-col gap-2 mt-2">
                             <label
                               htmlFor="graduate"
-                              className="flex justify-between items-center text-2xl mb-2"
+                              className="flex justify-between items-center text-2xl"
                             >
                               Graduate Jobs
                               <Checkbox
@@ -508,6 +537,9 @@ const Search = () => {
                                 }}
                               />
                             </label>
+                            <small className="text-sm -mt-4 opacity-60">
+                              Click on the icon to toggle graduate jobs
+                            </small>
                           </div>
                           <div className="flex flex-col gap-2">
                             <label htmlFor="postedBy" className="text-2xl mb-2">
@@ -516,8 +548,7 @@ const Search = () => {
                             <div className="flex flex-col ml-4">
                               <StyledSelect
                                 isDarkMode={darkMode}
-                                isTable
-                                isEdit
+                                isTable={true}
                                 defaultValue="All"
                                 onChange={(e) => setPostedBy(e.target.value)}
                               >

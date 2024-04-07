@@ -60,9 +60,7 @@ const filterReedJobs = async (req, res) => {
       locationName: searchLocation,
       resultsToTake: 10,
       resultsToSkip: skipped || 0,
-      minimumSalary: minimumSalary,
-      maximumSalary: maximumSalary,
-      distanceFromLocation: distanceFromLocation,
+      distanceFromLocation: distanceFromLocation || 10,
     };
 
     if (jobType === "permanent") {
@@ -85,6 +83,13 @@ const filterReedJobs = async (req, res) => {
 
     if (graduate === "true") {
       queryParams.graduate = true;
+    }
+
+    if (minimumSalary) {
+      queryParams.minimumSalary = minimumSalary;
+    }
+    if (maximumSalary) {
+      queryParams.maximumSalary = maximumSalary;
     }
 
     const queryString = new URLSearchParams(queryParams).toString();
