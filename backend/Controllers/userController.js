@@ -30,12 +30,9 @@ const signup = async (req, res) => {
       });
 
       res.cookie("jwt", token, {
-        maxAge: process.env.COOKIE_EXPIRATION,
-        domain: "192.168.0.41/",
-        sameSite: "None",
+        maxAge: parseInt(process.env.COOKIE_EXPIRATION),
+        withCredentials: true,
         httpOnly: true,
-        path: "/",
-        partitioned: true,
       });
       console.log("user", JSON.stringify(user, null, 2));
       console.log(token);
@@ -74,12 +71,8 @@ const signin = async (req, res) => {
         // If password is valid, set cookie with the token generated
         res.cookie("jwt", token, {
           maxAge: parseInt(process.env.COOKIE_EXPIRATION),
-          domain: "192.168.0.41",
-          sameSite: "None",
+          withCredentials: true,
           httpOnly: true,
-          secure: true,
-          partitioned: true,
-          path: "/",
         });
 
         // Send user details
