@@ -33,6 +33,7 @@ const signup = async (req, res) => {
         maxAge: parseInt(process.env.COOKIE_EXPIRATION),
         withCredentials: true,
         httpOnly: true,
+        sameSite: "none",
       });
       console.log("user", JSON.stringify(user, null, 2));
       console.log(token);
@@ -73,6 +74,7 @@ const signin = async (req, res) => {
           maxAge: parseInt(process.env.COOKIE_EXPIRATION),
           withCredentials: true,
           httpOnly: true,
+          sameSite: "none",
         });
 
         // Send user details

@@ -3,16 +3,16 @@
 import { useEffect, useState } from "react";
 import heroImage from "../../assets/images/register-hero.jpg";
 import { LoginForm } from "../../components/functional/Forms";
-import { useHistory } from "react-router-dom";
-import Loading from "../../components/functional/Loading";
+import { useNavigate } from "react-router-dom";
+import Loading from "../../components/Loading";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuth = async () => {
-      const response = await fetch("/api/auth/", {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -20,8 +20,9 @@ const Login = () => {
         credentials: "include",
       });
       const data = await response.json();
+      console.log(data);
       if (data.status) {
-        history.push("/dashboard");
+        navigate("/dashboard");
       } else {
         setIsLoading(false);
       }
