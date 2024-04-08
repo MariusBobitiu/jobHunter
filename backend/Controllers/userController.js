@@ -34,6 +34,7 @@ const signup = async (req, res) => {
         withCredentials: true,
         httpOnly: true,
         sameSite: "none",
+        domain: "https://jobhunter-dev.mariusbobitiu.dev"
       });
       console.log("user", JSON.stringify(user, null, 2));
       console.log(token);
@@ -75,6 +76,7 @@ const signin = async (req, res) => {
           withCredentials: true,
           httpOnly: true,
           sameSite: "none",
+          domain: "https://jobhunter-dev.mariusbobitiu.dev"
         });
 
         // Send user details
