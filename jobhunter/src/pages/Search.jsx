@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 // Components
 import JobContainer from "../components/search/JobContainer";
+import JobDetails from "../components/search/JobDetails";
 import {
   StyledMenuItem,
   StyledSelect,
@@ -12,9 +13,13 @@ import {
 import { ThemeProvider } from "@emotion/react";
 import Checkbox from "@mui/material/Checkbox";
 
+// Hooks
+import useFetch from "../hooks/useFetch";
+
 // MUI Icons
 
 import MyLocationIcon from "@mui/icons-material/MyLocation";
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import SchoolIcon from "@mui/icons-material/School";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import {
@@ -24,12 +29,14 @@ import {
   getTotalJobs,
 } from "../features/searchJobs/searchJobsSlice";
 import AppliedPopup from "../components/search/AppliedPopup";
+import { getJobsFailure, getJobsStart, getJobsSuccess } from "../features/jobs/jobsSlice";
 
 const Search = () => {
   // Redux states for search jobs
   const jobs = useSelector((state) => state.searchJobs.searchJobs);
   const totalJobs = useSelector((state) => state.searchJobs.totalJobs);
   const darkMode = useSelector((state) => state.darkMode.darkMode);
+  const user = useSelector((state) => state.user.user);
 
   const [customDistance, setCustomDistance] = useState(false);
 
@@ -40,21 +47,69 @@ const Search = () => {
   const [graduateJobs, setGraduateJobs] = useState(false);
   const [postedBy, setPostedBy] = useState("All");
 
+  const [successMessage, setSuccessMessage] = useState(false);
+
   const [applied, setApplied] = useState("");
   const [showAppliedPopup, setShowAppliedPopup] = useState(false);
   const [appliedJob, setAppliedJob] = useState({});
+
+  const [showJobDetails, setShowJobDetails] = useState(false);
+  const [showJobDetailsId, setShowJobDetailsId] = useState("");
+  
+  const dispatch = useDispatch();
+  const fetchJobs = useFetch();
 
   useEffect(() => {
     if (applied !== "") {
       const job = jobs.find((job) => job.jobId === applied);
       console.log(job);
-      setApplied(job.jobId);
-      setShowAppliedPopup(true);
-      setAppliedJob(job);
+      setTimeout(() => {
+        setApplied(job.jobId);
+        setShowAppliedPopup(true);
+        setAppliedJob(job);
+      }, 2500);
     }
   }, [applied, jobs]);
 
-  const dispatch = useDispatch();
+  const AddJobToTable = async (e) => {
+    console.log(`Adding job to table... ${appliedJob.jobId, appliedJob.employerName, appliedJob.jobTitle} to ${user.id}`);
+    e.preventDefault();
+    try {
+      const formattedDate = new Date().toISOString();
+      // setLoading(true);
+      
+      dispatch(getJobsStart());
+      await fetchJobs("POST", `${import.meta.env.VITE_API_BASE_URL}/jobs`, 
+      {
+        company: appliedJob.employerName,
+        position: appliedJob.jobTitle,
+        status: "Applied",
+        date: formattedDate,
+        details: `Applied through jobHunter on ${appliedJob.jobUrl}`,
+        userId: user.id,
+      });
+
+      const data = await fetchJobs("GET", `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`);
+      const jobsWithId = data.map((job, index) => {
+        return { ...job, jobId: index + 1 };
+      });
+      dispatch(getJobsSuccess(jobsWithId));
+
+      setApplied("");
+      setAppliedJob({});
+      setShowAppliedPopup(false);
+      console.log("Showing success message... ");
+      setSuccessMessage(true);
+      setTimeout(() => {
+        console.log("Dismissing success message...")
+        setSuccessMessage(false);
+      }, 2500);
+    } catch (err) {
+      console.error(err);
+      dispatch(getJobsFailure(err.message));
+    }
+  }
+
 
   // Search states
   const [searchTerm, setSearchTerm] = useState("");
@@ -300,6 +355,33 @@ const Search = () => {
                   Search
                 </button>
               </div>
+              <div className="w-full flex flex-col justify-center items-center gap-2 mt-8">
+                <p className="w-3/4 pl-12">
+                  Our searches are powered by
+                </p>
+                <div className="flex gap-4 justify-evenly items-center w-3/4">
+                <a
+                  href="https://www.reed.co.uk/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-primary hover:underline w-44"
+                >
+                  <span className="w-full">
+                    <img src={darkMode ? '/reed-logo-darkMode.webp' : '/reed-logo.webp'} alt="Reed Logo" className="bg-cover bg-center w-full"/>
+                  </span>
+                </a>
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-primary hover:underline w-44 mb-4"
+                >
+                  <span className="w-full">
+                    <img src={darkMode ? '/linkedin-logo-darkMode.webp' : '/linkedin-logo.webp'} alt="LinkedIn Logo" className="bg-cover bg-center w-full"/>
+                  </span>
+                </a>
+                </div>
+              </div>
             </div>
           )}
           {searchedJobsStatus === "success" && (
@@ -343,6 +425,7 @@ const Search = () => {
                         item={job}
                         key={job.jobId}
                         onClick={() => setApplied(job.jobId)}
+                        viewDetails={() => {setShowJobDetailsId(job.jobId); setShowJobDetails(true)}}
                       />
                     ))}
                   </div>
@@ -730,11 +813,7 @@ const Search = () => {
       </Layout>
       {showAppliedPopup && (
         <AppliedPopup
-          onClick={() => {
-            setApplied("");
-            setAppliedJob({});
-            setShowAppliedPopup(false);
-          }}
+          onClick={AddJobToTable}
           closePopup={() => {
             setApplied("");
             setAppliedJob({});
@@ -743,6 +822,21 @@ const Search = () => {
           job={appliedJob}
         />
       )}
+      {showJobDetails && (
+        <JobDetails jobId={showJobDetailsId} 
+          onClick={() => {
+              setShowJobDetails(false); 
+              setApplied(showJobDetailsId);
+            }}
+          closePopup={() => setShowJobDetails(false)} 
+        />
+      )}
+      <div className={`absolute bottom-2 right-2 p-4 rounded-lg z-50 bg-primaryDark-light dark:bg-primary-dark flex justify-center items-center gap-2 ${successMessage ? 'visible' : 'invisible'} transition ease-in-out duration-300`}>
+        <span className="w-12 h-12 bg-green-600 rounded-full flex justify-center items-center">
+          <TaskAltIcon fontSize="large" className={`${darkMode ? 'text-secondaryDark' : 'text-secondary'}`} />
+        </span>
+        <p className="text-lg font-semibold text-secondaryDark dark:text-secondary">Job added to table successfully!</p>
+      </div>
     </>
   );
 };

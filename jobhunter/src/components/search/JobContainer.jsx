@@ -1,9 +1,9 @@
 import { PropTypes } from "prop-types";
 
-const JobContainer = ({ item, onClick }) => {
-  const openDescription = (jobId) => {
-    console.log(jobId);
-  };
+const JobContainer = ({ item, onClick, viewDetails }) => {
+  // const openDescription = (jobId) => {
+  //   console.log(jobId);
+  // };
 
   const formatSalary = (salary) => {
     return salary
@@ -39,9 +39,7 @@ const JobContainer = ({ item, onClick }) => {
         <a
           href="#"
           className="text-secondary dark:text-secondaryDark-dark cursor-pointer hover:text-secondary-dark dark:hover:text-secondaryDark-light"
-          onClick={() => {
-            openDescription(item.jobId);
-          }}
+          onClick={viewDetails}
         >
           View More Details
         </a>
@@ -62,6 +60,7 @@ const JobContainer = ({ item, onClick }) => {
 JobContainer.propTypes = {
   item: PropTypes.object,
   onClick: PropTypes.func,
+  viewDetails: PropTypes.func,
 };
 
 export default JobContainer;
