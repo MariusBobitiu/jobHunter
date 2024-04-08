@@ -1,9 +1,39 @@
 // import GoogleIcon from "@mui/icons-material/Google";
 // import AppleIcon from "@mui/icons-material/Apple";
+import { useEffect, useState } from "react";
 import heroImage from "../../assets/images/register-hero.jpg";
 import { LoginForm } from "../../components/functional/Forms";
+import { useHistory } from "react-router-dom";
+import Loading from "../../components/functional/Loading";
 
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const history = useHistory();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const response = await fetch("/api/auth/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (data.status) {
+        history.push("/dashboard");
+      } else {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [history])
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <main

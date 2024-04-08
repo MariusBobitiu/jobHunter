@@ -29,7 +29,7 @@ const signup = async (req, res) => {
         expiresIn: process.env.JWT_EXPIRATION,
       });
 
-      res.cookie("jwt", token, {
+      res.cookie("token", token, {
         maxAge: parseInt(process.env.COOKIE_EXPIRATION),
         withCredentials: true,
         httpOnly: true,
@@ -69,7 +69,7 @@ const signin = async (req, res) => {
         });
 
         // If password is valid, set cookie with the token generated
-        res.cookie("jwt", token, {
+        res.cookie("token", token, {
           maxAge: parseInt(process.env.COOKIE_EXPIRATION),
           withCredentials: true,
           httpOnly: true,
