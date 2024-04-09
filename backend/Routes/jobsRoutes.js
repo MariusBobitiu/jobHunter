@@ -1,20 +1,19 @@
 const express = require("express");
 const jobsController = require("../Controllers/jobsController");
 const { getJobs, createJob, updateJob, deleteJob } = jobsController;
-const { userVerification } = require("../Middlewares/userAuth");
 
 const router = express.Router();
 
 // Get all jobs
-router.get("/:userId", userVerification, getJobs);
+router.get("/:userId", getJobs);
 
 // Create a new job
-router.post("/", userVerification, createJob);
+router.post("/", createJob);
 
 // Update a job
-router.put("/:jobId", userVerification, updateJob);
+router.put("/:jobId", updateJob);
 
 // Delete a job
-router.delete("/:jobId", userVerification, deleteJob);
+router.delete("/:jobId", deleteJob);
 
 module.exports = router;

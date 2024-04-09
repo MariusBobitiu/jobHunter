@@ -82,6 +82,7 @@ const Dashboard = () => {
 
     getQuote();
     getJobs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getRandomQuote = async () => {

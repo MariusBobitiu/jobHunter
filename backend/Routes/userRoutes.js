@@ -26,6 +26,6 @@ router.patch("/reset-password/:token", resetPassword);
 router.post("/verify-token", verifyToken);
 
 // Logout a user
-router.post("/logout", userVerification, logout);
+router.post("/logout", logout);
 
 module.exports = router;
