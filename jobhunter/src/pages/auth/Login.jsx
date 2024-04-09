@@ -12,21 +12,26 @@ const Login = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/auth`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/auth`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+        const data = await response.json();
+        console.log(data);
+        if (data.status) {
+          navigate("/dashboard");
+        } else {
+          setIsLoading(false);
         }
-      );
-      const data = await response.json();
-      console.log(data);
-      if (data.status) {
-        navigate("/dashboard");
-      } else {
+      } catch (error) {
+        console.error("Error:", error);
         setIsLoading(false);
       }
     };

@@ -39,7 +39,7 @@ const saveUser = async (req, res, next) => {
 const userVerification = async (req, res) => {
   const token = req.cookies.token;
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ status: false, message: "Unauthorized" });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {

@@ -6,7 +6,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import TableComponent from "../components/TableComponent/TableComponent";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Loading from "../components/Loading";
 
 const Jobs = () => {
   const phone = window.innerWidth < 520;
@@ -22,11 +24,25 @@ const Jobs = () => {
   const deniedJobs = jobs.filter((job) => job.status === "Rejected").length;
   const noResponse = jobs.filter((job) => job.status === "No response").length;
 
+  const user = useSelector((state) => state.user.user);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
   useEffect(() => {
-    document.title = "Jobs - JobHunter";
-  }, []);
+    if (!user) {
+      console.log("User not logged in. Redirecting to login page...");
+      navigate("/login");
+      return;
+    }
+    setIsLoading(false);
+    document.title = `Jobs | ${user.username}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, user]);
 
   const smallScreen = window.innerWidth < 1028;
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>

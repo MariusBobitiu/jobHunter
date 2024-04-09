@@ -17,18 +17,21 @@ function App() {
     <>
       <Router>
         <Routes>
+          {/* PUBLIC Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/about" element={<About />} />
+          <Route path="*" element={<h1>Not Found</h1>} />
+          <Route path="/test" element={<Test />} />
+
+          {/* PRIVATE Routes */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/Search" element={<Search />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/about" element={<About />} />
-          <Route path="*" element={<h1>Not Found</h1>} />
-          <Route path="/test" element={<Test />} />
         </Routes>
       </Router>
     </>

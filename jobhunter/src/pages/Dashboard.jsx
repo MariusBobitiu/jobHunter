@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import DateChart from "../components/functional/DateChart";
 import Placeholder from "../components/dashboard/Placeholder";
-import Loading from "../components/dashboard/Loading";
+import LoadingDashboard from "../components/dashboard/LoadingDashboard";
+import Loading from "../components/Loading";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import useFetch from "../hooks/useFetch";
@@ -19,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [isData, setIsData] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -37,10 +39,12 @@ const Dashboard = () => {
     if (!user) {
       console.log("User not logged in. Redirecting to login page...");
       navigate("/login");
+      return;
     }
+    setIsLoading(false);
     document.title = `Dashboard | ${user.username}`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [navigate, user]);
 
   useEffect(() => {
     console.log("User after login:", user);
@@ -122,10 +126,14 @@ const Dashboard = () => {
     setLoading(false);
   }, [jobs]);
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <Layout>
-        {loading && <Loading />}
+        {loading && <LoadingDashboard />}
         <div className="w-full h-dvh bg-primary dark:bg-primaryDark centred p-4">
           {!isData && <Placeholder />}
           {isData && (

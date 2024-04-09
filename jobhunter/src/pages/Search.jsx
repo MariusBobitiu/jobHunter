@@ -9,6 +9,7 @@ import Filters from "../components/search/Filters";
 import Notification from "../components/functional/Notification";
 
 // Hooks
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import useFetch from "../hooks/useFetch";
@@ -18,11 +19,15 @@ import {
   getSearchJobsSuccess,
   getTotalJobs,
 } from "../features/searchJobs/searchJobsSlice";
-import { getJobsFailure, getJobsStart, getJobsSuccess } from "../features/jobs/jobsSlice";
+import {
+  getJobsFailure,
+  getJobsStart,
+  getJobsSuccess,
+} from "../features/jobs/jobsSlice";
 
 // MUI Icons
 import MyLocationIcon from "@mui/icons-material/MyLocation";
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 
 const Search = () => {
   // Redux states
@@ -49,7 +54,7 @@ const Search = () => {
 
   const [showJobDetails, setShowJobDetails] = useState(false);
   const [showJobDetailsId, setShowJobDetailsId] = useState("");
-  
+
   const dispatch = useDispatch();
   const fetchJobs = useFetch();
 
@@ -65,6 +70,20 @@ const Search = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 10;
 
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      console.log("User not logged in. Redirecting to login page...");
+      navigate("/login");
+      return;
+    }
+    setIsLoading(false);
+    document.title = `Search Jobs | ${user.username}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, user]);
+
   useEffect(() => {
     if (applied !== "") {
       const job = jobs.find((job) => job.jobId === applied);
@@ -78,15 +97,18 @@ const Search = () => {
   }, [applied, jobs]);
 
   const AddJobToTable = async (e) => {
-    console.log(`Adding job to table... ${appliedJob.jobId, appliedJob.employerName, appliedJob.jobTitle} to ${user.id}`);
+    console.log(
+      `Adding job to table... ${
+        (appliedJob.jobId, appliedJob.employerName, appliedJob.jobTitle)
+      } to ${user.id}`
+    );
     e.preventDefault();
     try {
       const formattedDate = new Date().toISOString();
       // setLoading(true);
-      
+
       dispatch(getJobsStart());
-      await fetchJobs("POST", `${import.meta.env.VITE_API_BASE_URL}/jobs`, 
-      {
+      await fetchJobs("POST", `${import.meta.env.VITE_API_BASE_URL}/jobs`, {
         company: appliedJob.employerName,
         position: appliedJob.jobTitle,
         status: "Applied",
@@ -95,7 +117,10 @@ const Search = () => {
         userId: user.id,
       });
 
-      const data = await fetchJobs("GET", `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`);
+      const data = await fetchJobs(
+        "GET",
+        `${import.meta.env.VITE_API_BASE_URL}/jobs/${user.id}`
+      );
       const jobsWithId = data.map((job, index) => {
         return { ...job, jobId: index + 1 };
       });
@@ -107,14 +132,14 @@ const Search = () => {
       console.log("Showing success message... ");
       setSuccessMessage(true);
       setTimeout(() => {
-        console.log("Dismissing success message...")
+        console.log("Dismissing success message...");
         setSuccessMessage(false);
       }, 2500);
     } catch (err) {
       console.error(err);
       dispatch(getJobsFailure(err.message));
     }
-  }
+  };
 
   // Get Location
   const getLocation = (e) => {
@@ -174,19 +199,18 @@ const Search = () => {
       postedBy: postedBy === "All" ? false : postedBy,
     };
 
-    
     if (minimumSalary !== "not specified") {
       queryParams.minimumSalary = minimumSalary;
     }
-    
+
     if (maximumSalary !== "not specified") {
       queryParams.maximumSalary = maximumSalary;
     }
-    
+
     if (graduateJobs) {
       queryParams.graduate = graduateJobs;
     }
-    
+
     const searchQueryParams = new URLSearchParams(queryParams).toString();
     console.log(searchQueryParams);
 
@@ -283,6 +307,10 @@ const Search = () => {
     }
   };
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   // Loading state
   if (searchedJobsStatus === "loading") {
     return (
@@ -319,29 +347,35 @@ const Search = () => {
                   applications. Get started by searching for jobs above.
                 </p>
               </div>
-              <Searchbar 
-                term={searchTerm} 
-                location={searchLocation} 
-                onTermChange={(e) => setSearchTerm(e.target.value)} 
-                onLocationChange={(e) => setSearchLocation(e.target.value)} 
+              <Searchbar
+                term={searchTerm}
+                location={searchLocation}
+                onTermChange={(e) => setSearchTerm(e.target.value)}
+                onLocationChange={(e) => setSearchLocation(e.target.value)}
                 onGetLocation={getLocation}
                 onSearch={search}
               />
               <div className="w-full flex flex-col justify-center items-center gap-2 mt-8">
-                <p className="w-3/4 pl-12">
-                  Our searches are powered by
-                </p>
+                <p className="w-3/4 pl-12">Our searches are powered by</p>
                 <div className="flex gap-4 justify-evenly items-center w-3/4">
-                <a
-                  href="https://www.reed.co.uk/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-primary hover:underline w-44"
-                >
-                  <span className="w-full">
-                    <img src={darkMode ? '/reed-logo-darkMode.webp' : '/reed-logo.webp'} alt="Reed Logo" className="bg-cover bg-center w-full"/>
-                  </span>
-                </a>
+                  <a
+                    href="https://www.reed.co.uk/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-primary hover:underline w-44"
+                  >
+                    <span className="w-full">
+                      <img
+                        src={
+                          darkMode
+                            ? "/reed-logo-darkMode.webp"
+                            : "/reed-logo.webp"
+                        }
+                        alt="Reed Logo"
+                        className="bg-cover bg-center w-full"
+                      />
+                    </span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -387,23 +421,39 @@ const Search = () => {
                         item={job}
                         key={job.jobId}
                         onClick={() => setApplied(job.jobId)}
-                        viewDetails={() => {setShowJobDetailsId(job.jobId); setShowJobDetails(true)}}
+                        viewDetails={() => {
+                          setShowJobDetailsId(job.jobId);
+                          setShowJobDetails(true);
+                        }}
                       />
                     ))}
                   </div>
                   <div className="w-1/4 flex flex-col gap-4 h-full p-4 rounded-sm bg-primary-dark dark:bg-primaryDark-light">
                     <Filters
                       onJobTypeChange={(e) => setJobType(e.target.value)}
-                      onMinimumSalaryChange={(e) => setMinimumSalary(e.target.value)}
-                      onMaximumSalaryChange={(e) => setMaximumSalary(e.target.value)}
+                      onMinimumSalaryChange={(e) =>
+                        setMinimumSalary(e.target.value)
+                      }
+                      onMaximumSalaryChange={(e) =>
+                        setMaximumSalary(e.target.value)
+                      }
                       onDistanceChange={(e) => {
-                        const value = e.target.value === "Custom Distance" ? true : false;
+                        const value =
+                          e.target.value === "Custom Distance" ? true : false;
                         setCustomDistance(value);
-                        setDistance(e.target.value === "Custom Distance" ? 0 : e.target.value);
+                        setDistance(
+                          e.target.value === "Custom Distance"
+                            ? 0
+                            : e.target.value
+                        );
                       }}
-                      onCustomDistanceChange={(e) => setDistance(e.target.value)}
+                      onCustomDistanceChange={(e) =>
+                        setDistance(e.target.value)
+                      }
                       graduate={graduateJobs}
-                      onGraduateChange={(e) => setGraduateJobs(e.target.checked)}
+                      onGraduateChange={(e) =>
+                        setGraduateJobs(e.target.checked)
+                      }
                       onPostedByChange={(e) => setPostedBy(e.target.value)}
                       onApplyFilters={filterResults}
                       distanceValue={distance}
@@ -497,12 +547,13 @@ const Search = () => {
         />
       )}
       {showJobDetails && (
-        <JobDetails jobId={showJobDetailsId} 
+        <JobDetails
+          jobId={showJobDetailsId}
           onClick={() => {
-              setShowJobDetails(false); 
-              setApplied(showJobDetailsId);
-            }}
-          closePopup={() => setShowJobDetails(false)} 
+            setShowJobDetails(false);
+            setApplied(showJobDetailsId);
+          }}
+          closePopup={() => setShowJobDetails(false)}
         />
       )}
       {/* <div className={`absolute bottom-2 right-2 p-4 rounded-lg z-50 bg-primaryDark-light dark:bg-primary-dark flex justify-center items-center gap-2 ${successMessage ? 'visible' : 'invisible'} transition ease-in-out duration-300`}>
@@ -511,8 +562,13 @@ const Search = () => {
         </span>
         <p className="text-lg font-semibold text-secondaryDark dark:text-secondary">Job added to table successfully!</p>
       </div> */}
-      <Notification 
-        icon={<TaskAltIcon fontSize="large" className={`${darkMode ? 'text-secondaryDark' : 'text-secondary'}`} />}
+      <Notification
+        icon={
+          <TaskAltIcon
+            fontSize="large"
+            className={`${darkMode ? "text-secondaryDark" : "text-secondary"}`}
+          />
+        }
         trigger={successMessage}
         message="Job added to table successfully!"
       />

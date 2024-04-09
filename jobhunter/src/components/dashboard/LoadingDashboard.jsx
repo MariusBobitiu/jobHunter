@@ -1,12 +1,12 @@
 import { CircularProgress } from "@mui/material";
 import { useSelector } from "react-redux";
 
-const Loading = () => {
+const LoadingDashboard = () => {
   const darkMode = useSelector((state) => state.darkMode.darkMode);
 
   return (
     <>
-      <div className="w-full h-screen z-20 bg-primary centred dark:bg-primaryDark">
+      <div className="w-full h-screen bg-primary z-20 centred dark:bg-primaryDark">
         <div className="size-1/3 bg-primary-dark dark:bg-primaryDark-light centred flex-col gap-4 rounded-2xl">
           <CircularProgress
             sx={{
@@ -27,4 +27,4 @@ const Loading = () => {
   );
 };
 
-export default Loading;
+export default LoadingDashboard;
