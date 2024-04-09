@@ -1,43 +1,37 @@
-import { useEffect, useState } from "react";
-import Layout from "../components/Layout";
-import { useSelector, useDispatch } from "react-redux";
-
 // Components
+import Layout from "../components/Layout";
 import JobContainer from "../components/search/JobContainer";
 import JobDetails from "../components/search/JobDetails";
-import {
-  StyledMenuItem,
-  StyledSelect,
-  Theme as theme,
-} from "../utils/StyledComponents";
-import { ThemeProvider } from "@emotion/react";
-import Checkbox from "@mui/material/Checkbox";
+import Loading from "../components/Loading";
+import AppliedPopup from "../components/search/AppliedPopup";
+import Searchbar from "../components/search/Searchbar";
+import Filters from "../components/search/Filters";
+import Notification from "../components/functional/Notification";
 
 // Hooks
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import useFetch from "../hooks/useFetch";
-
-// MUI Icons
-
-import MyLocationIcon from "@mui/icons-material/MyLocation";
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import SchoolIcon from "@mui/icons-material/School";
-import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import {
   getSearchJobsFailure,
   getSearchJobsStart,
   getSearchJobsSuccess,
   getTotalJobs,
 } from "../features/searchJobs/searchJobsSlice";
-import AppliedPopup from "../components/search/AppliedPopup";
 import { getJobsFailure, getJobsStart, getJobsSuccess } from "../features/jobs/jobsSlice";
 
+// MUI Icons
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+
 const Search = () => {
-  // Redux states for search jobs
+  // Redux states
   const jobs = useSelector((state) => state.searchJobs.searchJobs);
   const totalJobs = useSelector((state) => state.searchJobs.totalJobs);
   const darkMode = useSelector((state) => state.darkMode.darkMode);
   const user = useSelector((state) => state.user.user);
 
+  // Local states
   const [customDistance, setCustomDistance] = useState(false);
 
   const [jobType, setJobType] = useState("All");
@@ -58,6 +52,18 @@ const Search = () => {
   
   const dispatch = useDispatch();
   const fetchJobs = useFetch();
+
+  // Search states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
+  const [searchedJobsError, setSearchedJobsError] = useState("");
+
+  const [searchedJobs, setSearchedJobs] = useState(jobs);
+  const [searchedJobsStatus, setSearchedJobsStatus] = useState("idle");
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 10;
 
   useEffect(() => {
     if (applied !== "") {
@@ -109,16 +115,6 @@ const Search = () => {
       dispatch(getJobsFailure(err.message));
     }
   }
-
-
-  // Search states
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchLocation, setSearchLocation] = useState("");
-  const [searchedJobsError, setSearchedJobsError] = useState("");
-
-  const [searchedJobs, setSearchedJobs] = useState(jobs);
-  const [searchedJobsStatus, setSearchedJobsStatus] = useState("idle");
-  useState(searchedJobsStatus);
 
   // Get Location
   const getLocation = (e) => {
@@ -178,19 +174,21 @@ const Search = () => {
       postedBy: postedBy === "All" ? false : postedBy,
     };
 
+    
     if (minimumSalary !== "not specified") {
       queryParams.minimumSalary = minimumSalary;
     }
-
+    
     if (maximumSalary !== "not specified") {
       queryParams.maximumSalary = maximumSalary;
     }
-
-    if (graduateJobs === "true") {
+    
+    if (graduateJobs) {
       queryParams.graduate = graduateJobs;
     }
-
+    
     const searchQueryParams = new URLSearchParams(queryParams).toString();
+    console.log(searchQueryParams);
 
     try {
       const response = await fetch(
@@ -204,7 +202,6 @@ const Search = () => {
       }
 
       const data = await response.json();
-      console.log(data);
 
       dispatch(getSearchJobsSuccess(data.results));
       dispatch(getTotalJobs(data.totalResults));
@@ -222,37 +219,15 @@ const Search = () => {
     setSearchedJobs(jobs);
   }, [jobs]);
 
-  // Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const jobsPerPage = 10;
-
   // Pagination Numbers
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(totalJobs / jobsPerPage); i++) {
     pageNumbers.push(i);
   }
 
-  // Loading state
-  if (searchedJobsStatus === "loading") {
-    return (
-      <Layout>
-        <div className="flex items-center justify-center h-dvh text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark">
-          <h1 className="text-3xl font-bold">Loading...</h1>
-        </div>
-      </Layout>
-    );
-  }
-
-  // Error state
-  if (searchedJobsStatus === "fail") {
-    return (
-      <Layout>
-        <div className="flex items-center justify-center h-dvh text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark">
-          <h1 className="text-3xl font-bold">{searchedJobsError}</h1>
-        </div>
-      </Layout>
-    );
-  }
+  useEffect(() => {
+    console.log("Graduate state: ", graduateJobs);
+  }, [graduateJobs]);
 
   const handlePageChange = async (newPage) => {
     setCurrentPage(newPage);
@@ -308,8 +283,27 @@ const Search = () => {
     }
   };
 
-  // Success state
+  // Loading state
+  if (searchedJobsStatus === "loading") {
+    return (
+      <Layout>
+        <Loading />
+      </Layout>
+    );
+  }
 
+  // Error state
+  if (searchedJobsStatus === "fail") {
+    return (
+      <Layout>
+        <div className="flex items-center justify-center h-dvh text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark">
+          <h1 className="text-3xl font-bold">{searchedJobsError}</h1>
+        </div>
+      </Layout>
+    );
+  }
+
+  // Success state
   return (
     <>
       <Layout>
@@ -325,36 +319,14 @@ const Search = () => {
                   applications. Get started by searching for jobs above.
                 </p>
               </div>
-              <div className="w-3/4 mt-8 flex self-center gap-2 p-4 rounded-lg bg-primary-dark dark:bg-primaryDark-light">
-                <input
-                  type="text"
-                  placeholder="Search for jobs..."
-                  className="w-3/6 p-2 bg-transparent border-r border-primaryDark dark:border-secondaryDark-dark/50"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <label htmlFor="location" className="w-2/6 relative">
-                  <input
-                    type="text"
-                    placeholder="Location"
-                    className="w-full p-2 bg-transparent"
-                    value={searchLocation}
-                    onChange={(e) => setSearchLocation(e.target.value)}
-                  />
-                  <span
-                    className="absolute right-0 top-0 p-2 cursor-pointer"
-                    onClick={getLocation}
-                  >
-                    <MyLocationIcon />
-                  </span>
-                </label>
-                <button
-                  className="w-1/6 p-2 bg-primary-light dark:bg-primaryDark rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark"
-                  onClick={search}
-                >
-                  Search
-                </button>
-              </div>
+              <Searchbar 
+                term={searchTerm} 
+                location={searchLocation} 
+                onTermChange={(e) => setSearchTerm(e.target.value)} 
+                onLocationChange={(e) => setSearchLocation(e.target.value)} 
+                onGetLocation={getLocation}
+                onSearch={search}
+              />
               <div className="w-full flex flex-col justify-center items-center gap-2 mt-8">
                 <p className="w-3/4 pl-12">
                   Our searches are powered by
@@ -368,16 +340,6 @@ const Search = () => {
                 >
                   <span className="w-full">
                     <img src={darkMode ? '/reed-logo-darkMode.webp' : '/reed-logo.webp'} alt="Reed Logo" className="bg-cover bg-center w-full"/>
-                  </span>
-                </a>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-primary hover:underline w-44 mb-4"
-                >
-                  <span className="w-full">
-                    <img src={darkMode ? '/linkedin-logo-darkMode.webp' : '/linkedin-logo.webp'} alt="LinkedIn Logo" className="bg-cover bg-center w-full"/>
                   </span>
                 </a>
                 </div>
@@ -430,311 +392,23 @@ const Search = () => {
                     ))}
                   </div>
                   <div className="w-1/4 flex flex-col gap-4 h-full p-4 rounded-sm bg-primary-dark dark:bg-primaryDark-light">
-                    <div className="flex flex-col w-full h-full gap-4">
-                      <ThemeProvider theme={theme}>
-                        <div className="flex flex-col gap-2">
-                          <h1 className="text-3xl mb-4 font-bold">Filters</h1>
-                          <div className="flex flex-col gap-2">
-                            <label htmlFor="jobType" className="text-2xl mb-2">
-                              Job Type
-                            </label>
-                            <div className="flex flex-col ml-4">
-                              <StyledSelect
-                                isDarkMode={darkMode}
-                                isTable
-                                isEdit
-                                defaultValue="All"
-                                onChange={(e) => setJobType(e.target.value)}
-                              >
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="All"
-                                >
-                                  All
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="permanent"
-                                >
-                                  Permanent
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="contract"
-                                >
-                                  Contract
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="temp"
-                                >
-                                  Temporary
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="partTime"
-                                >
-                                  Part Time
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="fullTime"
-                                >
-                                  Full Time
-                                </StyledMenuItem>
-                              </StyledSelect>
-                            </div>
-                          </div>
-                          <div className="flex flex-col gap-2">
-                            <label htmlFor="salary" className="text-2xl mb-2">
-                              Salary Range
-                            </label>
-                            <div className="flex flex-col gap-2 ml-4">
-                              <p className="text-lg">Minimum Salary</p>
-                              <StyledSelect
-                                isDarkMode={darkMode}
-                                isTable
-                                isEdit
-                                defaultValue="not specified"
-                                onChange={(e) =>
-                                  setMinimumSalary(e.target.value)
-                                }
-                              >
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="10000"
-                                >
-                                  £10.000
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="20000"
-                                >
-                                  £20.000
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="30000"
-                                >
-                                  £30.000
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="40000"
-                                >
-                                  £40.000
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="50000"
-                                >
-                                  £50.000
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="not specified"
-                                >
-                                  Not Specified
-                                </StyledMenuItem>
-                              </StyledSelect>
-                              <p className="text-lg">Maximum Salary</p>
-                              <StyledSelect
-                                isDarkMode={darkMode}
-                                isTable
-                                isEdit
-                                defaultValue="not specified"
-                                onChange={(e) =>
-                                  setMaximumSalary(e.target.value)
-                                }
-                              >
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="20000"
-                                >
-                                  £20.000
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="30000"
-                                >
-                                  £30.000
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="40000"
-                                >
-                                  £40.000
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="50000"
-                                >
-                                  £50.000
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="60000"
-                                >
-                                  £60.000
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="not specified"
-                                >
-                                  Not Specified
-                                </StyledMenuItem>
-                              </StyledSelect>
-                            </div>
-                          </div>
-                          <div className="flex flex-col gap-2">
-                            <label htmlFor="distance" className="text-2xl mb-2">
-                              Distance from Location
-                            </label>
-                            <div className="ml-4 gap-2 flex flex-col">
-                              <StyledSelect
-                                isDarkMode={darkMode}
-                                isTable
-                                defaultValue="10"
-                                onChange={(e) => {
-                                  const value =
-                                    e.target.value === "Custom Distance"
-                                      ? true
-                                      : false;
-                                  setCustomDistance(value);
-                                  setDistance(
-                                    e.target.value === "Custom Distance"
-                                      ? 0
-                                      : e.target.value
-                                  );
-                                }}
-                              >
-                                <StyledMenuItem isDarkMode={darkMode} value="5">
-                                  5 miles
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="10"
-                                >
-                                  10 miles
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="15"
-                                >
-                                  15 miles
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="20"
-                                >
-                                  20 miles
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="25"
-                                >
-                                  25 miles
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="Custom Distance"
-                                >
-                                  Custom Distance
-                                </StyledMenuItem>
-                              </StyledSelect>
-                              {customDistance && (
-                                <>
-                                  <div className="flex justify-center items-center gap-4">
-                                    <input
-                                      type="number"
-                                      className="py-1 px-4 bg-transparent border border-secondary/25 dark:border-primaryDark-dark/25 rounded-sm w-4/5"
-                                      placeholder="Enter Custom Distance"
-                                      value={distance}
-                                      onChange={(e) =>
-                                        setDistance(e.target.value)
-                                      }
-                                    />
-                                    <p className="w-1/5">miles</p>
-                                  </div>
-                                </>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex flex-col gap-2 mt-2">
-                            <label
-                              htmlFor="graduate"
-                              className="flex justify-between items-center text-2xl"
-                            >
-                              Graduate Jobs
-                              <Checkbox
-                                icon={
-                                  <SchoolOutlinedIcon
-                                    className="text-secondary dark:text-secondaryDark"
-                                    fontSize="large"
-                                  />
-                                }
-                                checkedIcon={
-                                  <SchoolIcon
-                                    className="text-secondary dark:text-secondaryDark"
-                                    fontSize="large"
-                                  />
-                                }
-                                value="graduate"
-                                onChange={(e) => {
-                                  setGraduateJobs(!e.target.checked);
-                                  console.log(
-                                    "graduate: ",
-                                    e.target.checked,
-                                    graduateJobs
-                                  );
-                                }}
-                              />
-                            </label>
-                            <small className="text-sm -mt-4 opacity-60">
-                              Click on the icon to toggle graduate jobs
-                            </small>
-                          </div>
-                          <div className="flex flex-col gap-2">
-                            <label htmlFor="postedBy" className="text-2xl mb-2">
-                              Posted By
-                            </label>
-                            <div className="flex flex-col ml-4">
-                              <StyledSelect
-                                isDarkMode={darkMode}
-                                isTable={true}
-                                defaultValue="All"
-                                onChange={(e) => setPostedBy(e.target.value)}
-                              >
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="All"
-                                >
-                                  All
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="Recruiter"
-                                >
-                                  Recruitment Agency
-                                </StyledMenuItem>
-                                <StyledMenuItem
-                                  isDarkMode={darkMode}
-                                  value="Company"
-                                >
-                                  Employer
-                                </StyledMenuItem>
-                              </StyledSelect>
-                            </div>
-                          </div>
-                          <button
-                            className="bg-primary-light mt-4 dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark text-xl"
-                            onClick={filterResults}
-                          >
-                            Apply Filters
-                          </button>
-                        </div>
-                      </ThemeProvider>
-                    </div>
+                    <Filters
+                      onJobTypeChange={(e) => setJobType(e.target.value)}
+                      onMinimumSalaryChange={(e) => setMinimumSalary(e.target.value)}
+                      onMaximumSalaryChange={(e) => setMaximumSalary(e.target.value)}
+                      onDistanceChange={(e) => {
+                        const value = e.target.value === "Custom Distance" ? true : false;
+                        setCustomDistance(value);
+                        setDistance(e.target.value === "Custom Distance" ? 0 : e.target.value);
+                      }}
+                      onCustomDistanceChange={(e) => setDistance(e.target.value)}
+                      graduate={graduateJobs}
+                      onGraduateChange={(e) => setGraduateJobs(e.target.checked)}
+                      onPostedByChange={(e) => setPostedBy(e.target.value)}
+                      onApplyFilters={filterResults}
+                      distanceValue={distance}
+                      viewCustomDistance={customDistance}
+                    />
                   </div>
                 </div>
                 <div className="flex justify-center items-center gap-4">
@@ -831,12 +505,17 @@ const Search = () => {
           closePopup={() => setShowJobDetails(false)} 
         />
       )}
-      <div className={`absolute bottom-2 right-2 p-4 rounded-lg z-50 bg-primaryDark-light dark:bg-primary-dark flex justify-center items-center gap-2 ${successMessage ? 'visible' : 'invisible'} transition ease-in-out duration-300`}>
+      {/* <div className={`absolute bottom-2 right-2 p-4 rounded-lg z-50 bg-primaryDark-light dark:bg-primary-dark flex justify-center items-center gap-2 ${successMessage ? 'visible' : 'invisible'} transition ease-in-out duration-300`}>
         <span className="w-12 h-12 bg-green-600 rounded-full flex justify-center items-center">
           <TaskAltIcon fontSize="large" className={`${darkMode ? 'text-secondaryDark' : 'text-secondary'}`} />
         </span>
         <p className="text-lg font-semibold text-secondaryDark dark:text-secondary">Job added to table successfully!</p>
-      </div>
+      </div> */}
+      <Notification 
+        icon={<TaskAltIcon fontSize="large" className={`${darkMode ? 'text-secondaryDark' : 'text-secondary'}`} />}
+        trigger={successMessage}
+        message="Job added to table successfully!"
+      />
     </>
   );
 };
