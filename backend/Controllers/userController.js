@@ -31,9 +31,7 @@ const signup = async (req, res) => {
 
       res.cookie("token", token, {
         maxAge: parseInt(process.env.COOKIE_EXPIRATION),
-        withCredentials: true,
         httpOnly: true,
-        sameSite: "none",
         secure: true,
       });
       console.log("user", JSON.stringify(user, null, 2));
@@ -73,9 +71,7 @@ const signin = async (req, res) => {
         // If password is valid, set cookie with the token generated
         res.cookie("token", token, {
           maxAge: parseInt(process.env.COOKIE_EXPIRATION),
-          withCredentials: true,
           httpOnly: true,
-          sameSite: "none",
           secure: true,
         });
 
