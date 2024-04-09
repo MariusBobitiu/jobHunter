@@ -11,6 +11,7 @@ import { login, updateUser } from "../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import deleteAccountImg from "../assets/images/deleteProfile.svg";
 import deleteAccountImgDark from "../assets/images/deleteProfileDark.svg";
+import Loading from "../components/Loading";
 // import twoFactorAuthImg from "../assets/images/2fa.svg";
 // import twoFactorAuthImgDark from "../assets/images/2faDark.svg";
 
@@ -18,15 +19,18 @@ const Profile = () => {
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!user.id) {
+    if (!user) {
       console.log("User not logged in. Redirecting to login page...");
       navigate("/login");
+      return;
     }
+    setIsLoading(false);
     document.title = `Profile | ${user.username}`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [navigate, user]);
 
   const phone = window.innerWidth < 520;
 
@@ -157,11 +161,15 @@ const Profile = () => {
     }
   };
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <Layout>
-        <div className="flex flex-col h-screen text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark xsm:overflow-auto lg:overflow-hidden">
-          <div className="xsm:mt-20 sm:mt-32 lg:mt-0 py-4 ml-4 pl-2 border-b-2 border-secondary/50 lg:mb-4 dark:border-secondaryDark/50 flex justify-between items-center ">
+        <div className="flex flex-col h-dvh text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark xsm:overflow-auto">
+          <div className="xsm:mt-20 sm:mt-32 lg:mt-0 py-4 ml-4 pl-2 border-b-2 border-secondary/50 lg:mb-4 dark:border-secondaryDark/50 flex justify-between items-center">
             <h1 className="xsm:text-lg sm:text-xl lg:text-3xl font-bold">
               Profile
             </h1>

@@ -172,6 +172,7 @@ const AddJobPopupComponent = ({ onAdd, isVisible, onClose }) => {
               },
             }}
             primaryColor="red"
+            backgroundColor="white"
             onChange={(date) => setDate(date)}
             value={date}
             displayFormat="DD/MM/YYYY"

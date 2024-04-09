@@ -1,9 +1,48 @@
 // import GoogleIcon from "@mui/icons-material/Google";
 // import AppleIcon from "@mui/icons-material/Apple";
+import { useEffect, useState } from "react";
 import heroImage from "../../assets/images/register-hero.jpg";
 import { LoginForm } from "../../components/functional/Forms";
+import { useNavigate } from "react-router-dom";
+import Loading from "../../components/Loading";
 
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/auth`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+        const data = await response.json();
+        console.log(data);
+        if (data.status) {
+          navigate("/dashboard");
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [navigate]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <main

@@ -1,5 +1,9 @@
 const db = require("../Models");
 const User = db.users;
+const dotenv = require("dotenv");
+const jwt = require("jsonwebtoken");
+
+dotenv.config();
 
 const saveUser = async (req, res, next) => {
   // Extract and rename userName to username from the request body
@@ -32,6 +36,29 @@ const saveUser = async (req, res, next) => {
   }
 };
 
-module.exports = saveUser;
+const userVerification = async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ status: false, message: "Unauthorized" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
+
+    const user = await User.findOne({ where: { id: decoded.id } });
+
+    if (user) {
+      return res.status(200).json({
+        status: true,
+        message: "Authorized",
+      });
+    } else
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+  });
+};
+
+module.exports = { saveUser, userVerification };
 
 // Path: backend/Middlewares/userAuth.js

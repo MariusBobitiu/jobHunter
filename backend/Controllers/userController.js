@@ -29,13 +29,12 @@ const signup = async (req, res) => {
         expiresIn: process.env.JWT_EXPIRATION,
       });
 
-      res.cookie("jwt", token, {
-        maxAge: process.env.COOKIE_EXPIRATION,
-        domain: "192.168.0.41/",
-        sameSite: "None",
+      res.cookie("token", token, {
+        maxAge: parseInt(process.env.COOKIE_EXPIRATION),
+        withCredentials: true,
         httpOnly: true,
-        path: "/",
-        partitioned: true,
+        sameSite: "none",
+        secure: true,
       });
       console.log("user", JSON.stringify(user, null, 2));
       console.log(token);
@@ -72,26 +71,22 @@ const signin = async (req, res) => {
         });
 
         // If password is valid, set cookie with the token generated
-        res.cookie("jwt", token, {
+        res.cookie("token", token, {
           maxAge: parseInt(process.env.COOKIE_EXPIRATION),
-          domain: "192.168.0.41",
-          sameSite: "None",
+          withCredentials: true,
           httpOnly: true,
+          sameSite: "none",
           secure: true,
-          partitioned: true,
-          path: "/",
         });
 
         // Send user details
-        return res
-          .status(200)
-          .send({
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            goalValue: user.goalValue,
-            timeFrame: user.timeFrame,
-          });
+        return res.status(200).send({
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          goalValue: user.goalValue,
+          timeFrame: user.timeFrame,
+        });
       } else {
         return res.status(401).json({ message: "Invalid credentials" });
       }
@@ -298,6 +293,16 @@ const updateGoal = async (req, res) => {
   }
 };
 
+const logout = async (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+    withCredentials: true,
+  });
+  return res.status(200).json({ message: "Logout successful" });
+};
+
 module.exports = {
   signup,
   signin,
@@ -308,4 +313,5 @@ module.exports = {
   resetPassword,
   verifyToken,
   updateGoal,
+  logout,
 };

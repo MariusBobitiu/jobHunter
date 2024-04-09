@@ -1,16 +1,20 @@
 const express = require("express");
 const userController = require("../Controllers/userController");
-const { signup, signin, forgotPassword, resetPassword, verifyToken } =
+const { signup, signin, forgotPassword, resetPassword, verifyToken, logout } =
   userController;
 const userAuth = require("../Middlewares/userAuth");
+const { saveUser, userVerification } = userAuth;
 
 const router = express.Router();
 
 // Sign up a new user
-router.post("/signup", userAuth, signup);
+router.post("/signup", saveUser, signup);
 
 // Login a user
 router.post("/signin", signin);
+
+// Verify Cookie
+router.post("/", userVerification);
 
 // Forgot password
 router.patch("/forgot-password", forgotPassword);
@@ -20,5 +24,8 @@ router.patch("/reset-password/:token", resetPassword);
 
 // Verify token
 router.post("/verify-token", verifyToken);
+
+// Logout a user
+router.post("/logout", logout);
 
 module.exports = router;
