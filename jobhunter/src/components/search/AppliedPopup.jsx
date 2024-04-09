@@ -5,7 +5,7 @@ const AppliedPopup = ({ job, onClick, closePopup }) => {
 
   return (
     <div
-      className="w-screen h-dvh bg-white dark:bg-black/40 absolute top-0 left-0 z-30"
+      className="w-screen h-dvh bg-white/35 dark:bg-black/40 absolute top-0 left-0 z-30"
       key={jobId}
     >
       <div className="w-1/3 bg-primary-light dark:bg-primaryDark-light text-secondary dark:text-secondaryDark absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg z-40 opacity-100 px-12 py-8">
@@ -26,13 +26,13 @@ const AppliedPopup = ({ job, onClick, closePopup }) => {
         </p>
         <div className="flex justify-center gap-4 py-4">
           <button
-            className="bg-accent-light dark:bg-accent-dark text-secondary dark:text-secondaryDark-dark px-4 py-2 rounded-lg"
+            className="bg-accentDark hover:bg-accentDark-dark dark:bg-accent dark:hover:bg-accent-dark text-secondaryDark-light dark:text-secondaryDark-light text-lg font-medium px-4 py-2 rounded-lg"
             onClick={onClick}
           >
             Yes, I applied
           </button>
           <button
-            className="bg-secondary-light dark:bg-secondary-dark text-secondary dark:text-secondaryDark-dark px-4 py-2 rounded-lg"
+            className="text-secondary dark:text-secondaryDark-dark px-4 py-2 text-lg font-medium rounded-lg"
             onClick={closePopup}
           >
             No, I didn&apos;t apply

@@ -47,18 +47,18 @@ const userVerification = async (req, res) => {
       return res.status(401).json({ status: false, message: "Unauthorized" });
     }
 
-    const user = await User.findById(decoded.id);
+    const user = await User.findOne({ where: { id: decoded.id } });
 
     if (user) {
-      return res.status(200).json({ status: true, message: "Authorized" });
+      return res.status(200).json({
+        status: true,
+        message: "Authorized",
+      });
     } else
       return res.status(401).json({ status: false, message: "Unauthorized" });
   });
 };
 
-
 module.exports = { saveUser, userVerification };
-
-
 
 // Path: backend/Middlewares/userAuth.js

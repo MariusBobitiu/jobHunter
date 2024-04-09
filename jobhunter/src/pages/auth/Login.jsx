@@ -12,13 +12,16 @@ const Login = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/auth`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
       const data = await response.json();
       console.log(data);
       if (data.status) {
@@ -29,7 +32,7 @@ const Login = () => {
     };
 
     checkAuth();
-  }, [history])
+  }, [navigate]);
 
   if (isLoading) {
     return <Loading />;

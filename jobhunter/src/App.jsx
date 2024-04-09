@@ -10,6 +10,7 @@ import Search from "./pages/Search";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
 import ResetPassword from "./pages/auth/ResetPassword";
+import Test from "./components/page/Test";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<h1>Not Found</h1>} />
+          <Route path="/test" element={<Test />} />
         </Routes>
       </Router>
     </>

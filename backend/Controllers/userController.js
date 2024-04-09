@@ -34,7 +34,7 @@ const signup = async (req, res) => {
         withCredentials: true,
         httpOnly: true,
         sameSite: "none",
-        domain: "http://localhost:5173"
+        secure: true,
       });
       console.log("user", JSON.stringify(user, null, 2));
       console.log(token);
@@ -76,19 +76,17 @@ const signin = async (req, res) => {
           withCredentials: true,
           httpOnly: true,
           sameSite: "none",
-          domain: "http://localhost:5173"
+          secure: true,
         });
 
         // Send user details
-        return res
-          .status(200)
-          .send({
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            goalValue: user.goalValue,
-            timeFrame: user.timeFrame,
-          });
+        return res.status(200).send({
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          goalValue: user.goalValue,
+          timeFrame: user.timeFrame,
+        });
       } else {
         return res.status(401).json({ message: "Invalid credentials" });
       }
@@ -295,6 +293,16 @@ const updateGoal = async (req, res) => {
   }
 };
 
+const logout = async (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+    withCredentials: true,
+  });
+  return res.status(200).json({ message: "Logout successful" });
+};
+
 module.exports = {
   signup,
   signin,
@@ -305,4 +313,5 @@ module.exports = {
   resetPassword,
   verifyToken,
   updateGoal,
+  logout,
 };

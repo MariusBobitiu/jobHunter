@@ -11,10 +11,12 @@ import { logout } from "../../features/user/userSlice";
 import { setJobsLogout } from "../../features/jobs/jobsSlice";
 import ThemeSwitcher from "../functional/ThemeSwitcher";
 import { setSearchJobsLogout } from "../../features/searchJobs/searchJobsSlice";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [active, setActive] = useState("Dashboard");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handlePathChange = () => {
@@ -42,6 +44,34 @@ const Sidebar = () => {
 
     handlePathChange();
   }, []);
+
+  const logoutUser = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/logout`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Logout failed");
+      }
+
+      const data = await response.json();
+      console.log(data);
+
+      dispatch(logout());
+      dispatch(setJobsLogout());
+      dispatch(setSearchJobsLogout());
+      navigate("/login");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
 
   return (
     <div className="lg:size-full lg:flex lg:flex-col lg:items-center lg:pt-8 lg:relative bg-primary-dark dark:bg-primaryDark-light lg:dark:border-r-4 lg:dark:border-primaryDark-light xsm:flex xsm:flex-row xsm:centred xsm:w-full">
@@ -193,13 +223,7 @@ const Sidebar = () => {
       <div className="xsm:flex xsm:justify-center xsm:items-center lg:justify-start lg:absolute lg:bottom-0 p-4 text-white text-lg lg:w-full">
         <button
           className="text-secondary dark:text-secondaryDark hover:text-accent dark:hover:text-accentDark cursor-pointer"
-          onClick={() => {
-            localStorage.removeItem("token");
-            dispatch(logout());
-            dispatch(setJobsLogout());
-            dispatch(setSearchJobsLogout());
-            window.location.href = "/login";
-          }}
+          onClick={logoutUser}
         >
           <LogoutIcon className="-mt-1 lg:mr-2" fontSize="large" />
           <span className="xsm:text-xs lg:text-2xl">Logout</span>
