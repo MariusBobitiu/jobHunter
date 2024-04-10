@@ -174,7 +174,7 @@ const Dashboard = () => {
                 <h2 className="xsm:text-sm md:text-lg lg:text-2xl text-secondary-dark dark:text-secondaryDark-light w-full text-start ml-4 xsm:mt-2 lg:mt-4">
                   {quoteType}:{" "}
                 </h2>
-                <div className="w-4/5 flex-col centred gap-2 xsm:my-1 lg:my-2 lg:mb-4 mx-auto p-6 rounded-lg relative bg-primary-dark/25 dark:bg-primaryDark-dark/25">
+                <div className="w-5/6 flex-col centred gap-2 xsm:my-1 lg:my-2 lg:mb-4 mx-auto xsm:px-2 py-4 lg:px-6 lg:py-6 rounded-lg relative bg-primary-dark/25 dark:bg-primaryDark-dark/25">
                   <h3 className="xsm:text-md md:text-xl lg:text-2xl text-secondary dark:text-secondaryDark text-center italic font-averia relative">
                     <span className="xsm:text-md md:text-2xl lg:text-4xl leading-3">
                       &ldquo;{" "}

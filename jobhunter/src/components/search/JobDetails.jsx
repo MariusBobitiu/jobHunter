@@ -94,7 +94,7 @@ const JobDetails = ({ jobId, closePopup, onClick }) => {
             <p>Applications: {job.applicationCount}</p>
             <p>Expiry: {job.expirationDate}</p>
           </div>
-          <div className="flex xsm:flex-col lg:flex-row justify-center items-center gap-4 py-4">
+          <div className="flex xsm:flex-col lg:flex-row justify-center items-center xsm:gap-2 lg:gap-4 py-4">
             <a
               href={job.externalUrl ? job.externalUrl : job.jobUrl}
               target="_blank"
@@ -105,7 +105,7 @@ const JobDetails = ({ jobId, closePopup, onClick }) => {
               Apply Now
             </a>
             <button
-              className="rounded-lg py-2 px-8 text-secondary dark:text-secondaryDark hover:text-secondary-dark dark:hover:text-secondaryDark-dark xsm:w-full lg:w-auto text-center"
+              className="rounded-lg py-2 px-8 text-secondary dark:text-secondaryDark hover:text-secondary-dark dark:hover:text-secondaryDark-dark xsm:w-full lg:w-auto text-center bg-secondary-light/25 dark:bg-secondaryDark/25 hover:bg-secondary-light/40 dark:hover:bg-secondaryDark/40"
               onClick={closePopup}
             >
               Close

@@ -44,7 +44,7 @@ const About = () => {
           </div>
 
           {aboutPage && (
-            <div className="w-full relative bg-primary-dark dark:bg-primaryDark-light p-4 rounded-lg text-secondary dark:text-secondaryDark overflow-y-auto xsm:mb-4 lg:mb-0">
+            <div className="w-full relative bg-primary-dark dark:bg-primaryDark-light p-4 rounded-lg text-secondary dark:text-secondaryDark overflow-y-auto xsm:mb-32 lg:mb-0">
               <div className="absolute top-2 right-2">
                 <div className="bg-primary/60 dark:bg-primaryDark/50 py-2 px-4 rounded-xl font-black tracking-widest z-50">
                   v.1.0.0
@@ -99,7 +99,7 @@ const About = () => {
                 <br />
                 <p>- Marius</p>
               </div>
-              <div className="flex justify-center items-center gap-4 mt-4">
+              <div className="flex flex-wrap justify-center items-center gap-4 mt-4 mb-4">
                 <a
                   href="http://www.linkedin.com/in/marius-bobitiu"
                   className="font-bold text-xl py-2 px-4 bg-primary/60 dark:bg-primaryDark/50 rounded-lg"
@@ -236,28 +236,10 @@ const About = () => {
                   <li>Dark mode</li>
                 </ul>
               </div>
-              <div className="flex flex-col mt-4">
-                <h3 className="text-2xl font-bold mb-4 font-averia">
-                  Future Features
-                </h3>
-                <p>
-                  If you have any suggestions for features you&apos;d like to
-                  see in jobHunter, please reach out to me at the email address
-                  below!
-                </p>
-                <p className="italic">
-                  <a
-                    href="mailto:jobHunter@mariusbobitiu.dev"
-                    className="text-accent font-bold dark:text-accentDark"
-                  >
-                    jobHunter@mariusbobitiu.dev
-                  </a>
-                </p>
-              </div>
             </div>
           )}
           {helpPage && (
-            <div className="w-full text-secondary dark:text-secondaryDark bg-primary dark:bg-primaryDark-light p-4 rounded-lg flex flex-col gap-2 xsm:mb-4 lg:mb-0">
+            <div className="w-full text-secondary dark:text-secondaryDark bg-primary dark:bg-primaryDark-light p-4 rounded-lg flex flex-col gap-2 xsm:mb-32 lg:mb-0 overflow-scroll">
               <h1 className="text-2xl text-secondary dark:text-secondaryDark font-bold mb-4">
                 Help & Support
               </h1>

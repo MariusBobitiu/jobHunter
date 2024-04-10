@@ -273,18 +273,18 @@ const Profile = () => {
               {changePassword && (
                 <>
                   <div className="w-screen h-screen bg-black bg-opacity-50 fixed top-0 left-0 flex justify-center items-center">
-                    <div className="bg-primary w-2/5 px-6 py-12 rounded-lg flex flex-col justify-center items-start gap-8 border-t-4 border-accent relative dark:bg-primaryDark-light dark:border-accentDark">
+                    <div className="bg-primary xsm:w-11/12 lg:w-2/5 px-6 py-12 rounded-lg flex flex-col justify-center items-start gap-8 border-t-4 border-accent relative dark:bg-primaryDark-light dark:border-accentDark">
                       <div className="flex gap-4 w-full">
                         <div className="centred p-4 bg-accent rounded-full">
                           <PasswordIcon fontSize="large" />
                         </div>
                         <div className="flex items-center">
-                          <h1 className="text-3xl text-secondary font-bold dark:text-secondaryDark">
+                          <h1 className="xsm:text-2xl lg:text-3xl text-secondary font-bold dark:text-secondaryDark">
                             Change Password
                           </h1>
                         </div>
                       </div>
-                      <div className="flex flex-col gap-4 w-full">
+                      <div className="flex flex-col gap-4 w-full xsm:text-sm lg:text-lg">
                         <label htmlFor="oldPassword">
                           <p className="text-secondary dark:text-secondaryDark">
                             Old Password
@@ -325,15 +325,15 @@ const Profile = () => {
                           onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                       </div>
-                      <div className="flex gap-4 centred w-full">
+                      <div className="flex xsm:gap-2 lg:gap-4 centred w-full xsm:flex-col lg:flex-row">
                         <button
-                          className="bg-accent text-primary font-bold w-48 h-16 rounded-lg text-lg dark:bg-accentDark"
+                          className="bg-accent text-primary font-bold xsm:w-full lg:w-48 xsm:py-3 lg:h-16 rounded-lg text-lg dark:bg-accentDark"
                           onClick={editPassword}
                         >
                           Change Password
                         </button>
                         <button
-                          className="text-secondary w-48 h-16 rounded-lg text-lg bg-secondary-light/25 hover:bg-secondary-light/40 dark:text-secondaryDark dark:bg-secondaryDark/25 dark:hover:bg-secondaryDark/40"
+                          className="text-secondary xsm:w-full xsm:py-3 lg:w-48 lg:h-16 rounded-lg text-lg bg-secondary-light/25 hover:bg-secondary-light/40 dark:text-secondaryDark dark:bg-secondaryDark/25 dark:hover:bg-secondaryDark/40"
                           onClick={() => setChangePassword(false)}
                         >
                           Cancel
@@ -389,9 +389,9 @@ const Profile = () => {
               </button>
               {deleteAccount && (
                 <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-                  <div className="bg-primary w-1/2 p-6 rounded-lg flex flex-col justify-center items-start gap-4 border-t-4 border-accent relative dark:bg-primaryDark-light dark:border-accentDark">
-                    <div className="centred gap-6">
-                      <div className="size-1/3">
+                  <div className="bg-primary xsm:w-11/12 lg:w-1/2 p-6 rounded-lg flex flex-col justify-center items-start gap-4 border-t-4 border-accent relative dark:bg-primaryDark-light dark:border-accentDark">
+                    <div className="centred xsm:gap-2 lg:gap-6">
+                      <div className="xsm:size-1/2 lg:size-1/3">
                         <img
                           src={
                             darkMode ? deleteAccountImg : deleteAccountImgDark
@@ -401,10 +401,10 @@ const Profile = () => {
                         />
                       </div>
                       <div className="flex-col px-6">
-                        <h1 className="text-3xl text-secondary font-bold dark:text-secondaryDark">
+                        <h1 className="xsm:text-lg lg:text-3xl text-secondary font-bold dark:text-secondaryDark">
                           Delete Account
                         </h1>
-                        <p className="text-secondary-dark font-medium text-xl mb-4 dark:text-secondaryDark">
+                        <p className="text-secondary-dark font-medium xsm:text-xs lg:text-xl mb-4 dark:text-secondaryDark">
                           Are you sure you want to delete your account?{" "}
                           <span className="text-secondary/75 font-normal dark:text-secondaryDark/75">
                             If you delete your account, you will permanently

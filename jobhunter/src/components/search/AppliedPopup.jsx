@@ -24,7 +24,7 @@ const AppliedPopup = ({ job, onClick, closePopup }) => {
           applied yet or you don&apos;t want to apply, click the button to close
           this popup.
         </p>
-        <div className="flex xsm:flex-col lg:flex-row justify-center gap-4 py-4">
+        <div className="flex xsm:flex-col lg:flex-row justify-center xsm:gap-2 lg:gap-4 py-4">
           <button
             className="bg-accentDark hover:bg-accentDark-dark dark:bg-accent dark:hover:bg-accent-dark text-secondaryDark-light dark:text-secondaryDark-light xsm:text-sm lg:text-lg font-medium px-4 py-2 rounded-lg"
             onClick={onClick}
@@ -32,7 +32,7 @@ const AppliedPopup = ({ job, onClick, closePopup }) => {
             Yes, I applied
           </button>
           <button
-            className="text-secondary dark:text-secondaryDark-dark px-4 py-2 xsm:text-sm lg:text-lg font-medium rounded-lg"
+            className="text-secondary dark:text-secondaryDark-dark px-4 py-2 xsm:text-sm lg:text-lg font-medium rounded-lg bg-secondary-light/25 dark:bg-secondaryDark/25 hover:bg-secondary-light/40 dark:hover:bg-secondaryDark/40"
             onClick={closePopup}
           >
             No, I didn&apos;t apply

@@ -71,7 +71,7 @@ const JobsChart = () => {
       labels: sortedDates,
       datasets: [
         {
-          label: "Jobs Applied",
+          label: `${jobs.length} Jobs`,
           data: sortedDates.map((date) => counts[date]),
           backgroundColor: "rgba(79,78,229)",
           hoverBackgroundColor: "rgba(46, 37, 212)",
