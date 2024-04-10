@@ -10,6 +10,7 @@ import Search from "./pages/Search";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
 import ResetPassword from "./pages/auth/ResetPassword";
+import Test from "./pages/Test";
 
 function App() {
   return (
@@ -23,13 +24,16 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/about" element={<About />} />
-          <Route path="*" element={<h1>Not Found</h1>} />
+          <Route path="/test" element={<Test />} />
 
           {/* PRIVATE Routes */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/Search" element={<Search />} />
           <Route path="/profile" element={<Profile />} />
+
+          {/* Not Found */}
+          <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
       </Router>
     </>

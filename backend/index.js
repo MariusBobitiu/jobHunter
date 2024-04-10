@@ -7,7 +7,7 @@ const updateUserRoutes = require("./Routes/updateUserRoutes");
 const quoteRoutes = require("./Routes/quoteRoutes");
 const goalRoutes = require("./Routes/goalRoutes");
 const searchJobsRoutes = require("./Routes/searchJobsRoutes");
-// const cors = require("cors");
+const cors = require("cors");
 
 //const cors = require("cors");
 const dotenv = require("dotenv");
@@ -30,12 +30,12 @@ db.sequelize.sync().then(() => {
 });
 
 // Set up cors - localhost
-// const corsOptions = {
-//   origin: "http://localhost:5173",
-//   credentials: true,
-//   optionSuccessStatus: 200,
-// };
-// app.use(cors(corsOptions));
+const corsOptions = {
+  origin: "http://localhost:5173",
+  credentials: true,
+  optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
 // Set up routes
 app.use("/api/auth", userRoutes);
