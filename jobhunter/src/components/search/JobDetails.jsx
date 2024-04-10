@@ -55,7 +55,7 @@ const JobDetails = ({ jobId, closePopup, onClick }) => {
   return (
     <>
       <div className="w-screen h-dvh flex justify-center items-center absolute top-0 left-0 bg-black/75 z-30 overflow-hidden">
-        <div className="w-2/3 h-3/4 bg-primary-dark dark:bg-primaryDark-light rounded-lg p-8 relative">
+        <div className="xsm:w-11/12 xsm:h-[90%] lg:w-2/3 lg:h-3/4 bg-primary-dark dark:bg-primaryDark-light rounded-lg xsm:p-2  xsm:pt-12 lg:pt-8 lg:p-8 relative">
           <span
             className="absolute top-2 right-4 text-3xl cursor-pointer"
             onClick={closePopup}
@@ -84,7 +84,7 @@ const JobDetails = ({ jobId, closePopup, onClick }) => {
               <p className="text-md">{job.salary || "Not Provided"}</p>
             </div>
           </div>
-          <div className="w-full h-4/6 pb-8">
+          <div className="w-full xsm:h-3/5 lg:h-4/6 pb-8">
             <p className="text-lg text-secondary-dark dark:text-secondaryDark-light pb-2">
               Job Description:{" "}
             </p>
@@ -94,18 +94,18 @@ const JobDetails = ({ jobId, closePopup, onClick }) => {
             <p>Applications: {job.applicationCount}</p>
             <p>Expiry: {job.expirationDate}</p>
           </div>
-          <div className="flex justify-center items-center gap-4 py-4">
+          <div className="flex xsm:flex-col lg:flex-row justify-center items-center gap-4 py-4">
             <a
               href={job.externalUrl ? job.externalUrl : job.jobUrl}
               target="_blank"
               rel="noreferrer"
-              className="bg-accent dark:bg-accentDark text-secondary dark:text-secondaryDark hover:bg-accent-dark dark:hover:bg-accentDark-dark rounded-lg py-2 px-8"
+              className="bg-accent dark:bg-accentDark text-secondary dark:text-secondaryDark hover:bg-accent-dark dark:hover:bg-accentDark-dark rounded-lg py-2 px-8 xsm:w-full lg:w-auto text-center"
               onClick={onClick}
             >
               Apply Now
             </a>
             <button
-              className="rounded-lg py-2 px-8 text-secondary dark:text-secondaryDark hover:text-secondary-dark dark:hover:text-secondaryDark-dark"
+              className="rounded-lg py-2 px-8 text-secondary dark:text-secondaryDark hover:text-secondary-dark dark:hover:text-secondaryDark-dark xsm:w-full lg:w-auto text-center"
               onClick={closePopup}
             >
               Close

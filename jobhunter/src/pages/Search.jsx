@@ -46,6 +46,9 @@ const Search = () => {
   const [graduateJobs, setGraduateJobs] = useState(false);
   const [postedBy, setPostedBy] = useState("All");
 
+  const [filtersActive, setFiltersActive] = useState(false);
+  const largeScreen = window.matchMedia("(min-width: 1440px)").matches;
+
   const [successMessage, setSuccessMessage] = useState(false);
 
   const [applied, setApplied] = useState("");
@@ -81,6 +84,9 @@ const Search = () => {
     }
     setIsLoading(false);
     document.title = `Search Jobs | ${user.username}`;
+    if (largeScreen) {
+      setFiltersActive(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate, user]);
 
@@ -230,6 +236,7 @@ const Search = () => {
       dispatch(getSearchJobsSuccess(data.results));
       dispatch(getTotalJobs(data.totalResults));
       setSearchedJobsStatus("success");
+      setFiltersActive(false);
     } catch (error) {
       dispatch(getSearchJobsFailure(error.message));
       dispatch(getTotalJobs(0));
@@ -335,14 +342,14 @@ const Search = () => {
   return (
     <>
       <Layout>
-        <div className="flex flex-col justify-center h-full text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark xsm:overflow-auto xsm:mt-28 xsm:mb-28 lg:mt-0 lg:mb-0">
+        <div className="flex flex-col justify-center h-full text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark xsm:overflow-auto xsm:mt-24 xsm:pb-28 lg:mt-0 lg:mb-0">
           {searchedJobsStatus === "idle" && (
             <div className="flex flex-col">
-              <div className="flex flex-col justify-center gap-2 w-2/3 pl-48">
-                <h1 className="text-6xl font-bold">
+              <div className="flex flex-col justify-center gap-2 xsm:w-full lg:w-2/3 xsm:items-center lg:items-start lg:pl-48">
+                <h1 className="xsm:text-3xl lg:text-6xl font-bold">
                   Let&apos;s find your dream job here
                 </h1>
-                <p className="text-xl font-semibold">
+                <p className="xsm:text-sm lg:text-xl text-secondary-light dark:text-secondaryDark-dark font-semibold xsm:w-4/5 lg:w-full">
                   jobHunter is your place to search and track your job
                   applications. Get started by searching for jobs above.
                 </p>
@@ -382,40 +389,52 @@ const Search = () => {
           )}
           {searchedJobsStatus === "success" && (
             <div className="flex items-center justify-center h-full">
-              <div className="flex flex-col gap-4 h-full w-full">
-                <h1 className="text-3xl font-bold">Search Results for: </h1>
-                <div className="w-full flex self-start gap-2 p-4 rounded-lg bg-primary-dark dark:bg-primaryDark-light">
-                  <input
-                    type="text"
-                    placeholder="Search for jobs..."
-                    className="w-3/6 p-2 bg-transparent border-r border-primaryDark dark:border-secondaryDark-dark/50"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  <label htmlFor="location" className="w-2/6 relative">
+              <div className="flex flex-col gap-4 h-full w-full mt-32 mb-32 overflow-scroll">
+                <h1 className="xsm:text-lg lg:text-3xl font-bold">
+                  Search Results for:{" "}
+                </h1>
+                <div className="w-full flex xsm:flex-col lg:flex-row self-start gap-4 p-4 rounded-lg bg-primary-dark dark:bg-primaryDark-light">
+                  <div className="flex items-center justify-center gap-4 xsm:w-full lg:w-5/6">
                     <input
                       type="text"
-                      placeholder="Location"
-                      className="w-full p-2 bg-transparent"
-                      value={searchLocation}
-                      onChange={(e) => setSearchLocation(e.target.value)}
+                      placeholder="Search for jobs..."
+                      className="w-2/3 p-2 bg-transparent border-r border-primaryDark dark:border-secondaryDark-dark/50"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <span
-                      className="absolute right-0 top-0 p-2 cursor-pointer"
-                      onClick={getLocation}
+                    <label htmlFor="location" className="w-1/3 relative">
+                      <input
+                        type="text"
+                        placeholder="Location"
+                        className="w-full p-2 bg-transparent"
+                        value={searchLocation}
+                        onChange={(e) => setSearchLocation(e.target.value)}
+                      />
+                      <span
+                        className="absolute right-0 top-0 p-2 cursor-pointer xsm:invisible lg:visible"
+                        onClick={getLocation}
+                      >
+                        <MyLocationIcon />
+                      </span>
+                    </label>
+                  </div>
+                  <div className="xsm:w-full lg:w-1/6 flex justify-center items-center gap-2">
+                    <button
+                      className="xsm:w-1/2 lg:w-full p-2 bg-primary-light dark:bg-primaryDark rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark"
+                      onClick={search}
                     >
-                      <MyLocationIcon />
-                    </span>
-                  </label>
-                  <button
-                    className="w-1/6 p-2 bg-primary-light dark:bg-primaryDark rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark"
-                    onClick={search}
-                  >
-                    Search
-                  </button>
+                      Search
+                    </button>
+                    <button
+                      className="w-1/2 xsm:visible lg:hidden p-2 bg-primary-light dark:bg-primaryDark rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark"
+                      onClick={() => setFiltersActive(!filtersActive)}
+                    >
+                      {filtersActive ? "Hide Filters" : "Show Filters"}
+                    </button>
+                  </div>
                 </div>
                 <div className="flex items-center justify-between h-4/5 gap-4">
-                  <div className="flex flex-wrap items-center justify-center gap-4 w-3/4 h-full overflow-scroll">
+                  <div className="flex flex-wrap items-center justify-center gap-4 xsm:w-full lg:w-3/4 h-full overflow-scroll">
                     {searchedJobs.map((job) => (
                       <JobContainer
                         item={job}
@@ -428,7 +447,11 @@ const Search = () => {
                       />
                     ))}
                   </div>
-                  <div className="w-1/4 flex flex-col gap-4 h-full p-4 rounded-sm bg-primary-dark dark:bg-primaryDark-light">
+                  <div
+                    className={`xsm:w-11/12 ${
+                      filtersActive ? "xsm:visible lg:visible" : "xsm:invisible"
+                    } lg:w-1/4 xsm:absolute lg:relative lg:flex flex-col gap-4 lg:h-full p-4 rounded-sm bg-primary-dark dark:bg-primaryDark-light transition ease-in-out duration-300`}
+                  >
                     <Filters
                       onJobTypeChange={(e) => setJobType(e.target.value)}
                       onMinimumSalaryChange={(e) =>
