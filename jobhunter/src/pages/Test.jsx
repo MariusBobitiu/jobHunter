@@ -1,6 +1,6 @@
 // Desc: Test page for testing purposes
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Layout from "../components/Layout";
 import DOMPurify from "dompurify";
 import PropTypes from "prop-types";

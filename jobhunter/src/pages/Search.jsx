@@ -150,18 +150,24 @@ const Search = () => {
   // Get Location
   const getLocation = (e) => {
     e.preventDefault();
-    navigator.geolocation.getCurrentPosition((position) => {
+    navigator.geolocation.getCurrentPosition(async (position) => {
       const { latitude, longitude } = position.coords;
-      fetch(
-        `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${
-          import.meta.env.VITE_OPENCAGE_API_KEY
-        }`
-      )
-        .then((response) => response.json())
-        .then((data) => setSearchLocation(data.results[0].components.city));
+      try {
+        const response = await fetch(
+          `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${
+            import.meta.env.VITE_OPENCAGE_API_KEY
+          }`,
+          {
+            method: "GET",
+          }
+        );
+        const data = await response.json();
+        console.log(data);
+        setSearchLocation(data.results[0].components.city);
+      } catch (error) {
+        console.error(error);
+      }
     });
-
-    console.log(searchLocation);
   };
 
   // Search Jobs
