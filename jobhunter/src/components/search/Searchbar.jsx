@@ -14,7 +14,7 @@ const Searchbar = ({
       <input
         type="text"
         placeholder="Search for jobs..."
-        className="xsm:w-full lg:w-3/6 p-2 bg-transparent xsm:border-b lg:border-b-0 lg:border-r border-primaryDark dark:border-secondaryDark-dark/50"
+        className="xsm:w-full rounded-none lg:w-3/6 p-2 bg-transparent xsm:border-b lg:border-b-0 lg:border-r border-primaryDark/50 dark:border-secondaryDark-dark/50"
         value={term}
         onChange={onTermChange}
       />

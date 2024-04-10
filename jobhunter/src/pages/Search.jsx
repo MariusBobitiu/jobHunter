@@ -398,7 +398,7 @@ const Search = () => {
                     <input
                       type="text"
                       placeholder="Search for jobs..."
-                      className="w-2/3 p-2 bg-transparent border-r border-primaryDark dark:border-secondaryDark-dark/50"
+                      className="w-2/3 p-2 bg-transparent rounded-none border-r border-primaryDark/50 dark:border-secondaryDark-dark/50"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
