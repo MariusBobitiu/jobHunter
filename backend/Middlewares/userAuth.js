@@ -16,7 +16,9 @@ const saveUser = async (req, res, next) => {
     });
 
     if (usernameExists) {
-      return res.status(409).json({ message: "Username already exists" });
+      return res
+        .status(409)
+        .json({ status: false, message: "Username already exists" });
     }
 
     // Check if email is already in use
@@ -25,7 +27,9 @@ const saveUser = async (req, res, next) => {
     });
 
     if (emailExists) {
-      return res.status(409).json({ message: "Email already in use" });
+      return res
+        .status(409)
+        .json({ status: false, message: "Email already in use" });
     }
 
     // If both checks pass, proceed to the next middleware or controller action
