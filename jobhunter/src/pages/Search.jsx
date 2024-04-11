@@ -24,6 +24,7 @@ import {
   getJobsStart,
   getJobsSuccess,
 } from "../features/jobs/jobsSlice";
+//import useSearch from "../hooks/useSearch";
 
 // MUI Icons
 import MyLocationIcon from "@mui/icons-material/MyLocation";
