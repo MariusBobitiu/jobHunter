@@ -303,8 +303,8 @@ const Test = () => {
         <div className="flex flex-col justify-center h-full text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark xsm:overflow-auto xsm:mt-24 xsm:pb-28 lg:mt-0 lg:pb-2">
           {searchedJobsStatus === "idle" && (
             <div className="flex flex-col">
-              <div className="flex flex-col justify-center gap-2 xsm:w-full lg:w-2/3 xsm:items-center lg:items-start lg:pl-48">
-                <h1 className="xsm:text-3xl lg:text-6xl font-bold">
+              <div className="flex flex-col justify-center gap-2 xsm:w-full lg:w-2/3 xsm:items-center lg:items-start lg:pl-48 mb-4">
+                <h1 className="xsm:text-3xl lg:text-6xl font-bold ">
                   Let&apos;s find your dream job here
                 </h1>
                 <p className="xsm:text-sm lg:text-xl text-secondary-light dark:text-secondaryDark-dark font-semibold xsm:w-4/5 lg:w-full">
@@ -337,6 +337,38 @@ const Test = () => {
                             ? "/reed-logo-darkMode.webp"
                             : "/reed-logo.webp"
                         }
+                        alt="Reed Logo"
+                        className="bg-cover bg-center w-full"
+                      />
+                    </span>
+                  </a>
+                  <a
+                    href="https://findwork.dev/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-primary hover:underline w-44"
+                  >
+                    <span className="w-full">
+                      <img
+                        src={
+                          darkMode
+                            ? "/FindworkLogo-dark.webp"
+                            : "/Findworklogo.webp"
+                        }
+                        alt="Reed Logo"
+                        className="bg-cover bg-center w-full"
+                      />
+                    </span>
+                  </a>
+                  <a
+                    href="https://adzuna.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-primary hover:underline w-44"
+                  >
+                    <span className="w-full">
+                      <img
+                        src={darkMode ? "/AdzunaLogo.webp" : "/AdzunaLogo.webp"}
                         alt="Reed Logo"
                         className="bg-cover bg-center w-full"
                       />
