@@ -217,7 +217,7 @@ const Sidebar = () => {
               </span>
             </span>
           </a>
-          {/* <ThemeSwitcher /> */}
+          <ThemeSwitcher />
         </div>
       </div>
       <div className="xsm:flex xsm:justify-center xsm:items-center lg:justify-start lg:absolute lg:bottom-0 p-4 text-white text-lg lg:w-full">

@@ -1,3 +1,5 @@
+// Desc: Test page for testing purposes
+
 // Components
 import Layout from "../components/Layout";
 import JobContainer from "../components/search/JobContainer";
@@ -9,13 +11,12 @@ import Filters from "../components/search/Filters";
 import Notification from "../components/functional/Notification";
 
 // Hooks
-import { useNavigate } from "react-router-dom";
+import useSearch from "../hooks/useSearch";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import usePagination from "../hooks/usePagination";
 import useFetch from "../hooks/useFetch";
 import {
-  getSearchJobsFailure,
-  getSearchJobsStart,
   getSearchJobsSuccess,
   getTotalJobs,
 } from "../features/searchJobs/searchJobsSlice";
@@ -24,18 +25,15 @@ import {
   getJobsStart,
   getJobsSuccess,
 } from "../features/jobs/jobsSlice";
-//import useSearch from "../hooks/useSearch";
+import useUserAuthentication from "../hooks/useUserAuthentication";
+import useFilter from "../hooks/useFilter";
 
 // MUI Icons
-import MyLocationIcon from "@mui/icons-material/MyLocation";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 
 const Search = () => {
   // Redux states
-  const jobs = useSelector((state) => state.searchJobs.searchJobs);
-  const totalJobs = useSelector((state) => state.searchJobs.totalJobs);
   const darkMode = useSelector((state) => state.darkMode.darkMode);
-  const user = useSelector((state) => state.user.user);
 
   // Local states
   const [customDistance, setCustomDistance] = useState(false);
@@ -65,31 +63,67 @@ const Search = () => {
   // Search states
   const [searchTerm, setSearchTerm] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
-  const [searchedJobsError, setSearchedJobsError] = useState("");
-
+  const [skippedJobs, setSkippedJobs] = useState(0);
+  const { jobs, performSearch, searchJobsStatus } = useSearch(
+    searchTerm,
+    searchLocation
+    // skippedJobs
+  );
+  const { filteredJobs, filterJobs } = useFilter(
+    searchTerm,
+    searchLocation,
+    jobType,
+    minimumSalary,
+    maximumSalary,
+    distance,
+    graduateJobs,
+    postedBy,
+    skippedJobs
+  );
   const [searchedJobs, setSearchedJobs] = useState(jobs);
-  const [searchedJobsStatus, setSearchedJobsStatus] = useState("idle");
+  const [searchedJobsStatus, setSearchedJobsStatus] =
+    useState(searchJobsStatus);
+  // const [searchedJobsError, setSearchedJobsError] = useState("");
 
   // Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const jobsPerPage = 10;
-
-  const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
+  // const [currentPage, setCurrentPage] = useState(1);
+  const [isLastPage, setIsLastPage] = useState(false);
+  const pageSize = 10;
 
   useEffect(() => {
-    if (!user) {
-      console.log("User not logged in. Redirecting to login page...");
-      navigate("/login");
-      return;
+    setSearchedJobs(jobs);
+  }, [jobs]);
+
+  useEffect(() => {
+    setSearchedJobs(filteredJobs);
+  }, [filteredJobs]);
+
+  const {
+    currentData: currentJobs,
+    currentPage,
+    setCurrentPage,
+    maxPage,
+  } = usePagination(searchedJobs, pageSize);
+
+  useEffect(() => {
+    // This ensures that the current page is always at least 1 and corrects it if it exceeds maxPage
+    if (maxPage === 0) {
+      // If there are no pages, we still want to set it to 1 as there might be default or placeholder content to display
+      setCurrentPage(1);
+    } else if (currentPage > maxPage) {
+      // Only adjust currentPage if it exceeds the maxPage and maxPage is not zero
+      setCurrentPage(maxPage);
     }
-    setIsLoading(false);
-    document.title = `Search Jobs | ${user.username}`;
-    if (largeScreen) {
-      setFiltersActive(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate, user]);
+  }, [currentPage, maxPage, setCurrentPage]);
+
+  const searchMoreJobs = async () => {
+    setSkippedJobs((prev) => prev + 100);
+    await performSearch();
+    setSearchedJobs((prevJobs) => [...prevJobs, ...jobs]);
+    setCurrentPage((prev) => (prev < maxPage ? prev : maxPage));
+  };
+
+  const user = useUserAuthentication("Search Jobs");
 
   useEffect(() => {
     if (applied !== "") {
@@ -102,6 +136,24 @@ const Search = () => {
       }, 2500);
     }
   }, [applied, jobs]);
+
+  useEffect(() => {
+    if (jobs.length > 0) {
+      if (largeScreen) {
+        setFiltersActive(true);
+      }
+      setSearchedJobsStatus("success");
+      dispatch(getSearchJobsSuccess(jobs));
+      dispatch(getTotalJobs(jobs.length));
+    } else {
+      setSearchedJobsStatus("idle");
+    }
+  }, [jobs, dispatch, largeScreen]);
+
+  useEffect(() => {
+    const totalPages = Math.ceil(searchedJobs.length / pageSize);
+    setIsLastPage(currentPage === totalPages);
+  }, [currentPage, searchedJobs, pageSize, jobs]);
 
   const AddJobToTable = async (e) => {
     console.log(
@@ -171,158 +223,57 @@ const Search = () => {
     });
   };
 
-  // Search Jobs
-  const search = async (e) => {
-    e.preventDefault();
-    // Dispatch action to search jobs
-    dispatch(getSearchJobsStart());
-    try {
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/searchJobs/reed?searchTerm=${searchTerm}&searchLocation=${searchLocation}&skippedResults=0`
-      );
-
-      const data = await response.json();
-      console.log(data);
-      dispatch(getSearchJobsSuccess(data.results));
-      dispatch(getTotalJobs(data.totalResults));
-      setSearchedJobsStatus("success");
-    } catch (error) {
-      dispatch(getSearchJobsFailure(error.message));
-      dispatch(getTotalJobs(0));
-      setSearchedJobsStatus("fail");
-      setSearchedJobsError(error.message);
-      console.error(error);
-    }
-  };
-
-  const filterResults = async (e) => {
-    e.preventDefault();
-
-    setCurrentPage(1);
-
-    dispatch(getSearchJobsStart());
-
-    const queryParams = {
-      searchTerm: searchTerm,
-      searchLocation: searchLocation,
-      jobType: jobType === "All" ? false : jobType,
-      distanceFromLocation: distance,
-      postedBy: postedBy === "All" ? false : postedBy,
-    };
-
-    if (minimumSalary !== "not specified") {
-      queryParams.minimumSalary = minimumSalary;
-    }
-
-    if (maximumSalary !== "not specified") {
-      queryParams.maximumSalary = maximumSalary;
-    }
-
-    if (graduateJobs) {
-      queryParams.graduate = graduateJobs;
-    }
-
-    const searchQueryParams = new URLSearchParams(queryParams).toString();
-    console.log(searchQueryParams);
-
-    try {
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/searchJobs/reed/filter?${searchQueryParams}`
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch Reed jobs");
-      }
-
-      const data = await response.json();
-
-      dispatch(getSearchJobsSuccess(data.results));
-      dispatch(getTotalJobs(data.totalResults));
-      setSearchedJobsStatus("success");
-      setFiltersActive(false);
-    } catch (error) {
-      dispatch(getSearchJobsFailure(error.message));
-      dispatch(getTotalJobs(0));
-      setSearchedJobsStatus("fail");
-      setSearchedJobsError(error.message);
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    setSearchedJobs(jobs);
-  }, [jobs]);
-
   // Pagination Numbers
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(totalJobs / jobsPerPage); i++) {
-    pageNumbers.push(i);
-  }
+  const renderPageNumbers = () => {
+    let items = [];
+    if (maxPage <= 5) {
+      // If there are 5 or less pages, display all page numbers
+      for (let i = 1; i <= maxPage; i++) {
+        items.push(i);
+      }
+    } else {
+      // Always add the first page
+      items.push(1);
 
-  useEffect(() => {
-    console.log("Graduate state: ", graduateJobs);
-  }, [graduateJobs]);
-
-  const handlePageChange = async (newPage) => {
-    setCurrentPage(newPage);
-
-    dispatch(getSearchJobsStart());
-    try {
-      const queryParams = {
-        searchTerm: searchTerm,
-        searchLocation: searchLocation,
-        jobType: jobType === "All" ? false : jobType,
-        distanceFromLocation: distance,
-        postedBy: postedBy === "All" ? false : postedBy,
-        skippedResults: (newPage - 1) * jobsPerPage,
-      };
-
-      if (minimumSalary !== "not specified") {
-        queryParams.minimumSalary = minimumSalary;
+      // If the current page is greater than 4, add an ellipsis after the first page
+      if (currentPage > 4) {
+        items.push("...");
       }
 
-      if (maximumSalary !== "not specified") {
-        queryParams.maximumSalary = maximumSalary;
+      // Determine the range of page numbers to display
+      let start = Math.max(2, currentPage - 1);
+      let end = Math.min(maxPage - 1, currentPage + 1);
+
+      // Prevent start from overlapping into the first page or the ellipsis
+      start = Math.max(start, 2);
+      if (currentPage < 4) {
+        end = 5; // Adjust end to show at least 5 pages at the beginning
       }
 
-      if (graduateJobs === "true") {
-        queryParams.graduate = graduateJobs;
+      // Add page numbers in the calculated range
+      for (let i = start; i <= end; i++) {
+        items.push(i);
       }
 
-      const searchQueryParams = new URLSearchParams(queryParams).toString();
-
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/searchJobs/reed/filter?${searchQueryParams}`
-      );
-      console.log(searchQueryParams);
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch Reed jobs. Status: ${response.status}, message: ${response.message}`
-        );
+      // If there is room for more pages and ellipses towards the end
+      if (currentPage < maxPage - 3) {
+        items.push("...");
       }
-      const data = await response.json();
-      console.log(data);
-      dispatch(getSearchJobsSuccess(data.results));
-      dispatch(getTotalJobs(data.totalResults));
-      setSearchedJobsStatus("success");
-    } catch (error) {
-      dispatch(getSearchJobsFailure(error.message));
-      dispatch(getTotalJobs(0));
-      setSearchedJobsStatus("fail");
-      setSearchedJobsError(error.message);
-      console.error(error);
+
+      // Always add the last page unless it's already included
+      if (!items.includes(maxPage)) {
+        items.push(maxPage);
+      }
     }
+    return items;
   };
 
-  if (isLoading) {
-    return <Loading />;
+  if (!user) {
+    return (
+      <Layout>
+        <Loading />;
+      </Layout>
+    );
   }
 
   // Loading state
@@ -339,7 +290,7 @@ const Search = () => {
     return (
       <Layout>
         <div className="flex items-center justify-center h-dvh text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark">
-          <h1 className="text-3xl font-bold">{searchedJobsError}</h1>
+          {/* <h1 className="text-3xl font-bold">{searchedJobsError}</h1> */}
         </div>
       </Layout>
     );
@@ -349,7 +300,7 @@ const Search = () => {
   return (
     <>
       <Layout>
-        <div className="flex flex-col justify-center h-full text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark xsm:overflow-auto xsm:mt-24 xsm:pb-28 lg:mt-0 lg:mb-0">
+        <div className="flex flex-col justify-center h-full text-secondary font-nunito p-4 dark:bg-primaryDark dark:text-secondaryDark xsm:overflow-auto xsm:mt-24 xsm:pb-28 lg:mt-0 lg:pb-2">
           {searchedJobsStatus === "idle" && (
             <div className="flex flex-col">
               <div className="flex flex-col justify-center gap-2 xsm:w-full lg:w-2/3 xsm:items-center lg:items-start lg:pl-48">
@@ -367,7 +318,8 @@ const Search = () => {
                 onTermChange={(e) => setSearchTerm(e.target.value)}
                 onLocationChange={(e) => setSearchLocation(e.target.value)}
                 onGetLocation={getLocation}
-                onSearch={search}
+                onSearch={performSearch}
+                status={"idle"}
               />
               <div className="w-full flex flex-col justify-center items-center gap-2 mt-8">
                 <p className="w-3/4 pl-12">Our searches are powered by</p>
@@ -400,59 +352,97 @@ const Search = () => {
                 <h1 className="xsm:text-lg lg:text-3xl font-bold">
                   Search Results for:{" "}
                 </h1>
-                <div className="w-full flex xsm:flex-col lg:flex-row self-start gap-4 p-4 rounded-lg bg-primary-dark dark:bg-primaryDark-light">
-                  <div className="flex items-center justify-center gap-4 xsm:w-full lg:w-5/6">
-                    <input
-                      type="text"
-                      placeholder="Search for jobs..."
-                      className="w-2/3 p-2 bg-transparent rounded-none border-r border-primaryDark/50 dark:border-secondaryDark-dark/50"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <label htmlFor="location" className="w-1/3 relative">
-                      <input
-                        type="text"
-                        placeholder="Location"
-                        className="w-full p-2 bg-transparent"
-                        value={searchLocation}
-                        onChange={(e) => setSearchLocation(e.target.value)}
-                      />
-                      <span
-                        className="absolute right-0 top-0 p-2 cursor-pointer xsm:invisible lg:visible"
-                        onClick={getLocation}
-                      >
-                        <MyLocationIcon />
-                      </span>
-                    </label>
-                  </div>
-                  <div className="xsm:w-full lg:w-1/6 flex justify-center items-center gap-2">
-                    <button
-                      className="xsm:w-1/2 lg:w-full p-2 bg-primary-light dark:bg-primaryDark rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark"
-                      onClick={search}
-                    >
-                      Search
-                    </button>
-                    <button
-                      className="w-1/2 xsm:visible lg:hidden p-2 bg-primary-light dark:bg-primaryDark rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark"
-                      onClick={() => setFiltersActive(!filtersActive)}
-                    >
-                      {filtersActive ? "Hide Filters" : "Show Filters"}
-                    </button>
-                  </div>
-                </div>
+                <Searchbar
+                  term={searchTerm}
+                  onTermChange={(e) => setSearchTerm(e.target.value)}
+                  location={searchLocation}
+                  onLocationChange={(e) => setSearchLocation(e.target.value)}
+                  onSearch={() => {
+                    performSearch();
+                    setCurrentPage(1);
+                    setSkippedJobs(0);
+                    setJobType("All");
+                    setMinimumSalary("not specified");
+                    setMaximumSalary("not specified");
+                    setDistance(10);
+                    setGraduateJobs(false);
+                    setPostedBy("All");
+                  }}
+                  onGetLocation={getLocation}
+                  filters={filtersActive}
+                  onToggleFilters={() => setFiltersActive(!filtersActive)}
+                  showFilterButton={true}
+                />
                 <div className="flex items-center justify-between h-4/5 gap-4">
-                  <div className="flex flex-wrap items-center justify-center gap-4 xsm:w-full lg:w-3/4 h-full overflow-scroll">
-                    {searchedJobs.map((job) => (
-                      <JobContainer
-                        item={job}
-                        key={job.jobId}
-                        onClick={() => setApplied(job.jobId)}
-                        viewDetails={() => {
-                          setShowJobDetailsId(job.jobId);
-                          setShowJobDetails(true);
-                        }}
-                      />
-                    ))}
+                  <div className="flex flex-col size-full">
+                    <div className="flex flex-col gap-4 w-full h-full overflow-scroll overflow-x-hidden">
+                      {currentJobs.map((job) => (
+                        <JobContainer
+                          item={job}
+                          key={job.jobId}
+                          onClick={() => setApplied(job.jobId)}
+                          viewDetails={() => {
+                            setShowJobDetailsId(job.jobId);
+                            setShowJobDetails(true);
+                          }}
+                        />
+                      ))}
+                      {isLastPage && (
+                        <div className="flex justify-center items-center gap-4 w-full xsm:text-xs lg:text-md p-12">
+                          <p className="">
+                            Looks like you&apos;ve reached the end of the page
+                          </p>
+                          <button
+                            className="bg-primary-light dark:bg-primaryDark-light py-2 px-4 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark-light/90 hover:opacity-90 dark:disabled:bg-primaryDark-light/50 disabled:cursor-not-allowed disabled:bg-primary-dark disabled:text-secondaryDark-dark"
+                            onClick={searchMoreJobs}
+                          >
+                            Search for more jobs
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    {/* PAGINATION  */}
+                    <div className="flex justify-center items-center gap-4 w-full xsm:text-xs lg:text-md bg-primary dark:bg-primaryDark py-2">
+                      <button
+                        className="bg-primary-light dark:bg-primaryDark-light py-2 px-4 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark-light/90 hover:opacity-90 dark:disabled:bg-primaryDark-light/50 disabled:cursor-not-allowed disabled:bg-primary-dark disabled:text-secondaryDark-dark"
+                        onClick={() =>
+                          setCurrentPage((prev) => Math.max(1, prev - 1))
+                        }
+                        disabled={currentPage === 1}
+                      >
+                        Prev
+                      </button>
+                      {renderPageNumbers().map((item, index) =>
+                        typeof item === "number" ? (
+                          <button
+                            key={index}
+                            className={`bg-primary-light dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark ${
+                              item === currentPage
+                                ? "text-xl bg-primary dark:bg-primaryDark-light"
+                                : ""
+                            }`}
+                            onClick={() => setCurrentPage(item)}
+                            disabled={currentPage === item}
+                          >
+                            {item}
+                          </button>
+                        ) : (
+                          <span key={index} className="pagination-ellipsis">
+                            {item}
+                          </span>
+                        )
+                      )}
+                      <button
+                        className="bg-primary-light dark:bg-primaryDark-light py-2 px-4 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark-light/90 hover:opacity-90 dark:disabled:bg-primaryDark-light/50 disabled:cursor-not-allowed disabled:bg-primary-dark disabled:text-secondaryDark-dark"
+                        onClick={() =>
+                          setCurrentPage((prev) => Math.min(maxPage, prev + 1))
+                        }
+                        disabled={currentPage >= maxPage}
+                      >
+                        Next
+                      </button>
+                    </div>
+                    {/* END OF PAGINATION */}
                   </div>
                   <div
                     className={`xsm:w-11/12 ${
@@ -460,13 +450,17 @@ const Search = () => {
                     } lg:w-1/4 xsm:absolute lg:relative lg:flex flex-col gap-4 lg:h-full p-4 rounded-sm bg-primary-dark dark:bg-primaryDark-light transition ease-in-out duration-300`}
                   >
                     <Filters
+                      jobTypeValue={jobType}
                       onJobTypeChange={(e) => setJobType(e.target.value)}
+                      minimumSalaryValue={minimumSalary}
                       onMinimumSalaryChange={(e) =>
                         setMinimumSalary(e.target.value)
                       }
+                      maximumSalaryValue={maximumSalary}
                       onMaximumSalaryChange={(e) =>
                         setMaximumSalary(e.target.value)
                       }
+                      distanceValue={distance}
                       onDistanceChange={(e) => {
                         const value =
                           e.target.value === "Custom Distance" ? true : false;
@@ -484,81 +478,12 @@ const Search = () => {
                       onGraduateChange={(e) =>
                         setGraduateJobs(e.target.checked)
                       }
+                      postedByValue={postedBy}
                       onPostedByChange={(e) => setPostedBy(e.target.value)}
-                      onApplyFilters={filterResults}
-                      distanceValue={distance}
+                      onApplyFilters={filterJobs}
                       viewCustomDistance={customDistance}
                     />
                   </div>
-                </div>
-                <div className="flex justify-center items-center gap-4">
-                  <button
-                    className="bg-primary-light dark:bg-primaryDark-light py-2 px-4 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark-light/90 hover:opacity-90 dark:disabled:bg-primaryDark-light/50 disabled:cursor-not-allowed disabled:bg-primary-dark disabled:text-secondaryDark-dark"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    Prev
-                  </button>
-                  {/* Always show the first page */}
-                  <button
-                    key={1}
-                    onClick={() => handlePageChange(1)}
-                    className={`bg-primary-light dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark ${
-                      currentPage === 1
-                        ? "text-xl bg-primary dark:bg-primaryDark-light"
-                        : ""
-                    }`}
-                  >
-                    1
-                  </button>
-
-                  {/* Conditional rendering for ellipsis and intermediate pages */}
-                  {currentPage > 4 && <span className="p-2">...</span>}
-
-                  {pageNumbers
-                    .slice(
-                      Math.max(currentPage - 2, 1),
-                      Math.min(currentPage + 1, pageNumbers.length - 1)
-                    )
-                    .map((number) => (
-                      <button
-                        key={number}
-                        onClick={() => handlePageChange(number)}
-                        className={`bg-primary-light dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark ${
-                          currentPage === number
-                            ? "text-xl bg-primary dark:bg-primaryDark-light"
-                            : ""
-                        }`}
-                      >
-                        {number}
-                      </button>
-                    ))}
-
-                  {currentPage < pageNumbers.length - 3 && (
-                    <span className="p-2">...</span>
-                  )}
-
-                  {/* Always show the last page */}
-                  {pageNumbers.length > 1 && (
-                    <button
-                      key={pageNumbers.length}
-                      onClick={() => handlePageChange(pageNumbers.length)}
-                      className={`bg-primary-light dark:bg-primaryDark p-2 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark ${
-                        currentPage === pageNumbers.length
-                          ? "text-xl bg-primary dark:bg-primaryDark-light"
-                          : ""
-                      }`}
-                    >
-                      {pageNumbers.length}
-                    </button>
-                  )}
-                  <button
-                    className="bg-primary-light dark:bg-primaryDark-light py-2 px-4 rounded-lg hover:bg-primary dark:hover:bg-opacity-60 dark:hover:bg-primaryDark-light/90 hover:opacity-90 dark:disabled:bg-primaryDark-light/50 disabled:cursor-not-allowed disabled:bg-primary-dark disabled:text-secondaryDark-dark"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === pageNumbers.length}
-                  >
-                    Next
-                  </button>
                 </div>
               </div>
             </div>
@@ -586,12 +511,6 @@ const Search = () => {
           closePopup={() => setShowJobDetails(false)}
         />
       )}
-      {/* <div className={`absolute bottom-2 right-2 p-4 rounded-lg z-50 bg-primaryDark-light dark:bg-primary-dark flex justify-center items-center gap-2 ${successMessage ? 'visible' : 'invisible'} transition ease-in-out duration-300`}>
-        <span className="w-12 h-12 bg-green-600 rounded-full flex justify-center items-center">
-          <TaskAltIcon fontSize="large" className={`${darkMode ? 'text-secondaryDark' : 'text-secondary'}`} />
-        </span>
-        <p className="text-lg font-semibold text-secondaryDark dark:text-secondary">Job added to table successfully!</p>
-      </div> */}
       <Notification
         icon={
           <TaskAltIcon

@@ -11,13 +11,17 @@ import SchoolIcon from "@mui/icons-material/School";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 
 const Filters = ({
+  jobTypeValue,
   onJobTypeChange,
+  minimumSalaryValue,
   onMinimumSalaryChange,
+  maximumSalaryValue,
   onMaximumSalaryChange,
   onDistanceChange,
   onCustomDistanceChange,
   graduate,
   onGraduateChange,
+  postedByValue,
   onPostedByChange,
   onApplyFilters,
   distanceValue,
@@ -31,14 +35,15 @@ const Filters = ({
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl mb-4 font-bold">Filters</h1>
           <div className="flex flex-col gap-2">
-            <label htmlFor="jobType" className="text-2xl mb-2">
+            <p htmlFor="jobType" className="text-2xl mb-2">
               Job Type
-            </label>
+            </p>
             <div className="flex flex-col ml-4">
               <StyledSelect
                 isDarkMode={darkMode}
-                isTable
-                isEdit
+                isTable={true}
+                isEdit={true}
+                value={jobTypeValue}
                 defaultValue="All"
                 onChange={onJobTypeChange}
               >
@@ -64,15 +69,16 @@ const Filters = ({
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="salary" className="text-2xl mb-2">
+            <p htmlFor="salary" className="text-2xl mb-2">
               Salary Range
-            </label>
+            </p>
             <div className="flex flex-col gap-2 ml-4">
               <p className="text-lg">Minimum Salary</p>
               <StyledSelect
                 isDarkMode={darkMode}
-                isTable
-                isEdit
+                isTable={true}
+                isEdit={true}
+                value={minimumSalaryValue}
                 defaultValue="not specified"
                 onChange={onMinimumSalaryChange}
               >
@@ -98,8 +104,9 @@ const Filters = ({
               <p className="text-lg">Maximum Salary</p>
               <StyledSelect
                 isDarkMode={darkMode}
-                isTable
-                isEdit
+                isTable={true}
+                isEdit={true}
+                value={maximumSalaryValue}
                 defaultValue="not specified"
                 onChange={onMaximumSalaryChange}
               >
@@ -125,13 +132,14 @@ const Filters = ({
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="distance" className="text-2xl mb-2">
+            <p htmlFor="distance" className="text-2xl mb-2">
               Distance from Location
-            </label>
+            </p>
             <div className="ml-4 gap-2 flex flex-col">
               <StyledSelect
                 isDarkMode={darkMode}
                 isTable
+                value={distanceValue}
                 defaultValue="10"
                 onChange={onDistanceChange}
               >
@@ -171,7 +179,7 @@ const Filters = ({
             </div>
           </div>
           <div className="flex flex-col gap-2 mt-2">
-            <label
+            <p
               htmlFor="graduate"
               className="flex justify-between items-center text-2xl"
             >
@@ -193,19 +201,20 @@ const Filters = ({
                 checked={graduate}
                 onChange={onGraduateChange}
               />
-            </label>
+            </p>
             <small className="text-sm -mt-4 opacity-60">
               Click on the icon to toggle graduate jobs
             </small>
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="postedBy" className="text-2xl mb-2">
+            <p htmlFor="postedBy" className="text-2xl mb-2">
               Posted By
-            </label>
+            </p>
             <div className="flex flex-col ml-4">
               <StyledSelect
                 isDarkMode={darkMode}
                 isTable={true}
+                value={postedByValue}
                 defaultValue="All"
                 onChange={onPostedByChange}
               >
@@ -234,13 +243,17 @@ const Filters = ({
 };
 
 Filters.propTypes = {
+  jobTypeValue: PropTypes.string.isRequired,
   onJobTypeChange: PropTypes.func.isRequired,
+  minimumSalaryValue: PropTypes.string.isRequired,
   onMinimumSalaryChange: PropTypes.func.isRequired,
+  maximumSalaryValue: PropTypes.string.isRequired,
   onMaximumSalaryChange: PropTypes.func.isRequired,
   onDistanceChange: PropTypes.func.isRequired,
   onCustomDistanceChange: PropTypes.func.isRequired,
   graduate: PropTypes.bool.isRequired,
   onGraduateChange: PropTypes.func.isRequired,
+  postedByValue: PropTypes.string.isRequired,
   onPostedByChange: PropTypes.func.isRequired,
   onApplyFilters: PropTypes.func.isRequired,
   viewCustomDistance: PropTypes.bool.isRequired,

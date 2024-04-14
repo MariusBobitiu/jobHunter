@@ -16,7 +16,7 @@ const searchReedJobs = async (req, res) => {
         searchTerm
       )}&location=${encodeURIComponent(
         searchLocation
-      )}&resultsToTake=10&resultsToSkip=${encodeURIComponent(skippedResults)}`,
+      )}&resultsToTake=100&resultsToSkip=${skippedResults}`,
       {
         method: "GET",
         headers: {
@@ -59,7 +59,7 @@ const filterReedJobs = async (req, res) => {
     const queryParams = {
       keywords: searchTerm,
       locationName: searchLocation,
-      resultsToTake: 10,
+      resultsToTake: 100,
       distanceFromLocation: distanceFromLocation || 10,
     };
 
@@ -89,15 +89,15 @@ const filterReedJobs = async (req, res) => {
       queryParams.graduate = true;
     }
 
-    if (minimumSalary) {
+    if (minimumSalary !== "not specified" && minimumSalary) {
       queryParams.minimumSalary = minimumSalary;
     }
-    if (maximumSalary) {
+    if (maximumSalary !== "not specified" && maximumSalary) {
       queryParams.maximumSalary = maximumSalary;
     }
 
     const queryString = new URLSearchParams(queryParams).toString();
-    console.log(`${process.env.REED_API_BASE_URL}/search?${queryString}`);
+    console.log(`Reed: ${process.env.REED_API_BASE_URL}/search?${queryString}`);
 
     const response = await fetch(
       `${process.env.REED_API_BASE_URL}/search?${queryString}`,
@@ -195,19 +195,17 @@ const filterFindworkJobs = async (req, res) => {
   };
 
   if (jobType === "fullTime" || jobType === "permanent") {
-    queryParams.job_type = "full+time";
+    queryParams.employment_type = "full time";
   } else if (
     jobType === "partTime" ||
     jobType === "contract" ||
     jobType === "temp"
   ) {
-    queryParams.job_type = "part+time";
+    queryParams.employment_type = "contract";
   }
 
   const queryString = new URLSearchParams(queryParams).toString();
-  console.log(
-    `Fetching data from: ${process.env.FINDWORK_API_BASE_URL}/?${queryString}`
-  );
+  console.log(`Findwork: ${process.env.FINDWORK_API_BASE_URL}/?${queryString}`);
 
   try {
     const response = await fetch(
@@ -242,7 +240,7 @@ const searchAdzunaJobs = async (req, res) => {
     const response = await fetch(
       `${
         process.env.ADZUNA_API_BASE_URL
-      }&results_per_page=10&what=${searchTerm}&where=${searchLocation}&distance=${
+      }&results_per_page=100&what=${searchTerm}&where=${searchLocation}&distance=${
         10 * 1.60934
       }`,
       {
@@ -268,6 +266,7 @@ const filterAdzunaJobs = async (req, res) => {
   const {
     searchTerm,
     searchLocation,
+    skippedResults,
     jobType,
     minimumSalary,
     maximumSalary,
@@ -292,21 +291,25 @@ const filterAdzunaJobs = async (req, res) => {
     queryParams.part_time = 1;
   }
 
-  if (minimumSalary) {
+  if (minimumSalary !== "not specified" && minimumSalary) {
     queryParams.salary_min = minimumSalary;
   }
-  if (maximumSalary) {
+  if (maximumSalary !== "not specified" && maximumSalary) {
     queryParams.salary_max = maximumSalary;
+  }
+
+  if (skippedResults) {
+    queryParams.page = skippedResults / 100;
   }
 
   const queryString = new URLSearchParams(queryParams).toString();
   console.log(
-    `Fetching data from: ${process.env.ADZUNA_API_BASE_URL}&results_per_page=10&${queryString}`
+    `Adzuna: ${process.env.ADZUNA_API_BASE_URL}&results_per_page=100&${queryString}`
   );
 
   try {
     const response = await fetch(
-      `${process.env.ADZUNA_API_BASE_URL}&results_per_page=10&`,
+      `${process.env.ADZUNA_API_BASE_URL}&results_per_page=100&${queryString}`,
       {
         method: "GET",
       }
