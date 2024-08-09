@@ -56,7 +56,18 @@ app.listen(PORT, () => {
 });
 
 app.get("/", (req, res) => {
-  res.status(200).send({ message: "server is running" });
+  res.status(200).send({
+    message: "Welcome to the Job Tracker API",
+    author: "Marius Bobitiu",
+    endpoints: {
+      login: "/api/auth/login",
+      register: "/api/auth/register",
+      jobs: "/api/jobs",
+      quote: "/api/quote",
+      goal: "/api/goal",
+      searchJobs: "/api/searchJobs",
+    }
+  });
 });
 
 module.exports = app;
