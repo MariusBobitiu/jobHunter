@@ -31,7 +31,7 @@ db.sequelize.sync().then(() => {
 
 // Set up cors - localhost
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "https://jobhunter.mariusbobitiu.dev",
   credentials: true,
   optionSuccessStatus: 200,
 };
