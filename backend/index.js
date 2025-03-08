@@ -38,17 +38,17 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Set up routes
-app.use("/api/auth", userRoutes);
+app.use("/auth", userRoutes);
 
-app.use("/api/users", updateUserRoutes);
+app.use("/users", updateUserRoutes);
 
-app.use("/api/jobs", jobsRoutes);
+app.use("/jobs", jobsRoutes);
 
-app.use("/api/quote", quoteRoutes);
+app.use("/quote", quoteRoutes);
 
-app.use("/api/goal", goalRoutes);
+app.use("/goal", goalRoutes);
 
-app.use("/api/searchJobs", searchJobsRoutes);
+app.use("/searchJobs", searchJobsRoutes);
 
 // Listen for requests
 app.listen(PORT, () => {
