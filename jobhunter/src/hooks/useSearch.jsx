@@ -24,7 +24,8 @@ const useSearch = (searchTerm, searchLocation) => {
   };
 
   const findWorkJobs = (findWorkData) => {
-    return findWorkData.results.map((job) => ({
+    console.log("Findwork data: ", findWorkData);
+    return findWorkData?.results?.map((job) => ({
       jobId: job.id,
       jobTitle: job.role,
       date: job.date_posted,
@@ -39,11 +40,11 @@ const useSearch = (searchTerm, searchLocation) => {
         dark: "/FindworkLogo-dark.webp",
         light: "/FindworkLogo.webp",
       },
-    }));
+    }), []);
   };
 
   const adzunaJobs = (adzunaData) => {
-    return adzunaData.results.map((job) => ({
+    return adzunaData?.results?.map((job) => ({
       jobId: job.adref,
       jobTitle: job.title,
       date: job.created,
@@ -58,7 +59,7 @@ const useSearch = (searchTerm, searchLocation) => {
         dark: "/AdzunaLogo.webp",
         light: "/AdzunaLogo.webp",
       },
-    }));
+    }), []);
   };
 
   const reedJobs = (reedData) => {
@@ -77,7 +78,7 @@ const useSearch = (searchTerm, searchLocation) => {
         dark: "/reed-logo-darkMode.webp",
         light: "/reed-logo.webp",
       },
-    }));
+    }), []);
   };
 
   const performSearch = async () => {

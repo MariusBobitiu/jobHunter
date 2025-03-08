@@ -63,6 +63,7 @@ const signin = async (req, res) => {
     // If the user exists, compare the password
     if (user) {
       const validPassword = await bcrypt.compare(password, user.password);
+      console.log("validPassword", validPassword);
 
       // If the password is valid, create a token
       if (validPassword) {
