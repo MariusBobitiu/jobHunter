@@ -13,6 +13,9 @@ RUN npm install
 # Copy the project files
 COPY . .
 
+# Copy environment file
+COPY .env .env
+
 # Build the Vite project
 RUN npm run build
 
