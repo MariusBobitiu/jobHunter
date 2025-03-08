@@ -70,14 +70,14 @@ const signin = async (req, res) => {
         let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRATION,
         });
+        console.log("token", token);
 
         // If password is valid, set cookie with the token generated
         res.cookie("token", token, {
-          maxAge: parseInt(process.env.COOKIE_EXPIRATION),
-          withCredentials: true,
+          maxAge: parseInt(process.env.COOKIE_EXPIRATION) || 3600000,
           httpOnly: true,
-          sameSite: "none",
           secure: true,
+          sameSite: "None",
         });
 
         // Send user details
